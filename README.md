@@ -1,4 +1,4 @@
-# SKYBIT CREATE3 Factory transactions
+# SKYBIT CREATE3 Factory Transactions
 ## Introduction
 This tool is for anyone who wants to **deploy smart contracts to the same address** on multiple Ethereum-Virtual Machine (EVM)-based blockchains. [CREATE2](https://eips.ethereum.org/EIPS/eip-1014) or CREATE3 factories help to achieve this, either with one that already exists on a blockchain, or one that you first deploy to the blockchain. There can be pitfalls depending on which path you take (see the section [Problems that this tool solves](#problems-that-this-tool-solves) for details). It's important to consider your options before you start any deployments to a live blockchain, as it'd be **difficult to switch later** after realizing that you made a bad decision, especially if many users are already using the contracts that you had deployed.
 
@@ -111,6 +111,8 @@ This shows that `TESTERC20` was deployed successfully using the CREATE3 factory.
 Copy `.env.example` to `.env` and enter any necessary values, including your API key to verify your contract on the explorer of the blockchain you will use.
 
 In `hardhat.config.js` do the following:
+
+Set `accounts` to the one(s) that you will use.
 
 Check whether the blockchains you will use are listed in [@wagmi/chains](https://github.com/wagmi-dev/references/blob/main/packages/chains/src/index.ts). If not, then add the blockchain info in `additionalNetworks`.
 
@@ -331,12 +333,12 @@ See also `contracts\TESTERC20.sol` in which the constructor accepts an array of 
 An alternative is to replace `msg.sender` with `tx.origin`, but Vitalik said that we shouldn't rely on `tx.origin`. Feel free to do some research if you're curious.
 
 ### Replay protection
-If for a particular blockchain you get the error "only replay-protected (EIP-155) transactions allowed over RPC" then you may have to run a node using `--rpc.allow-unprotected-txs`. The protection is to prevent a transaction that was done on one blockchain (e.g. transfer 1B USDC from Peter to Mary on Ethereum) to be executed again on another blockchain (e.g. transfer 1B USDC from Peter to Mary on Polygon). If Peter had 1B on Polygon at the same address then he'd lose it if Mary was able to replay the transaction on Polygon, so it makes sense to prevent such replay attacks.
+If for a particular blockchain you get the error "only replay-protected (EIP-155) transactions allowed over RPC" then you can try a different RPC URL, or run a node using `--rpc.allow-unprotected-txs`. The protection is to prevent a transaction that was done on one blockchain (e.g. transfer 1B USDC from Peter to Mary on Ethereum) to be executed again on another blockchain (e.g. transfer 1B USDC from Peter to Mary on Polygon). If Peter had 1B on Polygon at the same address then he'd lose it if Mary was able to replay the transaction on Polygon, so it makes sense to prevent such replay attacks.
 
 However with our transactions for factory contract deployment we want them to be replayed. There are no issues with replaying these particular transactions because it's only for deployment of the factory, with some  native currency spent for gas. There is no way to use funds at the signer's address for anything else - funds in the account can't be transferred out because nobody knows its private key. Excess funds after the deployment transaction will simply be stuck forever.
 
 ## Licenses
-### SKYBIT CREATE3 Factory transactions
+### SKYBIT CREATE3 Factory Transactions
 The software in this repository is released under the [MIT License](https://opensource.org/license/mit), therefore the following notices apply to this work:
 
 Copyright (c) 2023 SKYBIT
