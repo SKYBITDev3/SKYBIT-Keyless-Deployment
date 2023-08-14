@@ -1,8 +1,9 @@
 require("@nomicfoundation/hardhat-toolbox")
 require("dotenv").config()
-const chains = require("@wagmi/chains")
 
+// SET YOUR ACCOUNT HERE
 const accounts = { mnemonic: process.env.MNEMONIC || "test test test test test test test test test test test junk" }
+// const accounts = [process.env.PRIVATE_KEY0]
 // const accounts = [process.env.PRIVATE_KEY1, process.env.PRIVATE_KEY2]
 
 // You can add more blockchains to this list if they don't already exist in @wagmi/chains
@@ -76,6 +77,7 @@ const wagmiToHardhatVerifyTranslation = { // because some names don't match. So 
 }
 
 let networks = {}
+const chains = require("@wagmi/chains")
 for (let [chainName, chainData] of Object.entries(chains)) {
   if (!["hardhat", "localhost"].includes(chainName)) { // "HardhatConfig.networks.hardhat can't have an url"
     chainName = wagmiToHardhatVerifyTranslation[chainName] === undefined ? chainName : wagmiToHardhatVerifyTranslation[chainName] // change to what hardhat-verify uses
@@ -105,6 +107,16 @@ for (let [chainName, chainData] of Object.entries(chains)) {
 }
 networks = { ...networks, ...additionalNetworks }
 
+// RPC URL overrides in case the one in @wagmi/chains doesn't work
+// networks.mainnet.url = `https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`
+
+networks.polygonMumbai.url = "https://polygon-mumbai.blockpi.network/v1/rpc/public"
+
+networks.bscTestnet.url = "https://data-seed-prebsc-2-s2.bnbchain.org:8545" // factory deployment successful
+
+networks.sepolia.url = "https://eth-sepolia.g.alchemy.com/v2/demo" // factory deployment successful
+
+
 const customChains = Object.values(networks).filter(network => Object.hasOwn(network, "urls"))
 
 
@@ -129,12 +141,17 @@ module.exports = {
   networks,
   etherscan: {
     apiKey: { // ADD LINES FOR YOUR DESIRED BLOCKCHAINS HERE
+      mainnet: process.env.ETHERSCAN_API_KEY,
+      goerli: process.env.ETHERSCAN_API_KEY,
+      sepolia: process.env.ETHERSCAN_API_KEY,
       celo: process.env.CELOSCAN_API_KEY,
       celoAlfajores: process.env.CELOSCAN_API_KEY,
       polygonZkEvm: process.env.ZKEVM_POLYGONSCAN_API_KEY,
       polygonZkEvmTestnet: process.env.ZKEVM_POLYGONSCAN_API_KEY,
       bsc: process.env.BSCSCAN_API_KEY,
       bscTestnet: process.env.BSCSCAN_API_KEY,
+      avalanche: process.env.SNOWTRACE_API_KEY,
+      avalancheFujiTestnet: process.env.SNOWTRACE_API_KEY, 
     },
     customChains,
     timeout: 60000  // 1min (default is 20s)
