@@ -60,24 +60,24 @@ yarn hardhat run --network localhost scripts/deployCreate3FactoryFromRawTx.js
 
 Output like this appears:
 ```
-Using network: localhost, account: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 having 10000.0 of native currency
-Derived address of transaction signer: 0xe747C4aaBCC71De185991E856B15f76a45cDAE94
-Expected transaction ID: 0x6569d5b19ab5e62050f6d0b39f6cef43a216493b7957d41c91a35790879a29b6
-Expected address of deployed axelarnetwork factory contract: 0x63386A498082be5bD72499fD4c7d6e1d6072282A
+Using network: localhost, account: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 having 10000.0 of native currency, RPC url: http://127.0.0.1:8545
+Derived address of transaction signer: 0x64C2520B09320d97ccc38E5e41bE2cb617f41337
+Expected transaction ID: 0xfaed49a1cdaf6dc03b99681e6d3c12fa6c80bae439f4f0458ca1af43a76d0b45
+Expected address of deployed axelarnetwork factory contract: 0xDd9F606e518A955Cd3800f18126DC14E54e4E995
 Expected gas cost: 651440
 gasFeeEstimate: 0.065144 of native currency
-Minimum balance of signer required based on the gasPrice and gasLimit: 100000000000 x 1000000 wei = 0.1 of native currency
+Minimum balance of signer required based on the gasPrice and gasLimit: 100000000000 x 900000 wei = 0.09 of native currency
 balanceOfSigner: 0.0
-There are insufficient funds at 0xe747C4aaBCC71De185991E856B15f76a45cDAE94 on localhost to push the transaction. Do you want to try to transfer 0.1 of native currency from your wallet 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 to there now (y/n)?
+There are insufficient funds at 0x64C2520B09320d97ccc38E5e41bE2cb617f41337 on localhost to push the transaction. Do you want to try to transfer 0.09 of native currency from your wallet 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 to there now (y/n)?
 ```
 The script has detected that the transaction signer's account doesn't have enough funds for gas, so now you need to send some to it. If your own account has some funds then it asks you whether you want to transfer some funds from it. If that's OK then press 'y' and 'Enter'. Otherwise, press 'n'  and 'Enter', then transfer the required funds to the signer's address in any other way. Then run the script again.
 
 If you press 'y' then output like this appears:
 ```
-Transferring 0.1 of native currency from 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 to 0xe747C4aaBCC71De185991E856B15f76a45cDAE94 on localhost...
-0xe747C4aaBCC71De185991E856B15f76a45cDAE94 now has 0.1
+Transferring 0.09 of native currency from 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 to 0x64C2520B09320d97ccc38E5e41bE2cb617f41337 on localhost...
+0x64C2520B09320d97ccc38E5e41bE2cb617f41337 now has 0.09
 Deploying axelarnetwork factory contract by pushing signed raw transaction to localhost...
-axelarnetwork factory contract was successfully deployed to 0x63386A498082be5bD72499fD4c7d6e1d6072282A in transaction 0x6569d5b19ab5e62050f6d0b39f6cef43a216493b7957d41c91a35790879a29b6
+axelarnetwork factory contract was successfully deployed to 0xDd9F606e518A955Cd3800f18126DC14E54e4E995 in transaction 0xfaed49a1cdaf6dc03b99681e6d3c12fa6c80bae439f4f0458ca1af43a76d0b45
 ```
 Note the address of the deployed factory contract as you'll need it when you want to use it.
 
@@ -92,13 +92,14 @@ yarn hardhat run --network localhost scripts/deployUsingCreate3Factory-TESTERC20
 ```
 Output like this appears:
 ```
-Using network: localhost, account: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 having 9999.899981625 of native currency
-salt: 0x534b594249542e41534941202e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e00
-Expected address of TESTERC20 using deployer at 0x63386A498082be5bD72499fD4c7d6e1d6072282A: 0x97fddC5802Dd3d8fe3e817b936baA6d404Ecd6CE
+Using network: localhost, account: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 having 9999.909981625 of native currency, RPC url: http://127.0.0.1:8545
+salt: 0x534b594249542e41534941205445535445524332302e2e2e2e2e2e2e2e2e2e00
+Expected address of TESTERC20 using deployer at 0xDd9F606e518A955Cd3800f18126DC14E54e4E995: 0x88DCddf9FC5EecA013cFe5919606695E8Db36ce6
 feeData: {"_type":"FeeData","gasPrice":"1674213014","maxFeePerGas":"2531556250","maxPriorityFeePerGas":"1000000000"}
 functionCallGasCost: 2254028
 gasFeeEstimate: 0.003773723011520392 of native currency
-TESTERC20 was successfully deployed to 0x97fddC5802Dd3d8fe3e817b936baA6d404Ecd6CE
+now calling deploy() in the CREATE3 factory...
+TESTERC20 was successfully deployed to 0x88DCddf9FC5EecA013cFe5919606695E8Db36ce6
 The actual deployment address matches the expected address
 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 has 100.0 of 1000.0
 0xEB2e452fC167b5bb948c6FC2c9215ce7F4064692 has 900.0 of 1000.0
