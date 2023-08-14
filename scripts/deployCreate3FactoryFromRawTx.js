@@ -5,13 +5,15 @@ const hre = require("hardhat")
 const factoryToDeploy = "axelarnetwork"
 // const factoryToDeploy = "ZeframLou"
 
-const isDeployEnabled = true
+const isDeployEnabled = true // toggle in case you do deployment and verification separately.
+// const isDeployEnabled = false
 const isVerifyEnabled = true
+// const isVerifyEnabled = false
 
 async function main() {
   const [wallet] = await ethers.getSigners()
   const balanceOfWallet = await ethers.provider.getBalance(wallet.address)
-  console.log(`Using network: ${hre.network.name}${Object.hasOwn(hre.network.config, "chainId") ? ` (${hre.network.config.chainId})` : ""}, account: ${wallet.address} having ${ethers.formatUnits(balanceOfWallet, "ether")} of native currency`)
+  console.log(`Using network: ${hre.network.name}${Object.hasOwn(hre.network.config, "chainId") ? ` (${hre.network.config.chainId})` : ""}, account: ${wallet.address} having ${ethers.formatUnits(balanceOfWallet, "ether")} of native currency, RPC url: ${hre.network.config.url}`)
 
   const create3FactoryArtifact = getCreate3FactoryArtifact(factoryToDeploy)
 
@@ -59,7 +61,7 @@ async function main() {
 
 
   // FUND SIGNER - There needs to be some funds at derivedAddressOfSigner to pay gas fee for the deployment.
-  const isTransactionSignerFunded = await fundTransactionSigner(txData.gasPrice, txData.gasLimit, derivedAddressOfSigner, wallet)
+  const isTransactionSignerFunded = isDeployEnabled ? await fundTransactionSigner(txData.gasPrice, txData.gasLimit, derivedAddressOfSigner, wallet) : true
   if (!isTransactionSignerFunded) return
 
 
