@@ -82,7 +82,7 @@ axelarnetwork factory contract was successfully deployed to 0xDd9F606e518A955Cd3
 Note the address of the deployed factory contract as you'll need it when you want to use it.
 
 ### Test the CREATE3 factory on local blockchain
-`TESTERC20` as defined in `contracts\TESTERC20.sol` will be deployed using th.
+`TESTERC20` as defined in `contracts\TESTERC20.sol` will be deployed using the factory that has been deployed.
 
 In `scripts\deployUsingCreate3Factory-TESTERC20.js`, set the value of `addressOfFactory` to the correct address of the deployed factory contract.
 
@@ -165,7 +165,7 @@ Delete the lines testing `TESTERC20` after the line `// Testing the deployed ERC
 
 Run the script to deploy your contract using the factory:
 ```
-yarn hardhat run --network localhost scripts/deployUsingCreate3Factory-[contract name].js
+yarn hardhat run --network polygonZkEvmTestnet scripts/deployUsingCreate3Factory-[contract name].js
 ```
 
 The final step in the script is an attempt to verify the contract on the blockchain explorer.
@@ -334,7 +334,7 @@ See also `contracts\TESTERC20.sol` in which the constructor accepts an array of 
 An alternative is to replace `msg.sender` with `tx.origin`, but Vitalik said that we shouldn't rely on `tx.origin`. Feel free to do some research if you're curious.
 
 ### Replay protection
-If for a particular blockchain you get the error "only replay-protected (EIP-155) transactions allowed over RPC" then you can try a different RPC URL, or run a node using `--rpc.allow-unprotected-txs`. The protection is to prevent a transaction that was done on one blockchain (e.g. transfer 1B USDC from Peter to Mary on Ethereum) to be executed again on another blockchain (e.g. transfer 1B USDC from Peter to Mary on Polygon). If Peter had 1B on Polygon at the same address then he'd lose it if Mary was able to replay the transaction on Polygon, so it makes sense to prevent such replay attacks.
+If for a particular blockchain you get the error "only replay-protected (EIP-155) transactions allowed over RPC" then you can try a different RPC URL, find a node provider that doesn't enforce EIP-155, or run your own node using `--rpc.allow-unprotected-txs`. The protection is to prevent a transaction that was done on one blockchain (e.g. transfer 1B USDC from Peter to Mary on Ethereum) to be executed again on another blockchain (or a fork of the same blockchain) (e.g. transfer 1B USDC from Peter to Mary on Polygon). If Peter had 1B on Polygon at the same address then he'd lose it if Mary was able to replay the transaction on Polygon, so it makes sense to prevent such replay attacks.
 
 However with our transactions for factory contract deployment we want them to be replayed. There are no issues with replaying these particular transactions because it's only for deployment of the factory, with some  native currency spent for gas. There is no way to use funds at the signer's address for anything else - funds in the account can't be transferred out because nobody knows its private key. Excess funds after the deployment transaction will simply be stuck forever.
 
