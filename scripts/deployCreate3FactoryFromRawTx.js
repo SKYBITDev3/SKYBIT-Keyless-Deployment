@@ -28,6 +28,7 @@ async function main() {
     gasPrice: 100000000000n,
     value: 0,
     chainId: 0,
+    // chainId: 31337,
   }
 
   // Keep this data consistent otherwise the deployment address will become different
@@ -48,11 +49,17 @@ async function main() {
   // const tx = ethers.Transaction.from(txSignedSerialized) // checking the contents of signed transaction
   // console.log(`Signed transaction: ${JSON.stringify(tx, null, 2)}`)
 
+  const addressOfCreate3Factory = ethers.getCreateAddress({ from: derivedAddressOfSigner, nonce: txData.nonce })
+  console.log(`Expected address of deployed ${factoryToDeploy} factory contract: ${addressOfCreate3Factory}`)
+
+  if(await ethers.provider.getCode(addressOfCreate3Factory) !== "0x") {
+    console.log(`The factory contract already exists at ${addressOfCreate3Factory}. So you can now simply use it.`)
+    return
+  }
+
   const txSignedSerializedHash = ethers.keccak256(txSignedSerialized)
   console.log(`Expected transaction ID: ${txSignedSerializedHash}`)
 
-  const addressOfCreate3Factory = ethers.getCreateAddress({ from: derivedAddressOfSigner, nonce: txData.nonce })
-  console.log(`Expected address of deployed ${factoryToDeploy} factory contract: ${addressOfCreate3Factory}`)
 
   const gasCost = await ethers.provider.estimateGas({ data: create3FactoryArtifact.bytecode })
   console.log(`Expected gas cost: ${gasCost}`)
