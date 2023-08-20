@@ -25,10 +25,9 @@ async function main() {
     data: create3FactoryArtifact.bytecode,
     nonce: 0,
     gasLimit,
-    gasPrice: 100000000000n,
+    gasPrice: 100000000000n, // = 100 Gwei
     value: 0,
     chainId: 0,
-    // chainId: 31337,
   }
 
   // Keep this data consistent otherwise the deployment address will become different
@@ -79,6 +78,7 @@ async function main() {
     console.log(`${factoryToDeploy} factory contract was successfully deployed to ${addressOfCreate3Factory} in transaction ${transactionId}`)
   }
 
+
   // VERIFY ON BLOCKCHAIN EXPLORER
   if (isVerifyEnabled && !["hardhat", "localhost"].includes(hre.network.name)) {
     if (isDeployEnabled) {
@@ -90,6 +90,7 @@ async function main() {
     await verifyContract(addressOfCreate3Factory, [])
   }
 }
+
 
 const fundTransactionSigner = async (gasPrice, gasLimit, derivedAddressOfSigner, wallet) => {
   const balanceOfSignerMinRequired = gasPrice * gasLimit
@@ -151,6 +152,7 @@ const getGasLimit = (factoryToDeploy) => {
       return 900000n // Gas used: 651,262
   }
 }
+
 
 main().catch(error => {
   console.error(error)

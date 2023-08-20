@@ -130,13 +130,11 @@ module.exports = {
           optimizer: {
             enabled: true,
             runs: 1000000
-            // runs: 2000000
           },
           evmVersion: "paris", // shanghai is current default but many blockchains don't support push0 opcode yet (causing "ProviderError: invalid opcode: opcode 0x5f not defined" and "ProviderError: execution reverted"). paris is prior version. 
         }
       },
     ],
-
   },
   networks,
   etherscan: {
@@ -154,6 +152,6 @@ module.exports = {
       avalancheFujiTestnet: process.env.SNOWTRACE_API_KEY, 
     },
     customChains,
-    timeout: 60000  // 1min (default is 20s)
+    timeout: 60000 // 1min (default is 20s)
   }
 }
