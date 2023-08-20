@@ -249,6 +249,10 @@ https://github.com/axelarnetwork/axelar-gmp-sdk-solidity/blob/9cb3477d634c66c0fb
 
 Gas used for the deployment is 651,262 (or a little more for some blockchains), so gas limit in this deployment transaction has been set to 900,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.09 of native currency at the signer's address before factory deployment.
 
+Axelar's factory contract will be deployed to this address (if the transaction data is unchanged):
+```
+0xDd9F606e518A955Cd3800f18126DC14E54e4E995
+```
 
 ### ZeframLou
 ZeframLou's factory was included because it's well-known, as is the solmate CREATE3 library that it imports.
@@ -262,6 +266,11 @@ https://github.com/transmissions11/solmate/blob/34d20fc027fe8d50da71428687024a29
 Gas used for the deployment is 394,439 (or a little more for some blockchains), so gas limit in this deployment transaction has been set to 500,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.05 of native currency at the signer's address before factory deployment.
 
 The `solmate` directory has been placed in the repository root instead of under `contracts` so that `contracts\ZeframLou\create3-factory\CREATE3Factory.sol` can compile successfully without needing to change the line `import {CREATE3} from "solmate/utils/CREATE3.sol";`.
+
+ZeframLou's factory contract will be deployed to this address (if the transaction data is unchanged):
+```
+0xFAD1A5cA55b731b512FeF5FEb19c60Ab35f3657f
+```
 
 ## Future-proofing to ensure same deployment address in future
 Innovation will never stop and new blockchains with useful features are likely to continue to arise as time goes by. So you would want to be able to add support in your ecosystem for any amazing new and popular blockchains that appear, **possibly years into the future**. What can you do now to ensure that your contract is likely to have the same address on those blockchains as on the other blockchains that you support?
