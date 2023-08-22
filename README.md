@@ -60,7 +60,7 @@ yarn hardhat run --network localhost scripts/deployCreate3FactoryFromRawTx.js
 
 Output like this appears:
 ```
-Using network: localhost, account: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 having 10000.0 of native currency, RPC url: http://127.0.0.1:8545
+Using network: localhost (31337), account: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 having 10000.0 of native currency, RPC url: http://127.0.0.1:8545
 Derived address of transaction signer: 0x64C2520B09320d97ccc38E5e41bE2cb617f41337
 Expected transaction ID: 0xfaed49a1cdaf6dc03b99681e6d3c12fa6c80bae439f4f0458ca1af43a76d0b45
 Expected address of deployed axelarnetwork factory contract: 0xDd9F606e518A955Cd3800f18126DC14E54e4E995
@@ -92,7 +92,7 @@ yarn hardhat run --network localhost scripts/deployUsingCreate3Factory-TESTERC20
 ```
 Output like this appears:
 ```
-Using network: localhost, account: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 having 9999.909981625 of native currency, RPC url: http://127.0.0.1:8545
+Using network: localhost (31337), account: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 having 9999.909981625 of native currency, RPC url: http://127.0.0.1:8545
 salt: 0x534b594249542e41534941205445535445524332302e2e2e2e2e2e2e2e2e2e00
 Expected address of TESTERC20 using deployer at 0xDd9F606e518A955Cd3800f18126DC14E54e4E995: 0x88DCddf9FC5EecA013cFe5919606695E8Db36ce6
 feeData: {"_type":"FeeData","gasPrice":"1674213014","maxFeePerGas":"2531556250","maxPriorityFeePerGas":"1000000000"}
@@ -243,9 +243,9 @@ which calls a function called `init` in your contract just after it's deployed. 
 upgradeable contracts don't use constructors). If you intend to use `deployAndInit` then make sure that your contract does have a function called `init` (and e.g. not `initialize` as is shown in OpenZeppelin's examples).
 
 The exact GitHub commited files used are:
-https://github.com/axelarnetwork/axelar-gmp-sdk-solidity/blob/fec8f32aafe34352f315e6852b6c7d95098cef59/contracts/deploy/Create3.sol
-https://github.com/axelarnetwork/axelar-gmp-sdk-solidity/blob/fec8f32aafe34352f315e6852b6c7d95098cef59/contracts/deploy/Create3Deployer.sol
-https://github.com/axelarnetwork/axelar-gmp-sdk-solidity/blob/9cb3477d634c66c0fbf074e550bc721572e1cbd9/contracts/utils/ContractAddress.sol
+* https://github.com/axelarnetwork/axelar-gmp-sdk-solidity/blob/fec8f32aafe34352f315e6852b6c7d95098cef59/contracts/deploy/Create3.sol
+* https://github.com/axelarnetwork/axelar-gmp-sdk-solidity/blob/fec8f32aafe34352f315e6852b6c7d95098cef59/contracts/deploy/Create3Deployer.sol
+* https://github.com/axelarnetwork/axelar-gmp-sdk-solidity/blob/9cb3477d634c66c0fbf074e550bc721572e1cbd9/contracts/utils/ContractAddress.sol
 
 Gas used for the deployment is 651,262 (or a little more for some blockchains), so gas limit in this deployment transaction has been set to 900,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.09 of native currency at the signer's address before factory deployment.
 
@@ -258,10 +258,10 @@ Axelar's factory contract will be deployed to this address (if the transaction d
 ZeframLou's factory was included because it's well-known, as is the solmate CREATE3 library that it imports.
 
 The exact GitHub commited files used are:
-https://github.com/ZeframLou/create3-factory/blob/18cfad8d118b25a5092cdfed6bea9c932ca5b6eb/src/CREATE3Factory.sol
-https://github.com/ZeframLou/create3-factory/blob/18cfad8d118b25a5092cdfed6bea9c932ca5b6eb/src/ICREATE3Factory.sol
-https://github.com/transmissions11/solmate/blob/f2833c7cc951c50e0b5fd7e505571fddc10c8f77/src/utils/CREATE3.sol
-https://github.com/transmissions11/solmate/blob/34d20fc027fe8d50da71428687024a29dc01748b/src/utils/Bytes32AddressLib.sol
+* https://github.com/ZeframLou/create3-factory/blob/18cfad8d118b25a5092cdfed6bea9c932ca5b6eb/src/CREATE3Factory.sol
+* https://github.com/ZeframLou/create3-factory/blob/18cfad8d118b25a5092cdfed6bea9c932ca5b6eb/src/ICREATE3Factory.sol
+* https://github.com/transmissions11/solmate/blob/f2833c7cc951c50e0b5fd7e505571fddc10c8f77/src/utils/CREATE3.sol
+* https://github.com/transmissions11/solmate/blob/34d20fc027fe8d50da71428687024a29dc01748b/src/utils/Bytes32AddressLib.sol
 
 Gas used for the deployment is 394,439 (or a little more for some blockchains), so gas limit in this deployment transaction has been set to 500,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.05 of native currency at the signer's address before factory deployment.
 
