@@ -103,14 +103,17 @@ for (let [chainName, chainData] of Object.entries(chains)) {
         }
       }
     }
+  } else {
+    networks[chainName] = { // to prevent undefined chainId
+      chainId: 31337,
+    }
   }
 }
+
 networks = { ...networks, ...additionalNetworks }
 
-// RPC URL overrides in case the one in @wagmi/chains doesn't work
+// RPC URL overrides in case the one in @wagmi/chains doesn't work:
 // networks.mainnet.url = `https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`
-
-networks.polygonMumbai.url = "https://polygon-mumbai.blockpi.network/v1/rpc/public"
 
 networks.bscTestnet.url = "https://data-seed-prebsc-2-s2.bnbchain.org:8545" // factory deployment successful
 
