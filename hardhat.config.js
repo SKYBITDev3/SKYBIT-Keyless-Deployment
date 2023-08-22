@@ -115,9 +115,11 @@ networks = { ...networks, ...additionalNetworks }
 // RPC URL overrides in case the one in @wagmi/chains doesn't work:
 // networks.mainnet.url = `https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`
 
-networks.bscTestnet.url = "https://data-seed-prebsc-2-s2.bnbchain.org:8545" // factory deployment successful
+networks.polygonMumbai.url = "https://polygon-mumbai.blockpi.network/v1/rpc/public"
 
-networks.sepolia.url = "https://eth-sepolia.g.alchemy.com/v2/demo" // factory deployment successful
+networks.bscTestnet.url = "https://data-seed-prebsc-2-s2.bnbchain.org:8545"
+
+networks.sepolia.url = "https://eth-sepolia.g.alchemy.com/v2/demo"
 
 
 const customChains = Object.values(networks).filter(network => Object.hasOwn(network, "urls"))
