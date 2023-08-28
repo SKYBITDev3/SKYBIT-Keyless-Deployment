@@ -1,4 +1,4 @@
-# SKYBIT CREATE3 Factory Transactions
+# SKYBIT Keyless Deployment of Smart Contracts
 ## Introduction
 This tool is for anyone who wants to **deploy smart contracts to the same address** on multiple Ethereum-Virtual Machine (EVM)-based blockchains. [CREATE2](https://eips.ethereum.org/EIPS/eip-1014) or CREATE3 factories help to achieve this, either with one that already exists on a blockchain, or one that you first deploy to the blockchain. There can be pitfalls depending on which path you take (see the section [Problems that this tool solves](#problems-that-this-tool-solves) for details). It's important to consider your options before you start any deployments to a live blockchain, as it'd be **difficult to switch later** after realizing that you made a bad decision, especially if many users are already using the contracts that you had deployed.
 
@@ -41,12 +41,12 @@ It also makes it possible to:
 ## Usage
 Run in a terminal:
 ```
-git clone https://github.com/SKYBITDev3/SKYBIT-CREATE3-Factory-Transactions
-cd skybit-create3-factory-transactions
+git clone https://github.com/SKYBITDev3/SKYBIT-Keyless-Deployment
+cd SKYBIT-Keyless-Deployment
 yarn
 ```
 
-In `scripts/deployCreate3FactoryFromRawTx.js` change the value of `factoryToDeploy` to the factory you want to deploy from the options available.
+In `scripts/deployKeylessly-Create3Factory.js` change the value of `factoryToDeploy` to the factory you want to deploy from the options available.
 
 ### Deploy CREATE3 factory on local blockchain
 Start a blockchain node on your local machine in its own terminal:
@@ -55,7 +55,7 @@ yarn hardhat node
 ```
 Run the script in a separate terminal to deploy the factory:
 ```
-yarn hardhat run --network localhost scripts/deployCreate3FactoryFromRawTx.js
+yarn hardhat run --network localhost scripts/deployKeylessly-Create3Factory.js
 ```
 
 Output like this appears:
@@ -84,11 +84,11 @@ Note the address of the deployed factory contract as you'll need it when you wan
 ### Test the CREATE3 factory on local blockchain
 `TESTERC20` as defined in `contracts\TESTERC20.sol` will be deployed using the factory that has been deployed.
 
-In `scripts\deployUsingCreate3Factory-TESTERC20.js`, set the value of `addressOfFactory` to the correct address of the deployed factory contract.
+In `scripts\deployViaCREATE3-TESTERC20.js`, set the value of `addressOfFactory` to the correct address of the deployed factory contract.
 
 Run the script to deploy `TESTERC20` using the factory:
 ```
-yarn hardhat run --network localhost scripts/deployUsingCreate3Factory-TESTERC20.js
+yarn hardhat run --network localhost scripts/deployViaCREATE3-TESTERC20.js
 ```
 Output like this appears:
 ```
@@ -134,7 +134,7 @@ Add a reference to your explorer API key in `etherscan.apiKey` if it doesn't alr
 
 The steps are the same as described in [Deploy CREATE3 factory on local blockchain](#deploy-create3-factory-on-local-blockchain), but replace `localhost` with the name of the blockchain. e.g. if you want to deploy the factory to `polygonZkEvmTestnet`:
 ```
-yarn hardhat run --network polygonZkEvmTestnet scripts/deployCreate3FactoryFromRawTx.js
+yarn hardhat run --network polygonZkEvmTestnet scripts/deployKeylessly-Create3Factory.js
 ```
 To fund the signer’s address you can alternatively use apps like MetaMask or Trust (after pressing 'n'), then run the script again.
 
@@ -148,7 +148,7 @@ Add the solidity contract files that you want to deploy under `contracts` direct
 
 If the code of the contract that you want to deploy via a factory contains `msg.sender`, then you may need to change such code before you do the deployment. More details about this are provided in [Issues to be aware of](#issues-to-be-aware-of).
 
-Make a copy of `scripts\deployUsingCreate3Factory-TESTERC20.js` and rename it (e.g. change `TESTERC20` to the name of your main contract that you'll deploy).
+Make a copy of `scripts\deployViaCREATE3-TESTERC20.js` and rename it (e.g. change `TESTERC20` to the name of your main contract that you'll deploy).
 
 In the renamed script file:
 Set the value of `factoryToUse` to the factory that you'll use to deploy your contract.
@@ -165,7 +165,7 @@ Delete the lines testing `TESTERC20` after the line `// Testing the deployed ERC
 
 Run the script to deploy your contract using the factory:
 ```
-yarn hardhat run --network polygonZkEvmTestnet scripts/deployUsingCreate3Factory-[contract name].js
+yarn hardhat run --network polygonZkEvmTestnet scripts/deployViaCREATE3-[contract name].js
 ```
 
 The final step in the script is an attempt to verify the contract on the blockchain explorer.
@@ -294,7 +294,7 @@ But you still need to be careful not to change other factors. Once you start doi
 
 In our scripts, compilation artifacts of contracts are retrieved from `artifacts-saved` directory which was created to preserve the exact versions of the factories that were used for deployment. Before you start doing any contract deployments for production, you can make changes to your environment but after each change remember to copy the contents of `artifacts` directory (which Hardhat automatically creates) to `artifacts-saved`.
 
-The factory contract code from third parties have not been modified at all, and should always be left as-is. Though if new versions of any of the files are released, then we may replace the old copies with new ones in this repository, in which case a new release of this repository would be published on GitHub with updated version number. **Newer releases may not produce the same addresses** as prior releases due to different code, so if you ever do need to re-download the repository then instead of downloading the latest version, download the exact version that you had used before for production deployments via the releases page at https://github.com/SKYBITDev3/SKYBIT-CREATE3-Factory-Transactions/releases.
+The factory contract code from third parties have not been modified at all, and should always be left as-is. Though if new versions of any of the files are released, then we may replace the old copies with new ones in this repository, in which case a new release of this repository would be published on GitHub with updated version number. **Newer releases may not produce the same addresses** as prior releases due to different code, so if you ever do need to re-download the repository then instead of downloading the latest version, download the exact version that you had used before for production deployments via the releases page at https://github.com/SKYBITDev3/SKYBIT-Keyless-Deployment/releases.
 
 For your contracts that you want to deploy using a CREATE3 factory, there's no need to use `artifacts-saved` because bytecode isn't used for address calculation in CREATE3, so even after changes in the code the deployment address will remain the same. But you should still keep the many other factors (e.g. compiler version and settings) unchanged.
 

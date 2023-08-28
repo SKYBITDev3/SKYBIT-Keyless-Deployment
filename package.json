@@ -1,5 +1,5 @@
 {
-  "name": "SKYBIT-CREATE3-Factory-Transactions",
+  "name": "SKYBIT-Keyless-Deployment",
   "packageManager": "yarn@3.6.1",
   "devDependencies": {
     "@nomicfoundation/ethereumjs-trie": "^6.0.1",
