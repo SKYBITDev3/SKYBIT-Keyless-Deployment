@@ -1,6 +1,3 @@
-const hre = require("hardhat")
-// BigInt.prototype["toJSON"] = () => this.toString() // To prevent TypeError: Do not know how to serialize a BigInt
-
 // CHOOSE WHICH FACTORY YOU WANT TO USE: "axelarnetwork" or "ZeframLou"
 const factoryToDeploy = "axelarnetwork"
 // const factoryToDeploy = "ZeframLou"
@@ -17,7 +14,19 @@ async function main() {
 
   const create3FactoryArtifact = getCreate3FactoryArtifact(factoryToDeploy)
 
+  const gasCost = await ethers.provider.estimateGas({ data: create3FactoryArtifact.bytecode })
+  console.log(`Expected gas cost: ${gasCost}`)
+  // const gasFeeEstimate = BigInt(txData.gasPrice) * gasCost
+  // console.log(`gasFeeEstimate: ${ethers.formatUnits(gasFeeEstimate, "ether")} of native currency`)
+
   const gasLimit = getGasLimit(factoryToDeploy)
+  const gasLimitPercentageAboveCost = Number(gasLimit * 100n / gasCost) - 100
+  console.log(`gasLimit: ${gasLimit} (${gasLimitPercentageAboveCost}% above expected cost)`)
+  if (gasLimitPercentageAboveCost < 10) {
+    console.log(`gasLimit may be too low to accommodate possibly increasing future opcode cost. Once you choose a gasLimit, you'll need to use the same value for deployments on other blockchains any time in the future in order for your contract to have the same address.`)
+    return
+  }
+
 
   // Keep this data consistent otherwise the deployment address will become different
   const txData = {
@@ -48,11 +57,11 @@ async function main() {
   // const tx = ethers.Transaction.from(txSignedSerialized) // checking the contents of signed transaction
   // console.log(`Signed transaction: ${JSON.stringify(tx, null, 2)}`)
 
-  const addressOfCreate3Factory = ethers.getCreateAddress({ from: derivedAddressOfSigner, nonce: txData.nonce })
-  console.log(`Expected address of deployed ${factoryToDeploy} factory contract: ${addressOfCreate3Factory}`)
+  const addressExpected = ethers.getCreateAddress({ from: derivedAddressOfSigner, nonce: txData.nonce })
+  console.log(`Expected address of deployed ${factoryToDeploy} factory contract: ${addressExpected}`)
 
-  if(await ethers.provider.getCode(addressOfCreate3Factory) !== "0x") {
-    console.log(`The factory contract already exists at ${addressOfCreate3Factory}. So you can now simply use it.`)
+  if (await ethers.provider.getCode(addressExpected) !== "0x") {
+    console.log(`The factory contract already exists at ${addressExpected}. So you can now simply use it.`)
     return
   }
 
@@ -60,22 +69,16 @@ async function main() {
   console.log(`Expected transaction ID: ${txSignedSerializedHash}`)
 
 
-  const gasCost = await ethers.provider.estimateGas({ data: create3FactoryArtifact.bytecode })
-  console.log(`Expected gas cost: ${gasCost}`)
-  const gasFeeEstimate = BigInt(txData.gasPrice) * gasCost
-  console.log(`gasFeeEstimate: ${ethers.formatUnits(gasFeeEstimate, "ether")} of native currency`)
-
-
   // FUND SIGNER - There needs to be some funds at derivedAddressOfSigner to pay gas fee for the deployment.
-  const isTransactionSignerFunded = isDeployEnabled ? await fundTransactionSigner(txData.gasPrice, txData.gasLimit, derivedAddressOfSigner, wallet) : true
-  if (!isTransactionSignerFunded) return
+  const isTransactionSignerFunded = await fundTransactionSigner(txData.gasPrice, txData.gasLimit, derivedAddressOfSigner, wallet, isDeployEnabled)
+  if (!isTransactionSignerFunded) isDeployEnabled = false
 
 
   // THE DEPLOYMENT TRANSACTION
   if (isDeployEnabled) {
-    console.log(`Deploying ${factoryToDeploy} factory contract by pushing signed raw transaction to ${hre.network.name}...`)
+    console.log(`Deploying ${factoryToDeploy} factory contract by broadcasting signed raw transaction to ${hre.network.name}...`)
     const transactionId = await ethers.provider.send("eth_sendRawTransaction", [txSignedSerialized])
-    console.log(`${factoryToDeploy} factory contract was successfully deployed to ${addressOfCreate3Factory} in transaction ${transactionId}`)
+    console.log(`${factoryToDeploy} factory contract was successfully deployed to ${addressExpected} in transaction ${transactionId}`)
   }
 
 
@@ -87,37 +90,11 @@ async function main() {
       await setTimeout(20000)
     }
     const { verifyContract } = require("./utils")
-    await verifyContract(addressOfCreate3Factory, [])
-  }
+    await verifyContract(addressExpected, [])
+  } else console.log(`Verification on local network isn't possible`)
+
 }
 
-
-const fundTransactionSigner = async (gasPrice, gasLimit, derivedAddressOfSigner, wallet) => {
-  const balanceOfSignerMinRequired = gasPrice * gasLimit
-  console.log(`Minimum balance of signer required based on the gasPrice and gasLimit: ${gasPrice} x ${gasLimit} wei = ${ethers.formatUnits(balanceOfSignerMinRequired, "ether")} of native currency`)
-  let balanceOfSigner = await ethers.provider.getBalance(derivedAddressOfSigner)
-  console.log(`balanceOfSigner: ${ethers.formatUnits(balanceOfSigner, "ether")}`)
-
-  const shortfall = balanceOfSignerMinRequired - balanceOfSigner
-  if (balanceOfSigner < balanceOfSignerMinRequired) {
-    const balanceOfWallet = await ethers.provider.getBalance(wallet.address)
-    if (balanceOfWallet > balanceOfSignerMinRequired) {
-      const readlineSync = require("readline-sync")
-      const anwser = readlineSync.question(`There are insufficient funds at ${derivedAddressOfSigner} on ${hre.network.name} to push the transaction. Do you want to try to transfer ${ethers.formatUnits(shortfall, "ether")} of native currency from your wallet ${wallet.address} to there now (y/n)? `)
-      if (["y", "Y"].includes(anwser)) {
-        console.log(`Transferring ${ethers.formatUnits(shortfall, "ether")} of native currency from ${wallet.address} to ${derivedAddressOfSigner} on ${hre.network.name}...`)
-        let txRec = await wallet.sendTransaction({ to: derivedAddressOfSigner, value: shortfall })
-        await txRec.wait(1)
-        balanceOfSigner = await ethers.provider.getBalance(derivedAddressOfSigner)
-        console.log(`${derivedAddressOfSigner} now has ${ethers.formatUnits(balanceOfSigner, "ether")}`)
-        return true
-      }
-    }
-    console.log(`There are insufficient funds at ${derivedAddressOfSigner} on ${hre.network.name} to push the transaction. Transfer at least ${ethers.formatUnits(shortfall, "ether")} of native currency to there and try again.`)
-    return false
-  }
-  return true
-}
 
 const getCreate3FactoryArtifact = (factoryToDeploy) => {
   let pathToArtifact
@@ -151,6 +128,38 @@ const getGasLimit = (factoryToDeploy) => {
     default:
       return 900000n // Gas used: 651,262
   }
+}
+
+
+const fundTransactionSigner = async (gasPrice, gasLimit, derivedAddressOfSigner, wallet, isDeployEnabled) => {
+  const balanceOfSignerMinRequired = gasPrice * gasLimit
+  console.log(`Minimum balance of signer required based on the gasPrice and gasLimit: ${gasPrice} x ${gasLimit} wei = ${ethers.formatUnits(balanceOfSignerMinRequired, "ether")} of native currency`)
+  let balanceOfSigner = await ethers.provider.getBalance(derivedAddressOfSigner)
+  console.log(`balanceOfSigner: ${ethers.formatUnits(balanceOfSigner, "ether")}`)
+
+  const shortfall = balanceOfSignerMinRequired - balanceOfSigner
+  if (balanceOfSigner < balanceOfSignerMinRequired) {
+    const balanceOfWallet = await ethers.provider.getBalance(wallet.address)
+    if (balanceOfWallet > balanceOfSignerMinRequired) {
+      console.log(`There are insufficient funds at ${derivedAddressOfSigner} on ${network.name} to broadcast the transaction.`)
+
+      if (isDeployEnabled) {
+        const readlineSync = require("readline-sync")
+        const anwser = readlineSync.question(`Do you want to try to transfer ${ethers.formatUnits(shortfall, "ether")} of native currency from your wallet ${wallet.address} to there now (y/n)? `)
+        if (["y", "Y"].includes(anwser)) {
+          console.log(`Transferring ${ethers.formatUnits(shortfall, "ether")} of native currency from ${wallet.address} to ${derivedAddressOfSigner} on ${network.name}...`)
+          let txRec = await wallet.sendTransaction({ to: derivedAddressOfSigner, value: shortfall })
+          await txRec.wait(1)
+          balanceOfSigner = await ethers.provider.getBalance(derivedAddressOfSigner)
+          console.log(`${derivedAddressOfSigner} now has ${ethers.formatUnits(balanceOfSigner, "ether")} of native currency`)
+          return true
+        }
+      }
+    }
+    console.log(`You'll need to transfer at least ${ethers.formatUnits(shortfall, "ether")} of native currency to there.`)
+    return false
+  }
+  return true
 }
 
 
