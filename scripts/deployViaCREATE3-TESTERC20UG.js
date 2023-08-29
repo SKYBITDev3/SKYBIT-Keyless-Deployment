@@ -1,3 +1,5 @@
+// implementation deployed normally, proxy deployed via CREATE3
+
 // CHOOSE WHICH FACTORY YOU WANT TO USE: "axelarnetwork" or "ZeframLou"
 const factoryToUse = "axelarnetwork"
 // const factoryToUse = "ZeframLou"
@@ -23,7 +25,7 @@ async function main() {
   console.log(`Using network: ${network.name} (${network.config.chainId}), account: ${wallet.address} having ${await printNativeCurrencyBalance(wallet.address)} of native currency, RPC url: ${network.config.url}`)
 
   const tokenContractName = "TESTERC20UGV1"
-  const constructorArgsOfToken = [
+  const initializerArgs = [ // constructor not used in UUPS contracts. Instead, proxy will call initializer
     wallet.address,
     { x: 10, y: 5 },
   ]
@@ -34,7 +36,7 @@ async function main() {
   let proxy, proxyAddress, implAddress, initializerData
   if (useDeployProxy) {
     if (isDeployEnabled) {
-      proxy = await upgrades.deployProxy(cfToken, constructorArgsOfToken, { kind: "uups", timeout: 0 })
+      proxy = await upgrades.deployProxy(cfToken, initializerArgs, { kind: "uups", timeout: 0 })
       await proxy.waitForDeployment()
 
       proxyAddress = proxy.target
@@ -52,20 +54,21 @@ async function main() {
       console.log(`implAddress ${implAddress === expectedAddressOfImpl ? "matches" : "doesn't match"} expectedAddressOfImpl`)
     }
     const proxyContractName = "ERC1967Proxy"
-    const cfProxy = await ethers.getContractFactory(proxyContractName) // used hardhat-dependency-compiler to get the artifacts locally. The one in @openzeppelin/upgrades-core is old.
+    const cfProxy = await ethers.getContractFactory(proxyContractName)
     const fragment = cfToken.interface.getFunction("initialize")
-    initializerData = cfToken.interface.encodeFunctionData(fragment, constructorArgsOfToken)
+    initializerData = cfToken.interface.encodeFunctionData(fragment, initializerArgs)
+    const proxyConstructorArgs = [implAddress, initializerData]
 
     if (useCREATE3) {
       const { getArtifactOfFactory, getDeployedAddress, CREATE3Deploy } = rootRequire("scripts/CREATE3-deploy-functions.js")
 
       if (isDeployEnabled) {
-        proxy = await CREATE3Deploy(factoryToUse, addressOfFactory, cfProxy, proxyContractName, [implAddress, initializerData], salt, wallet)
+        proxy = await CREATE3Deploy(factoryToUse, addressOfFactory, cfProxy, proxyContractName, proxyConstructorArgs, salt, wallet)
         proxyAddress = proxy.target
       } else {
         const artifactOfFactory = getArtifactOfFactory(factoryToUse)
         const instanceOfFactory = await ethers.getContractAt(artifactOfFactory.abi, addressOfFactory)
-        proxyAddress = await getDeployedAddress(factoryToUse, instanceOfFactory, wallet.address, salt)  
+        proxyAddress = await getDeployedAddress(factoryToUse, instanceOfFactory, wallet.address, salt)
       }
     } else { // not using CREATE3
       proxy = await cfProxy.deploy(implAddress, initializerData)
@@ -82,15 +85,16 @@ async function main() {
 
 
   // VERIFY ON BLOCKCHAIN EXPLORER
-  if (isVerifyEnabled && !["hardhat", "localhost"].includes(network.name)) {
-    if (isDeployEnabled) {
-      console.log(`Waiting to ensure that it will be ready for verification on etherscan...`)
-      const { setTimeout } = require("timers/promises")
-      await setTimeout(20000)
-    }
+  if (isVerifyEnabled)
+    if (!["hardhat", "localhost"].includes(network.name)) {
+      if (isDeployEnabled) {
+        console.log(`Waiting to ensure that it will be ready for verification on etherscan...`)
+        const { setTimeout } = require("timers/promises")
+        await setTimeout(20000)
+      }
 
-    await verifyContract(proxyAddress) // also verifies implementation
-  }
+      await verifyContract(proxyAddress) // also verifies implementation
+    }
 }
 
 
