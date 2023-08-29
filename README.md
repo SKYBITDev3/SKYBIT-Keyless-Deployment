@@ -1,9 +1,8 @@
-
 # SKYBIT Keyless Deployment of Smart Contracts
 ## Introduction
-This tool is for anyone who wants to **deploy smart contracts to the same address** on multiple Ethereum-Virtual-Machine (EVM)-based blockchains. There are many ways to achieve this, but there can be pitfalls depending on which path you take. It's important to consider your options before you start any deployments to a live blockchain, as it'd be **difficult to switch later** after realizing that you made a bad decision, especially if many users are already using the contracts that you had deployed.
+This tool is for anyone who wants to **deploy smart contracts to the same address** on multiple Ethereum-Virtual-Machine (EVM)-based blockchains. There are many ways to achieve this, but there can be pitfalls (see the section [Problems that this tool solves](#problems-that-this-tool-solves) for details)depending on which path you take. It's important to consider your options before you start any deployments to a live blockchain, as it'd be **difficult to switch later** after realizing that you made a bad decision, especially if many users are already using the contracts that you had deployed.
 
-This repository offers scripts to perform *keyless* smart contract deployment, in which a contract is deployed from an account whose private keys are unknown. Regardless of who does the deployment, the contract will always get the same address on any EVM blockchain.
+This repository offers scripts to perform *keyless* smart contract deployment, in which a contract is deployed from an account that nobody owns and whose **private keys are unknown and not needed**. Regardless of who does the deployment, as long as the transaction data remains the same, the contract will always get the same address on any EVM blockchain.
 
 The 2 main options of using keyless deployment are:
 - Use a factory contract that had been deployed keylessly to deploy your contracts;
@@ -15,10 +14,9 @@ Keyless deployment of a contract is more expensive and complicated than other me
 
 Each option will be discussed in more detail below.
 
- (see the section [Problems that this tool solves](#problems-that-this-tool-solves) for details)
 
 ## Using factory contracts
-[CREATE2](https://eips.ethereum.org/EIPS/eip-1014) or CREATE3 factories help to achieve same addresses on multipe blockchains. They are smart contracts that you can use to create your contracts on EVM-based blockchains.
+[CREATE2](https://eips.ethereum.org/EIPS/eip-1014) or CREATE3 factories help to achieve same addresses on multipe blockchains because the deployment address can be known any time beforehand. They are smart contracts that you can use to create your contracts on EVM-based blockchains.
 
 
 ### CREATE, CREATE2 and CREATE3
@@ -104,9 +102,9 @@ ZeframLou's factory contract will be deployed to this address (if the transactio
 
 
 ### Usage
-Other people may have already deployed the factory contract onto some of your desired blockchains to the expected address (if they didn't change the deployment transaction data), in which case you won't need to deploy it on those blockchains - you can then just use those already-deployed factory contracts to deploy whatever other contracts you want to deploy. So first check the expected address on a blockchain explorer to see if a factory contract exists there.
+Other people may have already deployed the factory contract onto some of your desired blockchains to the expected address (if they didn't change the deployment transaction data), in which case you won't need to deploy it on those blockchains - you can then just use those already-deployed factory contracts to deploy whatever other contracts you want to deploy. So first check the expected address on a blockchain explorer to see if a factory contract already exists there.
 
-If there isn't one yet then you'll need to deploy the CREATE3 factory contract via a **reusable signed raw deployment transaction**. The factory contract will then have the same address as on other blockchains (as long as the transaction data stays the same). See the steps below to deploy the factory.
+If there isn't one yet then you'll need to deploy the factory contract via a **reusable signed raw deployment transaction**. The factory contract will then have the same address as on other blockchains (as long as the transaction data stays the same). See the steps below to deploy the factory.
 
 Run in a terminal:
 ```
@@ -151,9 +149,9 @@ axelarnetwork factory contract was successfully deployed to 0xDd9F606e518A955Cd3
 Note the address of the deployed factory contract as you'll need it when you want to use it.
 
 #### Test the CREATE3 factory on local blockchain
-`TESTERC20` as defined in `contracts\TESTERC20.sol` will be deployed using the factory that has been deployed.
+`TESTERC20` as defined in `contracts/TESTERC20.sol` will be deployed using the factory that has been deployed.
 
-In `scripts\deployViaCREATE3-TESTERC20.js`, set the value of `addressOfFactory` to the correct address of the deployed factory contract.
+In `scripts/deployViaCREATE3-TESTERC20.js`, set the value of `addressOfFactory` to the correct address of the deployed factory contract.
 
 Run the script to deploy `TESTERC20` using the factory:
 ```
@@ -217,7 +215,7 @@ Add the solidity contract files that you want to deploy under `contracts` direct
 
 If the code of the contract that you want to deploy via a factory contains `msg.sender`, then you may need to change such code before you do the deployment. More details about this are provided in [Issues to be aware of](#issues-to-be-aware-of).
 
-Make a copy of `scripts\deployViaCREATE3-TESTERC20.js` and rename it (e.g. change `TESTERC20` to the name of your main contract that you'll deploy).
+Make a copy of `scripts/deployViaCREATE3-TESTERC20.js` and rename it (e.g. change `TESTERC20` to the name of your main contract that you'll deploy).
 
 In the renamed script file:
 Set the value of `factoryToUse` to the factory that you'll use to deploy your contract.
@@ -300,7 +298,9 @@ There would also be no risk of the account owner accidentally increasing the non
 
 The factory then effectively becomes a **shared public good** that nobody owns or controls, existing at the same address on all EVM-based blockchains and available for anyone to use without requiring permission. If it doesn't yet exist on a particular (e.g. future) blockchain, **anyone can deploy the factory** contract onto that blockchain, and the factory will then have the same address as on other blockchains.
 
-
+If you deploy your contracts keylessly without using a factory, the added advantage is that you won't need to safeguard the private key of the account that was used to do the deployment - even if you use a different account (or someone else performs the deployment), the contract will still be deployed to the same address. Disadvantages include:
+- higher cost, because the gas price has been intentionally set high. If you have many contracts to deploy you'd have to spend highly for each. You'd also have to fund a different address for each contract, so there would be some funds left over in each after deployment. Such remaining funds will be wasted because there is no way to recover them.
+- the contract bytecode affects the address because CREATE2 or CREATE3 aren't being used. Even slight changes to the source code will change the bytecode, resulting in a different deployment address.
 
 
 ## Future-proofing to ensure same deployment address in future
@@ -416,4 +416,3 @@ This program is free software: you can redistribute it and/or modify it under th
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License along with this program.  If not, see https://www.gnu.org/licenses/agpl-3.0.txt.
-
