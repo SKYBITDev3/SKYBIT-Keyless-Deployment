@@ -24,14 +24,14 @@ Each option will be discussed in more detail below.
 
 #### `CREATE`
 Contract addresses are calculated using the:
-* address of the creator of the contract;
-* nonce (number of transactions the creator has done).
+- address of the creator of the contract;
+- nonce (number of transactions the creator has done).
 
 #### `CREATE2`
 Contract addresses are calculated using the
-* address of the creator of the contract;
-* bytecode of the contract;
-* salt (a chosen value).
+- address of the creator of the contract;
+- bytecode of the contract;
+- salt (a chosen value).
 
 As the nonce is not required in the contract address calculation, it's possible to know the contract's address on the blockchain before it's deployed regardless of how many transactions have been done in the account.
 
@@ -39,21 +39,21 @@ As the nonce is not required in the contract address calculation, it's possible 
 CREATE3 isn't itself an EVM opcode but a method that uses `CREATE` and `CREATE2` in combination to eliminate the bytecode from contract address calculation.
 
 Internally, first `CREATE2` is used to deploy a factory or "proxy" which then uses `CREATE` to deploy your contract. So the only data required for address calculation is:
-* address of the creator of the contract;
-* salt (a chosen value).
+- address of the creator of the contract;
+- salt (a chosen value).
 
 You then won't have to worry about accidentally making changes to your contracts (which would cause a different deployment address if you used CREATE2).
 
 It also makes it possible to:
-* Deploy your contract with updated code / using newer compiler on a new blockchain that will have the same address as the older version that had already been deployed on other blockchains;
-* use different constructor arguments on different blockchains.
+- Deploy your contract with updated code / using newer compiler on a new blockchain that will have the same address as the older version that had already been deployed on other blockchains;
+- use different constructor arguments on different blockchains.
 
 <hr/>
 
 ### CREATE3 factory choices
 This tool offers signed raw deployment transactions of unmodified CREATE3 factories from:
-* Axelar
-* ZeframLou
+- Axelar
+- ZeframLou
 
 More choices may be offered in future.
 
@@ -68,12 +68,12 @@ Axelar's factory contract `Create3Deployer.sol` has an additional function:
 deployAndInit(bytes memory bytecode, bytes32 salt, bytes calldata init)
 ```
 which calls a function called `init` in your contract just after it's deployed. This can be used in addition to a constructor, or in place of a constructor (particularly if you are deploying an upgradeable contract, as 
-upgradeable contracts don't use constructors). If you intend to use `deployAndInit` then make sure that your contract does have a function called `init` (and e.g. not `initialize` as is shown in OpenZeppelin's examples).
+upgradeable contracts may not use constructors). If you intend to use `deployAndInit` then make sure that your contract does have a function called `init` (and e.g. not `initialize` as is shown in OpenZeppelin's examples).
 
 The exact GitHub commited files used are:
-* https://github.com/axelarnetwork/axelar-gmp-sdk-solidity/blob/fec8f32aafe34352f315e6852b6c7d95098cef59/contracts/deploy/Create3.sol
-* https://github.com/axelarnetwork/axelar-gmp-sdk-solidity/blob/fec8f32aafe34352f315e6852b6c7d95098cef59/contracts/deploy/Create3Deployer.sol
-* https://github.com/axelarnetwork/axelar-gmp-sdk-solidity/blob/9cb3477d634c66c0fbf074e550bc721572e1cbd9/contracts/utils/ContractAddress.sol
+- https://github.com/axelarnetwork/axelar-gmp-sdk-solidity/blob/fec8f32aafe34352f315e6852b6c7d95098cef59/contracts/deploy/Create3.sol
+- https://github.com/axelarnetwork/axelar-gmp-sdk-solidity/blob/fec8f32aafe34352f315e6852b6c7d95098cef59/contracts/deploy/Create3Deployer.sol
+- https://github.com/axelarnetwork/axelar-gmp-sdk-solidity/blob/9cb3477d634c66c0fbf074e550bc721572e1cbd9/contracts/utils/ContractAddress.sol
 
 Gas used for the deployment is 651,262 (or a little more for some blockchains), so gas limit in this deployment transaction has been set to 900,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.09 of native currency at the signer's address before factory deployment.
 
@@ -86,10 +86,10 @@ Axelar's factory contract will be deployed to this address (if the transaction d
 ZeframLou's factory was included because it's well-known, as is the solmate CREATE3 library that it imports.
 
 The exact GitHub commited files used are:
-* https://github.com/ZeframLou/create3-factory/blob/18cfad8d118b25a5092cdfed6bea9c932ca5b6eb/src/CREATE3Factory.sol
-* https://github.com/ZeframLou/create3-factory/blob/18cfad8d118b25a5092cdfed6bea9c932ca5b6eb/src/ICREATE3Factory.sol
-* https://github.com/transmissions11/solmate/blob/f2833c7cc951c50e0b5fd7e505571fddc10c8f77/src/utils/CREATE3.sol
-* https://github.com/transmissions11/solmate/blob/34d20fc027fe8d50da71428687024a29dc01748b/src/utils/Bytes32AddressLib.sol
+- https://github.com/ZeframLou/create3-factory/blob/18cfad8d118b25a5092cdfed6bea9c932ca5b6eb/src/CREATE3Factory.sol
+- https://github.com/ZeframLou/create3-factory/blob/18cfad8d118b25a5092cdfed6bea9c932ca5b6eb/src/ICREATE3Factory.sol
+- https://github.com/transmissions11/solmate/blob/f2833c7cc951c50e0b5fd7e505571fddc10c8f77/src/utils/CREATE3.sol
+- https://github.com/transmissions11/solmate/blob/34d20fc027fe8d50da71428687024a29dc01748b/src/utils/Bytes32AddressLib.sol
 
 Gas used for the deployment is 394,439 (or a little more for some blockchains), so gas limit in this deployment transaction has been set to 500,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.05 of native currency at the signer's address before factory deployment.
 
@@ -258,10 +258,10 @@ If you used such a factory to deploy your contracts on some blockchains, then if
 Also, if he does try factory deployment and it fails, his account nonce may increase. The nonce can also increase if he made some other transaction in the account before. With a different nonce, it'd no longer be possible to deploy the factory contract to the same address, which would mean that you'd no longer be able to deploy your contracts to the same address as on the other blockchains that you had deployed onto before.
 
 So with this path you become **dependent on the person** or organization who had originally deployed the factory contract, hoping that:
-* they agree to deploy the factory to your desired blockchain;
-* they don't change any of the originally deployed factory contract code or compilation settings, either intentionally or accidentally (as otherwise the bytecode will change, resulting in a different address);
-* they do the factory deployment transaction properly such that it doesn't fail (which may increase nonce);
-* the nonce doesn't increase due to a transaction happening (either intentionally or unintentionally (it has actually happened before - see details below)) in the account before the factory deployment.
+- they agree to deploy the factory to your desired blockchain;
+- they don't change any of the originally deployed factory contract code or compilation settings, either intentionally or accidentally (as otherwise the bytecode will change, resulting in a different address);
+- they do the factory deployment transaction properly such that it doesn't fail (which may increase nonce);
+- the nonce doesn't increase due to a transaction happening (either intentionally or unintentionally (it has actually happened before - see details below)) in the account before the factory deployment.
 
 
 ### Deploying a factory yourself normally (not keylessly)
@@ -285,8 +285,8 @@ There are some CREATE2 factories already deployed on various blockchains. Using 
 The factories from them have been deployed on many blockchains and are ready to use by anyone. But they face the same problems as described in [Using an existing factory that wasn't deployed keylessly](#using-an-existing-factory-that-wasn't-deployed-keylessly) - you become dependent on the person or organization that deployed the factory. e.g. they may not agree to deploy their factories to your desired new blockchain, or their nonce in their account on a particular blockchain may increase due to a transaction before factory deployment, which actually happened with xdeployer - **the factory can no longer be deployed on Base to the same address as on other blockchains**: https://github.com/pcaversaccio/xdeployer/issues/164.
 
 A much better offering is Arachnid's or Zoltu's [Deterministic Deployment Proxy](https://github.com/Arachnid/deterministic-deployment-proxy) as it offers a reusable signed raw deployment transaction, so anyone can deploy the CREATE2 factory and it will have the same address as on other blockchains. So you can deploy it yourself to any EVM-based blockchain (if it hasn't already been deployed by somoeone else) instead of asking Arachnid or Zoltu to do it for you. After you've deployed the CREATE2 factory contract (or if it already exists), you can then use it to deploy a CREATE3 factory contract. Arachnid or Zoltu deserves a lot of credit for their innovative work, but issues include:
-* It assumes that you use linux, docker and geth; you'd need to make many changes if you don't use those;
-* If the CREATE2 factory doesn't already exist on a new blockchain onto which you want to deploy your contracts, you'd have to deploy the CREATE2 factory first, then the CREATE3 factory, then the contracts you wanted to deploy. i.e. deploying the CREATE2 factory would be a first extra step.
+- It assumes that you use linux, docker and geth; you'd need to make many changes if you don't use those;
+- If the CREATE2 factory doesn't already exist on a new blockchain onto which you want to deploy your contracts, you'd have to deploy the CREATE2 factory first, then the CREATE3 factory, then the contracts you wanted to deploy. i.e. deploying the CREATE2 factory would be a first extra step.
 
 ## Solution and advantages
 Our scripts offer something similar to Arachnid's or Zoltu's "Deterministic Deployment Proxy" but for CREATE3. The script `deployKeylessly-Create3Factory.js` creates a serialized signed deployment transaction and broadcasts it to the blockchain. The result is a CREATE3 factory contract deployed to an expected address. If that's repeated by you or anyone else on other blockchains, the factory contract will have the same address on those too (as long as the transaction data wasn't changed). You can then run your customized copy of `deployViaCREATE3-TESTERC20.js` to deploy your contracts.
@@ -300,24 +300,25 @@ The factory then effectively becomes a **shared public good** that nobody owns o
 
 If you deploy your contracts keylessly without using a factory, the added advantage is that you won't need to safeguard the private key of the account that was used to do the deployment - even if you use a different account (or someone else performs the deployment), the contract will still be deployed to the same address. Disadvantages include:
 - higher cost, because the gas price has been intentionally set high. If you have many contracts to deploy you'd have to spend highly for each. You'd also have to fund a different address for each contract, so there would be some funds left over in each after deployment. Such remaining funds will be wasted because there is no way to recover them.
-- the contract bytecode affects the address because CREATE2 or CREATE3 aren't being used. Even slight changes to the source code will change the bytecode, resulting in a different deployment address.
+- the contract bytecode affects the address because CREATE2 or CREATE3 aren't being used. Even slight changes to the source code or constructor argument values will change the bytecode, resulting in a different deployment address.
 
 
 ## Future-proofing to ensure same deployment address in future
 Innovation will never stop and new blockchains with useful features are likely to continue to arise as time goes by. So you would want to be able to add support in your ecosystem for any amazing new and popular blockchains that appear, **possibly years into the future**. What can you do now to ensure that your contract is likely to have the same address on those blockchains as on the other blockchains that you support?
 
 Factors that can generally influence the deployment address of a contract include:
-* Contract code, including spaces and comments;
-* Compiler settings including:
-	* Solidity version;
-	* evmVersion;
-	* Whether optimizer is enabled;
-	* Number of optimizer runs if optimizer is enabled;
-* Address of the account signing the transaction;
-* Nonce of the account signing the transaction;
-* Address of the factory contract being used to deploy the contract;
-* Address of the account that uses the factory;
-* The salt that you set when using a factory.
+- Contract code, including spaces and comments;
+- Constructor argument values;
+- Compiler settings including:
+	- Solidity version;
+	- evmVersion;
+	- Whether optimizer is enabled;
+	- Number of optimizer runs if optimizer is enabled;
+- Address of the account signing the transaction;
+- Nonce of the account signing the transaction;
+- Address of the factory contract being used to deploy the contract;
+- Address of the account that uses the factory;
+- The salt that you set when using a factory.
 
 By using keyless deployment and / or keylessly-deployed CREATE2 or CREATE3 factories, some of these factors in this general list are eliminated, e.g. nonce. CREATE3 factories in particular eliminate the contract code factor, as the bytecode is no longer used in the calculation of the address.
 
@@ -329,7 +330,7 @@ The factory contract code from third parties have not been modified at all, and 
 
 For your contracts that you want to deploy using a CREATE3 factory, there's no need to use `artifacts-saved` because bytecode isn't used for address calculation in CREATE3, so even after changes in the code the deployment address will remain the same. But you should still keep the many other factors (e.g. compiler version and settings) unchanged.
 
-For your contracts that you deploy keylessly without a factory, you need to ensure that the code and environment are unchanged, unless your contract is upgradeable, in which case you only need to ensure that the environment and proxy contract are unchanged, as it's the address of the proxy contract that needs to be maintained.
+For your contracts that you deploy keylessly without a factory, you need to ensure that the code, constructor argument values, and environment are unchanged.
 
 
 ## Issues to be aware of
