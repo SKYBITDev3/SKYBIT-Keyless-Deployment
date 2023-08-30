@@ -1,3 +1,4 @@
+
 # SKYBIT Keyless Deployment of Smart Contracts
 ## Introduction
 This tool is for anyone who wants to **deploy smart contracts to the same address** on multiple Ethereum-Virtual-Machine (EVM)-based blockchains. There are many ways to achieve this, but there can be pitfalls depending on which path you take (see the section [Problems that this tool solves](#problems-that-this-tool-solves) for details). It's important to consider your options before you start any deployments to a live blockchain, as it'd be **difficult to switch later** after realizing that you had made a bad decision, especially if many users are already using the contracts that you had deployed.
@@ -54,8 +55,7 @@ It also makes it possible to:
 This repository offers signed raw deployment transactions of unmodified CREATE3 factories from:
 - Axelar
 - ZeframLou & transmissions11/solmate
-
-More choices may be offered in future.
+- SKYBIT & Vectorized/solady
 
 Gas price in the deployment transaction has been set to 100 Gwei = 10<sup>-7</sup> native currency of the blockchain. This is a high value for most blockchains but it's to ensure that the contract will be deployable.
 
@@ -82,11 +82,11 @@ Axelar's factory contract will be deployed to this address (if the transaction d
 #### ZeframLou & transmissions11/solmate
 ZeframLou's factory was included because it's well-known, as is the solmate CREATE3 library that it imports.
 
-The original solidity files were obtained by firstly adding the specific github repository commits:
+The original solidity files were obtained by firstly adding the specific github repository commits to `package.json`:
 - https://github.com/ZeframLou/create3-factory#18cfad8d118b25a5092cdfed6bea9c932ca5b6eb
 - https://github.com/transmissions11/solmate#f2833c7cc951c50e0b5fd7e505571fddc10c8f77
 
-`@ZeframLou/create3-factory/src/CREATE3Factory.sol` is imported in `contracts/Imports.sol`. The `solmate/utils` directory is copied from `node_modules` to the repository root so that compilation would run without needing to change the line `import {CREATE3} from "solmate/utils/CREATE3.sol";` in the original factory contract. Hardhat then compiles it and places the artifacts in `artifacts` directory. `CREATE3Factory.json` was then copied to `artifacts-saved/@ZeframLou/create3-factory/src/CREATE3Factory.sol/CREATE3Factory.json/` directory for preservation.
+`@ZeframLou/create3-factory/src/CREATE3Factory.sol` is imported in `contracts/Imports.sol`. The `solmate/utils` directory is copied from `node_modules` to the repository root so that compilation would run without needing to change the line `import {CREATE3} from "solmate/utils/CREATE3.sol";` in the original factory contract. Hardhat then compiles it and places the artifacts in `artifacts` directory. `CREATE3Factory.json` was then copied to `artifacts-saved/@ZeframLou/create3-factory/src/CREATE3Factory.sol/` directory for preservation.
 
 Gas used for the deployment is 394,439 (or a little more for some blockchains), so gas limit in this deployment transaction has been set to 500,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.05 of native currency at the signer's address before factory deployment.
 
@@ -95,6 +95,19 @@ ZeframLou's factory contract will be deployed to this address (if the transactio
 0xb3cBfCf8ad9eeccE068D8704C9316f38F6cC54b3
 ```
 
+#### SKYBIT & Vectorized/solady
+The Vectorized/solady CREATE3 library has been included because it is gas-efficient. A factory contract is needed to use the library so a new one was created based on ZeframLou's factory.
+
+The original Vectorized/solady CREATE3 solidity file was obtained by firstly adding the specific github repository commit to `package.json`:
+https://github.com/Vectorized/solady#03f3fd05fb1da76edc4df83ae6bf32a842c15f12
+`contracts\SKYBITCREATE3Factory.sol` imports `{CREATE3} from "@Vectorized/solady/src/utils/CREATE3.sol";`. Hardhat then compiles it and places the artifacts in `artifacts` directory. `SKYBITCREATE3Factory.json` was then copied to `artifacts-saved/contracts/SKYBITCREATE3Factory.sol/` directory for preservation.
+
+Gas used for the deployment is 253,282 (or a little more for some blockchains), so gas limit in this deployment transaction has been set to 400,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.05 of native currency at the signer's address before factory deployment.
+
+The SKYBIT factory contract will be deployed to this address (if the transaction data is unchanged):
+```
+0x03b2761e6f97b72349686728cb5fF7C565BF7db4
+```
 
 ### Usage
 Other people may have already deployed the factory contract onto some of your desired blockchains to the expected address (if they didn't change the deployment transaction data), in which case you won't need to deploy it on those blockchains - you can then just use those already-deployed factory contracts to deploy whatever other contracts you want to deploy. So first check the expected address on a blockchain explorer to see if a factory contract already exists there.

@@ -2,6 +2,10 @@
 # yarn lockfile v1
 
 
+"@Vectorized/solady@https://github.com/Vectorized/solady#03f3fd05fb1da76edc4df83ae6bf32a842c15f12":
+  version "0.0.105"
+  resolved "https://github.com/Vectorized/solady#03f3fd05fb1da76edc4df83ae6bf32a842c15f12"
+
 "@ZeframLou/create3-factory@https://github.com/ZeframLou/create3-factory#18cfad8d118b25a5092cdfed6bea9c932ca5b6eb":
   version "0.0.0"
   resolved "https://github.com/ZeframLou/create3-factory#18cfad8d118b25a5092cdfed6bea9c932ca5b6eb"
