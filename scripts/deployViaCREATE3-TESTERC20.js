@@ -1,10 +1,13 @@
-// CHOOSE WHICH FACTORY YOU WANT TO USE: "axelarnetwork" or "ZeframLou"
+// CHOOSE WHICH FACTORY YOU WANT TO USE: "axelarnetwork", "ZeframLou" or "SKYBIT"
 const factoryToUse = "axelarnetwork"
-// const factoryToUse = "ZeframLou"
+const addressOfFactory = "0xd63cd4CA70b137399cF4d3ec034117fCb9D7365b" // gas cost: 2248784
 
-// WRITE THE ADDRESS OF THE FACTORY CONTRACT HERE
-const addressOfFactory = "0xd63cd4CA70b137399cF4d3ec034117fCb9D7365b" // axelarnetwork
-// const addressOfFactory = "0xb3cBfCf8ad9eeccE068D8704C9316f38F6cC54b3" // ZeframLou
+// const factoryToUse = "ZeframLou"
+// const addressOfFactory = "0xb3cBfCf8ad9eeccE068D8704C9316f38F6cC54b3" // gas cost: 2169509
+
+// const factoryToUse = "SKYBIT"
+// const addressOfFactory = "0x03b2761e6f97b72349686728cb5fF7C565BF7db4" // gas cost: 2140281
+
 
 // PASS YOUR OWN STRING HERE TO GENERATE A UNIQUE SALT. After doing your first production deployment, don't change it in order to have same address on other blockchains.
 const salt = ethers.encodeBytes32String("SKYBIT.ASIA TESTERC20..........")

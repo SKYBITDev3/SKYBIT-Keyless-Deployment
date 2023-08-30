@@ -15,7 +15,9 @@ const fundTransactionSigner = async (gasPrice, gasLimit, derivedAddressOfSigner,
         const anwser = readlineSync.question(`Do you want to try to transfer ${ethers.formatUnits(shortfall, "ether")} of native currency from your wallet ${wallet.address} to there now (y/n)? `)
         if (["y", "Y"].includes(anwser)) {
           console.log(`Transferring ${ethers.formatUnits(shortfall, "ether")} of native currency from ${wallet.address} to ${derivedAddressOfSigner} on ${network.name}...`)
-          let txRec = await wallet.sendTransaction({ to: derivedAddressOfSigner, value: shortfall })
+          feeData = await ethers.provider.getFeeData()
+          delete feeData.gasPrice
+          let txRec = await wallet.sendTransaction({ to: derivedAddressOfSigner, value: shortfall, ...feeData })
           await txRec.wait(1)
           balanceOfSigner = await ethers.provider.getBalance(derivedAddressOfSigner)
           console.log(`${derivedAddressOfSigner} now has ${ethers.formatUnits(balanceOfSigner, "ether")} of native currency`)
@@ -104,7 +106,7 @@ const deployKeylessly = async (contractName, bytecodeWithArgs, gasLimit, wallet,
 
   if (await ethers.provider.getCode(addressExpected) !== "0x") {
     console.log(`The contract already exists at ${addressExpected}.`)
-    return
+    return addressExpected
   }
 
   const txSignedSerializedHash = ethers.keccak256(txSignedSerialized)
@@ -121,6 +123,7 @@ const deployKeylessly = async (contractName, bytecodeWithArgs, gasLimit, wallet,
     console.log(`Deploying ${contractName} contract by broadcasting signed raw transaction to ${network.name}...`)
     // const txHash = await ethers.provider.send("eth_sendRawTransaction", [txSignedSerialized])    
     const txReceipt = await ethers.provider.broadcastTransaction(txSignedSerialized)
+    await txReceipt.wait()
 
     if (await ethers.provider.getCode(addressExpected) !== "0x") console.log(`${contractName} contract was successfully deployed to ${addressExpected} in transaction ${txReceipt.hash}`)
   }

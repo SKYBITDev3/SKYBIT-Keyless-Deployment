@@ -1,8 +1,14 @@
 // implementation deployed normally, proxy deployed via CREATE3
 
-// CHOOSE WHICH FACTORY YOU WANT TO USE: "axelarnetwork" or "ZeframLou"
-const factoryToUse = "axelarnetwork"
+// CHOOSE WHICH FACTORY YOU WANT TO USE: "axelarnetwork", "ZeframLou" or "SKYBIT"
+// const factoryToUse = "axelarnetwork"
+// const addressOfFactory = "0xd63cd4CA70b137399cF4d3ec034117fCb9D7365b"
+
 // const factoryToUse = "ZeframLou"
+// const addressOfFactory = "0xb3cBfCf8ad9eeccE068D8704C9316f38F6cC54b3"
+
+const factoryToUse = "SKYBIT"
+const addressOfFactory = "0x03b2761e6f97b72349686728cb5fF7C565BF7db4"
 
 const isDeployEnabled = true // toggle in case you do deployment and verification separately.
 
@@ -10,9 +16,6 @@ const isVerifyEnabled = true
 
 const useDeployProxy = false // openzeppelin's deployment script for upgradeable contracts
 const useCREATE3 = true
-
-const addressOfFactory = "0xd63cd4CA70b137399cF4d3ec034117fCb9D7365b" // axelarnetwork
-// const addressOfFactory = "0xb3cBfCf8ad9eeccE068D8704C9316f38F6cC54b3" // ZeframLou
 
 const salt = ethers.encodeBytes32String("SKYBIT.ASIA TESTERC20UGV1......") // 31 characters that you choose
 

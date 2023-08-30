@@ -1,9 +1,8 @@
-
 # SKYBIT Keyless Deployment of Smart Contracts
 ## Introduction
 This tool is for anyone who wants to **deploy smart contracts to the same address** on multiple Ethereum-Virtual-Machine (EVM)-based blockchains. There are many ways to achieve this, but there can be pitfalls depending on which path you take (see the section [Problems that this tool solves](#problems-that-this-tool-solves) for details). It's important to consider your options before you start any deployments to a live blockchain, as it'd be **difficult to switch later** after realizing that you had made a bad decision, especially if many users are already using the contracts that you had deployed.
 
-This repository offers scripts to perform *keyless* smart contract deployment, in which a contract is deployed from a **single-use account** that nobody owns and whose **private keys are unknown and not needed**. Regardless of who does the deployment, as long as the transaction data remains the same, the contract will always get the same address on any EVM blockchain.
+This repository offers scripts to perform *keyless* smart contract deployment, in which a contract is deployed from a **single-use account** that nobody owns and whose **private keys are unknown and not needed**. Regardless of who does the deployment, as long as the transaction data remains the same, the contract will always get the same address on any EVM blockchain. This method is described in the [ERC-1820: Pseudo-introspection Registry Contract](https://eips.ethereum.org/EIPS/eip-1820#deployment-method) Ethereum standard in which the registry contract is deployed to an expected predetermined address.
 
 The two main options of using keyless deployment are:
 - Use a factory contract that had been deployed keylessly to deploy your contracts;
@@ -286,7 +285,7 @@ A much better offering is Arachnid's or Zoltu's [Deterministic Deployment Proxy]
 - If the CREATE2 factory doesn't already exist on a new blockchain onto which you want to deploy your contracts, you'd have to deploy the CREATE2 factory first, then the CREATE3 factory, then the contracts you wanted to deploy. i.e. deploying the CREATE2 factory would be a first extra step.
 
 ## Solution and advantages
-Our scripts offer something similar to Arachnid's or Zoltu's "Deterministic Deployment Proxy" but for CREATE3. The script `deployKeylessly-Create3Factory.js` creates a serialized signed deployment transaction and broadcasts it to the blockchain. The result is a CREATE3 factory contract deployed to an expected address. If that's repeated by you or anyone else on other blockchains, the factory contract will have the same address on those too (as long as the transaction data wasn't changed). You can then run your customized copy of `deployViaCREATE3-TESTERC20.js` to deploy your contracts.
+The script `deployKeylessly-Create3Factory.js` creates a serialized, signed and keyless deployment transaction and broadcasts it to the blockchain. The result is a CREATE3 factory contract deployed to an expected address. If that's repeated by you or anyone else on other blockchains, the factory contract will have the same address on those too (as long as the transaction data wasn't changed). You can then run your customized copy of `deployViaCREATE3-TESTERC20.js` to deploy your contracts to consistent addresses.
 
 ### How it works
 Rather than generating a signature from the signer as is normal in most blockchain transactions, we start with a constant human-generated signature then cryptographically *derive* the signer's address (this will be the "from" address in the factory deployment transaction). **Nobody knows the private key** for this address, so any funds sent to the address can only ever be used to pay gas for processing the associated one-time factory deployment transaction.
@@ -327,7 +326,7 @@ In our scripts, compilation artifacts of contracts are retrieved from `artifacts
 
 If newer versions of factory contract code from third parties become available, a new release of this repository would be published on GitHub with updated version number. **Newer releases may not produce the same addresses** as prior releases due to different code, so if you ever do need to re-download the repository then instead of downloading the latest version, download the exact version that you had used before for production deployments via the releases page at https://github.com/SKYBITDev3/SKYBIT-Keyless-Deployment/releases.
 
-For your contracts that you want to deploy using a CREATE3 factory, there's no need to use `artifacts-saved` because bytecode isn't used for address calculation in CREATE3, so even after changes in the code or contructor arguments the deployment address will remain the same. But you should still keep the many other factors (e.g. compiler version and settings) unchanged.
+For your contracts that you want to deploy using a CREATE3 factory, there's no need to use `artifacts-saved` because bytecode isn't used for address calculation in CREATE3, so even after changes in the code or constructor arguments the deployment address will remain the same. But you should still keep the many other factors (e.g. compiler version and settings) unchanged.
 
 For your contracts that you deploy keylessly *without* a factory, you need to ensure that the code, constructor arguments, and environment are unchanged.
 

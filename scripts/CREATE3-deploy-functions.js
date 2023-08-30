@@ -44,8 +44,11 @@ const getArtifactOfFactory = (factoryToUse) => {
       pathToArtifact = `artifacts-saved/@ZeframLou/create3-factory/src/CREATE3Factory.sol/CREATE3Factory.json`
       break
     case "axelarnetwork":
-    default:
       pathToArtifact = `artifacts-saved/@axelar-network/axelar-gmp-sdk-solidity/contracts/deploy/Create3Deployer.sol/Create3Deployer.json`
+      break
+    case "SKYBIT":
+    default:
+      pathToArtifact = `artifacts-saved/contracts/SKYBITCREATE3Factory.sol/SKYBITCREATE3Factory.json`
   }
   const { rootRequire } = require("./utils") // using saved artifact instead of the automatically created one}
   return rootRequire(pathToArtifact)
@@ -53,34 +56,37 @@ const getArtifactOfFactory = (factoryToUse) => {
 
 const getDeployedAddress = async (factoryToUse, instanceOfFactory, bytecode, walletAddress, salt) => {
   switch (factoryToUse) {
-    case "ZeframLou":
-      return await instanceOfFactory.getDeployed(walletAddress, salt)
-      break
     case "axelarnetwork":
-    default:
       return await instanceOfFactory.deployedAddress(bytecode, walletAddress, salt)
+      break
+    case "SKYBIT":
+    case "ZeframLou":
+    default:
+      return await instanceOfFactory.getDeployed(walletAddress, salt)
   }
 }
 
 const getGasEstimate = async (factoryToUse, instanceOfFactory, bytecodeWithArgs, salt) => {
   switch (factoryToUse) {
-    case "ZeframLou":
-      return await instanceOfFactory.deploy.estimateGas(salt, bytecodeWithArgs)
-      break
     case "axelarnetwork":
-    default:
       return await instanceOfFactory.deploy.estimateGas(bytecodeWithArgs, salt)
+      break
+    case "SKYBIT":
+    case "ZeframLou":
+    default:
+      return await instanceOfFactory.deploy.estimateGas(salt, bytecodeWithArgs)
   }
 }
 
 const deploy = async (factoryToUse, instanceOfFactory, bytecodeWithArgs, salt) => {
   switch (factoryToUse) {
-    case "ZeframLou":
-      return await instanceOfFactory.deploy(salt, bytecodeWithArgs)
-      break
     case "axelarnetwork":
-    default:
       return await instanceOfFactory.deploy(bytecodeWithArgs, salt)
+      break
+    case "SKYBIT":
+    case "ZeframLou":
+    default:
+      return await instanceOfFactory.deploy(salt, bytecodeWithArgs)
   }
 }
 
