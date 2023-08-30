@@ -1,7 +1,10 @@
 {
   "name": "SKYBIT-Keyless-Deployment",
+  "version": "2.1.0",
   "packageManager": "yarn@3.6.1",
   "devDependencies": {
+    "@ZeframLou/create3-factory": "https://github.com/ZeframLou/create3-factory#18cfad8d118b25a5092cdfed6bea9c932ca5b6eb",
+    "@axelar-network/axelar-gmp-sdk-solidity": "^5.2.0",
     "@nomicfoundation/ethereumjs-trie": "^6.0.2",
     "@nomicfoundation/ethereumjs-util": "^9.0.2",
     "@nomicfoundation/hardhat-chai-matchers": "2.0.2",
@@ -12,9 +15,10 @@
     "@openzeppelin/contracts": "^4.9.3",
     "@openzeppelin/contracts-upgradeable": "^4.9.3",
     "@openzeppelin/hardhat-upgrades": "^2.2.1",
+    "@transmissions11/solmate": "https://github.com/transmissions11/solmate#f2833c7cc951c50e0b5fd7e505571fddc10c8f77",
     "@typechain/ethers-v6": "^0.5.0",
     "@typechain/hardhat": "^9.0.0",
-    "@wagmi/chains": "^1.7.0",
+    "@wagmi/chains": "^1.8.0",
     "axios": "^1.5.0",
     "chai": "^4.3.8",
     "dotenv": "^16.3.1",

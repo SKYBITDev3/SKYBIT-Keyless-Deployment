@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "ICREATE3Factory",
-  "sourceName": "contracts/ZeframLou/create3-factory/ICREATE3Factory.sol",
+  "sourceName": "@ZeframLou/create3-factory/src/ICREATE3Factory.sol",
   "abi": [
     {
       "inputs": [

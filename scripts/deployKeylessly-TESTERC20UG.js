@@ -1,4 +1,4 @@
-// Both implementation and proxy deployed keylessly
+// Both implementation and proxy deployed keylessly. If you've already deployed the proxy contract and then change your contract source code or constructor arguments then don't run this script again, otherwise a new proxy contract will be deployed. Instead you should run upgrade.
 
 let isDeployEnabled = true // set to false initially to get gas cost or if you've already deployed and need to do verification on explorer.
 
@@ -29,7 +29,7 @@ async function main() {
   const cfToken = await ethers.getContractFactory(artifactOfContractToDeploy.abi, artifactOfContractToDeploy.bytecode)
   const bytecodeWithArgs = (await cfToken.getDeployTransaction()).data // no contructor args
 
-  const implAddress = await deployKeylessly(contractName, bytecodeWithArgs, gasLimitForImpl, wallet)
+  const implAddress = await deployKeylessly(contractName, bytecodeWithArgs, gasLimitForImpl, wallet, isDeployEnabled)
   if (implAddress === undefined) return
 
   const proxyContractName = "ERC1967Proxy"
@@ -40,7 +40,7 @@ async function main() {
 
   const proxyBytecodeWithArgs = (await cfProxy.getDeployTransaction(...proxyConstructorArgs)).data
 
-  const proxyAddress = await deployKeylessly(proxyContractName, proxyBytecodeWithArgs, gasLimitForProxy, wallet)
+  const proxyAddress = await deployKeylessly(proxyContractName, proxyBytecodeWithArgs, gasLimitForProxy, wallet, isDeployEnabled)
 
   if (isDeployEnabled) proxy = await upgrades.forceImport(proxyAddress, cfToken)
 

@@ -29,7 +29,7 @@ async function main() {
   const cfToken = await ethers.getContractFactory(artifactOfContractToDeploy.abi, artifactOfContractToDeploy.bytecode)
   const bytecodeWithArgs = (await cfToken.getDeployTransaction(...constructorArgs)).data
 
-  const address = await deployKeylessly(contractName, bytecodeWithArgs, gasLimitForImpl, wallet)
+  const address = await deployKeylessly(contractName, bytecodeWithArgs, gasLimit, wallet, isDeployEnabled)
 
 
   // VERIFY ON BLOCKCHAIN EXPLORER

@@ -2,6 +2,10 @@
 # yarn lockfile v1
 
 
+"@ZeframLou/create3-factory@https://github.com/ZeframLou/create3-factory#18cfad8d118b25a5092cdfed6bea9c932ca5b6eb":
+  version "0.0.0"
+  resolved "https://github.com/ZeframLou/create3-factory#18cfad8d118b25a5092cdfed6bea9c932ca5b6eb"
+
 "@adraffy/ens-normalize@1.9.2":
   version "1.9.2"
   resolved "https://registry.yarnpkg.com/@adraffy/ens-normalize/-/ens-normalize-1.9.2.tgz#60111a5d9db45b2e5cbb6231b0bb8d97e8659316"
@@ -39,6 +43,11 @@
   integrity sha512-UvFa/vR+e19XookZF8RzFZBrw2EUkQWxiBW0yYQAhvk3C+QVGl0H3ouca8LDBlBfQKXwmW3huo/59H8rwb1wJw==
   dependencies:
     tslib "^2.3.1"
+
+"@axelar-network/axelar-gmp-sdk-solidity@^5.2.0":
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/@axelar-network/axelar-gmp-sdk-solidity/-/axelar-gmp-sdk-solidity-5.2.0.tgz#0d588a596eb50f624952bc24bc3dcb53994623d1"
+  integrity sha512-x7i5BiucCDjZY38J2f9YH54Et7JmcOlhpxCYlIWsDyp+1XcwlPa+DcmIWs6P1TE29xCwVLhbwT/eCuDoo2S8Qg==
 
 "@chainsafe/as-sha256@^0.3.1":
   version "0.3.1"
@@ -936,6 +945,10 @@
   dependencies:
     antlr4ts "^0.5.0-alpha.4"
 
+"@transmissions11/solmate@https://github.com/transmissions11/solmate#f2833c7cc951c50e0b5fd7e505571fddc10c8f77":
+  version "6.6.2"
+  resolved "https://github.com/transmissions11/solmate#f2833c7cc951c50e0b5fd7e505571fddc10c8f77"
+
 "@typechain/ethers-v6@^0.5.0":
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/@typechain/ethers-v6/-/ethers-v6-0.5.0.tgz#841a63a61272448b72dfc8f53d32d7813709ef62"
@@ -1061,10 +1074,10 @@
   dependencies:
     "@types/node" "*"
 
-"@wagmi/chains@^1.7.0":
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/@wagmi/chains/-/chains-1.7.0.tgz#8f6ad81cf867e1788417f7c978ca92bc083ecaf6"
-  integrity sha512-TKVeHv0GqP5sV1yQ8BDGYToAFezPnCexbbBpeH14x7ywi5a1dDStPffpt9x+ytE6LJWkZ6pAMs/HNWXBQ5Nqmw==
+"@wagmi/chains@^1.8.0":
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/@wagmi/chains/-/chains-1.8.0.tgz#70e5fd0d50c8f9b8e63585eaf8544481e71707d3"
+  integrity sha512-UXo0GF0Cl0+neKC2KAmVAahv8L/5rACbFRRqkDvHMefzY6Fh7yzJd8F4GaGNNG3w4hj8eUB/E3+dEpaTYDN62w==
 
 abbrev@1:
   version "1.1.1"

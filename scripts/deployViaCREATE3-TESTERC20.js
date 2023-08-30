@@ -3,7 +3,8 @@ const factoryToUse = "axelarnetwork"
 // const factoryToUse = "ZeframLou"
 
 // WRITE THE ADDRESS OF THE FACTORY CONTRACT HERE
-const addressOfFactory = "0xDd9F606e518A955Cd3800f18126DC14E54e4E995"
+const addressOfFactory = "0xd63cd4CA70b137399cF4d3ec034117fCb9D7365b" // axelarnetwork
+// const addressOfFactory = "0xb3cBfCf8ad9eeccE068D8704C9316f38F6cC54b3" // ZeframLou
 
 // PASS YOUR OWN STRING HERE TO GENERATE A UNIQUE SALT. After doing your first production deployment, don't change it in order to have same address on other blockchains.
 const salt = ethers.encodeBytes32String("SKYBIT.ASIA TESTERC20..........")
@@ -17,7 +18,7 @@ async function main() {
   // WRITE YOUR CONTRACT NAME AND CONSTRUCTOR ARGUMENTS HERE
   const tokenContractName = "TESTERC20"
   const wallet2Address = "0xEB2e452fC167b5bb948c6FC2c9215ce7F4064692"
-  const constructorArgsOfToken = [
+  const constructorArgs = [
     "Token 4628",
     "TOKEN4628",
     1000,
@@ -32,7 +33,7 @@ async function main() {
   const cfToken = await ethers.getContractFactory(tokenContractName) // No need to use artifacts-saved for your contract because with CREATE3 deployment address isn't dependent on bytecode
 
   const { CREATE3Deploy } = rootRequire("scripts/CREATE3-deploy-functions.js")
-  const deployedContract = await CREATE3Deploy(factoryToUse, addressOfFactory, cfToken, tokenContractName, constructorArgsOfToken, salt, wallet)
+  const deployedContract = await CREATE3Deploy(factoryToUse, addressOfFactory, cfToken, tokenContractName, constructorArgs, salt, wallet)
 
 
   // Testing the deployed ERC20 contract. If your contract isn't ERC20 then you can call a function other than balanceOf.
@@ -50,7 +51,7 @@ async function main() {
     const { setTimeout } = require("timers/promises")
     await setTimeout(20000)
 
-    await verifyContract(deployedContract.target, constructorArgsOfToken)
+    await verifyContract(deployedContract.target, constructorArgs)
   }
 }
 

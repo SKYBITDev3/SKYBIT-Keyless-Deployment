@@ -11,9 +11,8 @@ const isVerifyEnabled = true
 const useDeployProxy = false // openzeppelin's deployment script for upgradeable contracts
 const useCREATE3 = true
 
-
-const addressOfFactory = "0xDd9F606e518A955Cd3800f18126DC14E54e4E995"
-// const addressOfFactory = "0xFAD1A5cA55b731b512FeF5FEb19c60Ab35f3657f"
+const addressOfFactory = "0xd63cd4CA70b137399cF4d3ec034117fCb9D7365b" // axelarnetwork
+// const addressOfFactory = "0xb3cBfCf8ad9eeccE068D8704C9316f38F6cC54b3" // ZeframLou
 
 const salt = ethers.encodeBytes32String("SKYBIT.ASIA TESTERC20UGV1......") // 31 characters that you choose
 
@@ -68,7 +67,8 @@ async function main() {
       } else {
         const artifactOfFactory = getArtifactOfFactory(factoryToUse)
         const instanceOfFactory = await ethers.getContractAt(artifactOfFactory.abi, addressOfFactory)
-        proxyAddress = await getDeployedAddress(factoryToUse, instanceOfFactory, wallet.address, salt)
+        const proxyBytecodeWithArgs = (await cfProxy.getDeployTransaction(...proxyConstructorArgs)).data
+        proxyAddress = await getDeployedAddress(factoryToUse, instanceOfFactory, proxyBytecodeWithArgs, wallet.address, salt)
       }
     } else { // not using CREATE3
       proxy = await cfProxy.deploy(implAddress, initializerData)

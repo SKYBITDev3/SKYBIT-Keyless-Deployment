@@ -26,3 +26,4 @@ artifacts
 .pnp.cjs
 .pnp.loader.mjs
 *.dbg.json
+solmate

@@ -13,7 +13,7 @@ const CREATE3Deploy = async (factoryToUse, addressOfFactory, contractFactory, co
 
   console.log(`salt: ${salt}`)
 
-  const expectedAddress = await getDeployedAddress(factoryToUse, instanceOfFactory, wallet.address, salt)
+  const expectedAddress = await getDeployedAddress(factoryToUse, instanceOfFactory, bytecodeWithArgs, wallet.address, salt)
   console.log(`Expected address of ${contractToDeployName} using deployer at ${addressOfFactory}: ${expectedAddress}`)
 
 
@@ -41,24 +41,24 @@ const getArtifactOfFactory = (factoryToUse) => {
   let pathToArtifact
   switch (factoryToUse) {
     case "ZeframLou":
-      pathToArtifact = `artifacts-saved/contracts/ZeframLou/create3-factory/CREATE3Factory.sol/CREATE3Factory.json`
+      pathToArtifact = `artifacts-saved/@ZeframLou/create3-factory/src/CREATE3Factory.sol/CREATE3Factory.json`
       break
     case "axelarnetwork":
     default:
-      pathToArtifact = `artifacts-saved/contracts/axelarnetwork/axelar-gmp-sdk-solidity/deploy/Create3Deployer.sol/Create3Deployer.json`
+      pathToArtifact = `artifacts-saved/@axelar-network/axelar-gmp-sdk-solidity/contracts/deploy/Create3Deployer.sol/Create3Deployer.json`
   }
   const { rootRequire } = require("./utils") // using saved artifact instead of the automatically created one}
   return rootRequire(pathToArtifact)
 }
 
-const getDeployedAddress = async (factoryToUse, instanceOfFactory, walletAddress, salt) => {
+const getDeployedAddress = async (factoryToUse, instanceOfFactory, bytecode, walletAddress, salt) => {
   switch (factoryToUse) {
     case "ZeframLou":
       return await instanceOfFactory.getDeployed(walletAddress, salt)
       break
     case "axelarnetwork":
     default:
-      return await instanceOfFactory.deployedAddress(walletAddress, salt)
+      return await instanceOfFactory.deployedAddress(bytecode, walletAddress, salt)
   }
 }
 

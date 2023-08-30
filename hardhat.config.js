@@ -2,6 +2,8 @@ require("@nomicfoundation/hardhat-toolbox")
 require("@openzeppelin/hardhat-upgrades")
 require("dotenv").config()
 
+BigInt.prototype["toJSON"] = () => this.toString() // To prevent TypeError: Do not know how to serialize a BigInt
+
 // SET YOUR ACCOUNT HERE
 const accounts = { mnemonic: process.env.MNEMONIC || "test test test test test test test test test test test junk" }
 // const accounts = [process.env.PRIVATE_KEY0]
@@ -161,3 +163,29 @@ module.exports = {
     timeout: 60000 // 1min (default is 20s)
   }
 }
+
+// override hardhat compilation subtask
+subtask("compile:solidity:get-dependency-graph")
+  .setAction(
+    async (args, hre, runSuper) => {
+      let filePath = "node_modules/@ZeframLou/create3-factory/package.json" // to create package.json required to import solidity file for compilation
+      const fileContent = "{ \"name\": \"create3-factory\", \"version\": \"18cfad8d118b25a5092cdfed6bea9c932ca5b6eb\" }"
+
+      const fs = require("fs")
+      const path = require("path")
+      fs.writeFileSync(path.join(__dirname, filePath), fileContent)
+      // console.log(`Created ${filePath}`)
+
+      filePath = "node_modules/@transmissions11/solmate/src/utils/Bytes32AddressLib.sol" // to handle "import {CREATE3} from "solmate/utils/CREATE3.sol";"
+      fileDest = "solmate/utils/Bytes32AddressLib.sol"
+      fs.cpSync(filePath, fileDest, { recursive: true })
+      // console.log(`Copied ${filePath} to ${fileDest}`)
+
+      filePath = "node_modules/@transmissions11/solmate/src/utils/CREATE3.sol"
+      fileDest = "solmate/utils/CREATE3.sol"
+      fs.cpSync(filePath, fileDest, { recursive: true })
+      // console.log(`Copied ${filePath} to ${fileDest}`)
+
+      return await runSuper(args) // run the original subtask
+    }
+  )

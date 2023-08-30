@@ -1,10 +1,11 @@
+
 # SKYBIT Keyless Deployment of Smart Contracts
 ## Introduction
-This tool is for anyone who wants to **deploy smart contracts to the same address** on multiple Ethereum-Virtual-Machine (EVM)-based blockchains. There are many ways to achieve this, but there can be pitfalls (see the section [Problems that this tool solves](#problems-that-this-tool-solves) for details)depending on which path you take. It's important to consider your options before you start any deployments to a live blockchain, as it'd be **difficult to switch later** after realizing that you made a bad decision, especially if many users are already using the contracts that you had deployed.
+This tool is for anyone who wants to **deploy smart contracts to the same address** on multiple Ethereum-Virtual-Machine (EVM)-based blockchains. There are many ways to achieve this, but there can be pitfalls depending on which path you take (see the section [Problems that this tool solves](#problems-that-this-tool-solves) for details). It's important to consider your options before you start any deployments to a live blockchain, as it'd be **difficult to switch later** after realizing that you had made a bad decision, especially if many users are already using the contracts that you had deployed.
 
-This repository offers scripts to perform *keyless* smart contract deployment, in which a contract is deployed from an account that nobody owns and whose **private keys are unknown and not needed**. Regardless of who does the deployment, as long as the transaction data remains the same, the contract will always get the same address on any EVM blockchain.
+This repository offers scripts to perform *keyless* smart contract deployment, in which a contract is deployed from a **single-use account** that nobody owns and whose **private keys are unknown and not needed**. Regardless of who does the deployment, as long as the transaction data remains the same, the contract will always get the same address on any EVM blockchain.
 
-The 2 main options of using keyless deployment are:
+The two main options of using keyless deployment are:
 - Use a factory contract that had been deployed keylessly to deploy your contracts;
 	- If the factory contract doesn't yet exist on any blockchains that you want to use, then deploy it yourself keylessly. The factory contract will have the same address as on the other blockchains because of keyless deployment.
 	- You must use the same factory having same addresses on each blockchain in order to achieve the same addresses for your contracts across all EVM-based blockchains.
@@ -51,9 +52,9 @@ It also makes it possible to:
 <hr/>
 
 ### CREATE3 factory choices
-This tool offers signed raw deployment transactions of unmodified CREATE3 factories from:
+This repository offers signed raw deployment transactions of unmodified CREATE3 factories from:
 - Axelar
-- ZeframLou
+- ZeframLou & transmissions11/solmate
 
 More choices may be offered in future.
 
@@ -67,22 +68,24 @@ Axelar's factory contract `Create3Deployer.sol` has an additional function:
 ```solidity
 deployAndInit(bytes memory bytecode, bytes32 salt, bytes calldata init)
 ```
-which calls a function called `init` in your contract just after it's deployed. This can be used in addition to a constructor, or in place of a constructor (particularly if you are deploying an upgradeable contract, as 
-upgradeable contracts may not use constructors). If you intend to use `deployAndInit` then make sure that your contract does have a function called `init` (and e.g. not `initialize` as is shown in OpenZeppelin's examples).
+which calls a function called `init` in your contract just after it's deployed. This can be used in addition to a constructor, or in place of one (particularly if you are deploying an upgradeable contract, as 
+upgradeable contracts may not use constructors). If you intend to use `deployAndInit` then make sure that your contract does have a function called `init`.
 
 The exact GitHub commited files used are:
 - https://github.com/axelarnetwork/axelar-gmp-sdk-solidity/blob/fec8f32aafe34352f315e6852b6c7d95098cef59/contracts/deploy/Create3.sol
 - https://github.com/axelarnetwork/axelar-gmp-sdk-solidity/blob/fec8f32aafe34352f315e6852b6c7d95098cef59/contracts/deploy/Create3Deployer.sol
 - https://github.com/axelarnetwork/axelar-gmp-sdk-solidity/blob/9cb3477d634c66c0fbf074e550bc721572e1cbd9/contracts/utils/ContractAddress.sol
 
+The original solidity files were obtained by firstly adding the npm package `@axelar-network/axelar-gmp-sdk-solidity` and importing `@axelar-network/axelar-gmp-sdk-solidity/contracts/deploy/Create3Deployer.sol` in `contracts/Imports.sol`. Hardhat then compiles it and places the artifacts in `artifacts` directory. `Create3Deployer.json` was then copied to `artifacts-saved/@axelar-network/axelar-gmp-sdk-solidity/contracts/deploy/Create3Deployer.sol/` directory for preservation.
+
 Gas used for the deployment is 651,262 (or a little more for some blockchains), so gas limit in this deployment transaction has been set to 900,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.09 of native currency at the signer's address before factory deployment.
 
 Axelar's factory contract will be deployed to this address (if the transaction data is unchanged):
 ```
-0xDd9F606e518A955Cd3800f18126DC14E54e4E995
+0xd63cd4CA70b137399cF4d3ec034117fCb9D7365b
 ```
 
-#### ZeframLou
+#### ZeframLou & transmissions11/solmate
 ZeframLou's factory was included because it's well-known, as is the solmate CREATE3 library that it imports.
 
 The exact GitHub commited files used are:
@@ -91,13 +94,17 @@ The exact GitHub commited files used are:
 - https://github.com/transmissions11/solmate/blob/f2833c7cc951c50e0b5fd7e505571fddc10c8f77/src/utils/CREATE3.sol
 - https://github.com/transmissions11/solmate/blob/34d20fc027fe8d50da71428687024a29dc01748b/src/utils/Bytes32AddressLib.sol
 
-Gas used for the deployment is 394,439 (or a little more for some blockchains), so gas limit in this deployment transaction has been set to 500,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.05 of native currency at the signer's address before factory deployment.
+The original solidity files were obtained by firstly adding the specific github repository commits:
+- https://github.com/ZeframLou/create3-factory#18cfad8d118b25a5092cdfed6bea9c932ca5b6eb
+- https://github.com/transmissions11/solmate#f2833c7cc951c50e0b5fd7e505571fddc10c8f77
 
-The `solmate` directory has been placed in the repository root instead of under `contracts` so that `contracts\ZeframLou\create3-factory\CREATE3Factory.sol` can compile successfully without needing to change the line `import {CREATE3} from "solmate/utils/CREATE3.sol";`.
+`@ZeframLou/create3-factory/src/CREATE3Factory.sol` is imported in `contracts/Imports.sol`. The `solmate/utils` directory is copied from `node_modules` to the repository root so that compilation would run without needing to change the line `import {CREATE3} from "solmate/utils/CREATE3.sol";` in the original factory contract. Hardhat then compiles it and places the artifacts in `artifacts` directory. `CREATE3Factory.json` was then copied to `artifacts-saved/@ZeframLou/create3-factory/src/CREATE3Factory.sol/CREATE3Factory.json/` directory for preservation.
+
+Gas used for the deployment is 394,439 (or a little more for some blockchains), so gas limit in this deployment transaction has been set to 500,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.05 of native currency at the signer's address before factory deployment.
 
 ZeframLou's factory contract will be deployed to this address (if the transaction data is unchanged):
 ```
-0xFAD1A5cA55b731b512FeF5FEb19c60Ab35f3657f
+0xb3cBfCf8ad9eeccE068D8704C9316f38F6cC54b3
 ```
 
 
@@ -237,9 +244,10 @@ yarn hardhat run --network polygonZkEvmTestnet scripts/deployViaCREATE3-[contrac
 
 The final step in the script is an attempt to verify the contract on the blockchain explorer.
 
-## Deploying without using any factory
+## Deploying keylessly without using any factory
 If you don't have many contracts to deploy then skipping the use of a factory is an alternative.
-In the same way that a factory was deployed keylessly above, your contracts can be deployed keylessly.
+In the same way that a factory was deployed keylessly above, your contracts themselves can be deployed keylessly.
+
 Just copy, rename and customize `deployKeylessly-TESTERC20.js`, then run:
 ```
 yarn hardhat run --network [blockchain name] scripts/deployKeylessly-[contract name].js
@@ -300,7 +308,7 @@ The factory then effectively becomes a **shared public good** that nobody owns o
 
 If you deploy your contracts keylessly without using a factory, the added advantage is that you won't need to safeguard the private key of the account that was used to do the deployment - even if you use a different account (or someone else performs the deployment), the contract will still be deployed to the same address. Disadvantages include:
 - higher cost, because the gas price has been intentionally set high. If you have many contracts to deploy you'd have to spend highly for each. You'd also have to fund a different address for each contract, so there would be some funds left over in each after deployment. Such remaining funds will be wasted because there is no way to recover them.
-- the contract bytecode affects the address because CREATE2 or CREATE3 aren't being used. Even slight changes to the source code or constructor argument values will change the bytecode, resulting in a different deployment address.
+- the contract bytecode affects the address because CREATE2 or CREATE3 aren't being used. Even slight changes to the source code or constructor arguments will change the bytecode, resulting in a different deployment address.
 
 
 ## Future-proofing to ensure same deployment address in future
@@ -308,7 +316,7 @@ Innovation will never stop and new blockchains with useful features are likely t
 
 Factors that can generally influence the deployment address of a contract include:
 - Contract code, including spaces and comments;
-- Constructor argument values;
+- Constructor arguments;
 - Compiler settings including:
 	- Solidity version;
 	- evmVersion;
@@ -326,11 +334,13 @@ But you still need to be careful not to change other factors. Once you start doi
 
 In our scripts, compilation artifacts of contracts are retrieved from `artifacts-saved` directory which was created to preserve the exact versions of the factories that were used for deployment. Before you start doing any contract deployments for production, you can make changes to your environment but after each change remember to copy the factorys' compilation artifact files under `artifacts` directory (which Hardhat automatically creates) to `artifacts-saved`.
 
-The factory contract code from third parties have not been modified at all, and should always be left as-is. Though if new versions of any of the files are released, then we may replace the old copies with new ones in this repository, in which case a new release of this repository would be published on GitHub with updated version number. **Newer releases may not produce the same addresses** as prior releases due to different code, so if you ever do need to re-download the repository then instead of downloading the latest version, download the exact version that you had used before for production deployments via the releases page at https://github.com/SKYBITDev3/SKYBIT-Keyless-Deployment/releases.
+ have not been modified at all, and should always be left as-is. Though if new versions of any of the files are released, then we may replace the old copies with new ones in this repository, in which case 
 
-For your contracts that you want to deploy using a CREATE3 factory, there's no need to use `artifacts-saved` because bytecode isn't used for address calculation in CREATE3, so even after changes in the code the deployment address will remain the same. But you should still keep the many other factors (e.g. compiler version and settings) unchanged.
+If newer versions of factory contract code from third parties become available, a new release of this repository would be published on GitHub with updated version number. **Newer releases may not produce the same addresses** as prior releases due to different code, so if you ever do need to re-download the repository then instead of downloading the latest version, download the exact version that you had used before for production deployments via the releases page at https://github.com/SKYBITDev3/SKYBIT-Keyless-Deployment/releases.
 
-For your contracts that you deploy keylessly without a factory, you need to ensure that the code, constructor argument values, and environment are unchanged.
+For your contracts that you want to deploy using a CREATE3 factory, there's no need to use `artifacts-saved` because bytecode isn't used for address calculation in CREATE3, so even after changes in the code or contructor arguments the deployment address will remain the same. But you should still keep the many other factors (e.g. compiler version and settings) unchanged.
+
+For your contracts that you deploy keylessly *without* a factory, you need to ensure that the code, constructor arguments, and environment are unchanged.
 
 
 ## Issues to be aware of

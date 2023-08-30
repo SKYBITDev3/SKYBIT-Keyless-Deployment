@@ -54,7 +54,7 @@ const getArtifactOfContract = contractName => {
 }
 
 
-const deployKeylessly = async (contractName, bytecodeWithArgs, gasLimit, wallet) => {
+const deployKeylessly = async (contractName, bytecodeWithArgs, gasLimit, wallet, isDeployEnabled = true) => {
   console.log(`Deploying ${contractName} keylessly...`)
 
   const gasPrice = 100000000000n // = 100 Gwei. Made high for future-proofing. DON'T CHANGE IT AFTER DEPLOYING YOUR FIRST CONTRACT TO LIVE BLOCKCHAIN.
