@@ -1,8 +1,9 @@
 {
   "name": "SKYBIT-Keyless-Deployment",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "packageManager": "yarn@3.6.1",
   "devDependencies": {
+    "@Vectorized/solady": "https://github.com/Vectorized/solady#03f3fd05fb1da76edc4df83ae6bf32a842c15f12",
     "@ZeframLou/create3-factory": "https://github.com/ZeframLou/create3-factory#18cfad8d118b25a5092cdfed6bea9c932ca5b6eb",
     "@axelar-network/axelar-gmp-sdk-solidity": "^5.2.0",
     "@nomicfoundation/ethereumjs-trie": "^6.0.2",
