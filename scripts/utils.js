@@ -1,6 +1,6 @@
 const rootRequire = name => {
-  const path = require("path")
-  const rootPath = path.resolve(__dirname, "..")
+  const path = require(`path`)
+  const rootPath = path.resolve(__dirname, `..`)
   return require(`${rootPath}/${name}`)
 }
 
@@ -15,7 +15,7 @@ const deriveAddressOfSignerFromSig = async (txData, splitSig) => {
 }
 
 const getContractAbi = async (contractAddress) => {
-  const axios = require("axios")
+  const axios = require(`axios`)
   const httpResponse = await axios.get(`https://api.etherscan.io/api?module=contract&action=getabi&address=${contractAddress}&apikey=${process.env.ETHERSCAN_API_KEY}`)
   // const httpResponse = await axios.get(`https://api-alfajores.celoscan.io/api?module=contract&action=getabi&address=${contractAddress}&apikey=${process.env.CELOSCAN_API_KEY}`)
   // const httpResponse = await axios.get(`https://testnet.snowtrace.io/api?module=contract&action=getabi&address=${contractAddress}&apikey=${process.env.SNOWTRACE_API_KEY}`)
@@ -24,22 +24,22 @@ const getContractAbi = async (contractAddress) => {
 }
 
 const verifyContract = async (address, constructorArguments) => {
-  console.log("Verifying contract...")
+  console.log(`Verifying contract...`)
   try {
-    await run("verify:verify", {
+    await run(`verify:verify`, {
       address,
       constructorArguments,
     })
 
-    console.log("Contract verified!")
+    console.log(`Contract verified!`)
   } catch (err) {
     console.log(err)
   }
 }
 
-const printNativeCurrencyBalance = async (walletAddress, decimals = "ether") => ethers.formatUnits(await ethers.provider.getBalance(walletAddress), decimals)
+const printNativeCurrencyBalance = async (walletAddress, decimals = `ether`) => ethers.formatUnits(await ethers.provider.getBalance(walletAddress), decimals)
 
-const printContractBalanceOf = async (tokenContract, holderAddress, decimals = "ether") => ethers.formatUnits(await tokenContract.balanceOf(holderAddress), decimals)
+const printContractBalanceOf = async (tokenContract, holderAddress, decimals = `ether`) => ethers.formatUnits(await tokenContract.balanceOf(holderAddress), decimals)
 
 
 module.exports = {

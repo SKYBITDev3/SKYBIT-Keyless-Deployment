@@ -1,11 +1,13 @@
+const { ethers, network, upgrades } = require(`hardhat`)
+
 async function main() {
-  const { rootRequire, printNativeCurrencyBalance, printContractBalanceOf, verifyContract } = require("./utils")
+  const { printNativeCurrencyBalance } = require(`./utils`)
 
   const [wallet, wallet2] = await ethers.getSigners()
   console.log(`Using network: ${network.name} (${network.config.chainId}), account: ${wallet.address} having ${await printNativeCurrencyBalance(wallet.address)} of native currency, RPC url: ${network.config.url}`)
 
-  const tokenContractName = "TESTERC20UGV1"
-  const contractAddress = "0x18Fb2C4870cC1B9f9440CB0D87c41b25D486A062" // ERC1967Proxy address
+  const tokenContractName = `TESTERC20UGV1`
+  const contractAddress = `0x18Fb2C4870cC1B9f9440CB0D87c41b25D486A062` // ERC1967Proxy address
 
   const contract = await ethers.getContractAt(tokenContractName, contractAddress)
 
@@ -14,7 +16,7 @@ async function main() {
   console.log(`V: ${await contract.getV()}`)
 
   // Upgrading
-  const tokenContractNameV2 = "TESTERC20UGV2"
+  const tokenContractNameV2 = `TESTERC20UGV2`
   const cfTokenV2 = await ethers.getContractFactory(tokenContractNameV2)
 
   await upgrades.validateUpgrade(contract, cfTokenV2)
@@ -30,13 +32,11 @@ async function main() {
 
 
   // VERIFY ON BLOCKCHAIN EXPLORER
-  if (!["hardhat", "localhost"].includes(network.name)) {
-    if (isDeployEnabled) {
-      console.log(`Waiting to ensure that it will be ready for verification on etherscan...`)
-      const { setTimeout } = require("timers/promises")
-      await setTimeout(20000)
-    }
-
+  if (![`hardhat`, `localhost`].includes(network.name)) {
+    console.log(`Waiting to ensure that it will be ready for verification on etherscan...`)
+    const { setTimeout } = require(`timers/promises`)
+    await setTimeout(20000)
+    const { verifyContract } = require(`./utils`)
     await verifyContract(contractAddress) // proxy. also verifies implementation
   }
 

@@ -1,8 +1,4 @@
-const hre = require("hardhat")
-
-// const path = require("path")
-// const rootPath = path.resolve(__dirname, "..")
-// const rootRequire = (name) => require(`${rootPath}/${name}`)
+const { ethers } = require(`hardhat`)
 
 const CREATE3Deploy = async (factoryToUse, addressOfFactory, contractFactory, contractToDeployName, constructorArguments, salt, wallet) => {
   const bytecodeWithArgs = (await contractFactory.getDeployTransaction(...constructorArguments)).data
@@ -22,7 +18,7 @@ const CREATE3Deploy = async (factoryToUse, addressOfFactory, contractFactory, co
   const functionCallGasCost = await getGasEstimate(factoryToUse, instanceOfFactory, bytecodeWithArgs, salt)
   console.log(`functionCallGasCost: ${functionCallGasCost}`)
   const gasFeeEstimate = feeData.gasPrice * functionCallGasCost
-  console.log(`gasFeeEstimate: ${ethers.formatUnits(gasFeeEstimate, "ether")} of native currency`)
+  console.log(`gasFeeEstimate: ${ethers.formatUnits(gasFeeEstimate, `ether`)} of native currency`)
 
   // Call DEPLOY
   console.log(`now calling deploy() in the CREATE3 factory...`)
@@ -40,27 +36,27 @@ const CREATE3Deploy = async (factoryToUse, addressOfFactory, contractFactory, co
 const getArtifactOfFactory = (factoryToUse) => {
   let pathToArtifact
   switch (factoryToUse) {
-    case "ZeframLou":
+    case `ZeframLou`:
       pathToArtifact = `artifacts-saved/@ZeframLou/create3-factory/src/CREATE3Factory.sol/CREATE3Factory.json`
       break
-    case "axelarnetwork":
+    case `axelarnetwork`:
       pathToArtifact = `artifacts-saved/@axelar-network/axelar-gmp-sdk-solidity/contracts/deploy/Create3Deployer.sol/Create3Deployer.json`
       break
-    case "SKYBIT":
+    case `SKYBIT`:
     default:
       pathToArtifact = `artifacts-saved/contracts/SKYBITCREATE3Factory.sol/SKYBITCREATE3Factory.json`
   }
-  const { rootRequire } = require("./utils") // using saved artifact instead of the automatically created one}
+  const { rootRequire } = require(`./utils`) // using saved artifact instead of the automatically created one}
   return rootRequire(pathToArtifact)
 }
 
 const getDeployedAddress = async (factoryToUse, instanceOfFactory, bytecode, walletAddress, salt) => {
   switch (factoryToUse) {
-    case "axelarnetwork":
+    case `axelarnetwork`:
       return await instanceOfFactory.deployedAddress(bytecode, walletAddress, salt)
       break
-    case "SKYBIT":
-    case "ZeframLou":
+    case `SKYBIT`:
+    case `ZeframLou`:
     default:
       return await instanceOfFactory.getDeployed(walletAddress, salt)
   }
@@ -68,11 +64,11 @@ const getDeployedAddress = async (factoryToUse, instanceOfFactory, bytecode, wal
 
 const getGasEstimate = async (factoryToUse, instanceOfFactory, bytecodeWithArgs, salt) => {
   switch (factoryToUse) {
-    case "axelarnetwork":
+    case `axelarnetwork`:
       return await instanceOfFactory.deploy.estimateGas(bytecodeWithArgs, salt)
       break
-    case "SKYBIT":
-    case "ZeframLou":
+    case `SKYBIT`:
+    case `ZeframLou`:
     default:
       return await instanceOfFactory.deploy.estimateGas(salt, bytecodeWithArgs)
   }
@@ -80,11 +76,11 @@ const getGasEstimate = async (factoryToUse, instanceOfFactory, bytecodeWithArgs,
 
 const deploy = async (factoryToUse, instanceOfFactory, bytecodeWithArgs, salt) => {
   switch (factoryToUse) {
-    case "axelarnetwork":
+    case `axelarnetwork`:
       return await instanceOfFactory.deploy(bytecodeWithArgs, salt)
       break
-    case "SKYBIT":
-    case "ZeframLou":
+    case `SKYBIT`:
+    case `ZeframLou`:
     default:
       return await instanceOfFactory.deploy(salt, bytecodeWithArgs)
   }

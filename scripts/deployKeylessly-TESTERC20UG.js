@@ -1,4 +1,5 @@
 // Both implementation and proxy deployed keylessly. If you've already deployed the proxy contract and then change your contract source code or constructor arguments then don't run this script again, otherwise a new proxy contract will be deployed. Instead you should run upgrade.
+const { ethers, network, upgrades } = require(`hardhat`)
 
 let isDeployEnabled = true // set to false initially to get gas cost or if you've already deployed and need to do verification on explorer.
 
@@ -11,19 +12,19 @@ const gasLimitForProxy = 500000n
 
 
 async function main() {
-  const { printNativeCurrencyBalance, verifyContract } = require("./utils")
+  const { printNativeCurrencyBalance } = require(`./utils`)
 
   const [wallet] = await ethers.getSigners()
   console.log(`Using network: ${network.name} (${network.config.chainId}), account: ${wallet.address} having ${await printNativeCurrencyBalance(wallet.address)} of native currency, RPC url: ${network.config.url}`)
 
   // WRITE YOUR CONTRACT NAME AND CONSTRUCTOR ARGUMENTS HERE
-  const contractName = "TESTERC20UGV1"
+  const contractName = `TESTERC20UGV1`
   const initializerArgs = [ // constructor not used in UUPS contracts. Instead, proxy will call initializer
     wallet.address,
     { x: 10, y: 5 },
   ]
 
-  const { getArtifactOfContract, deployKeylessly } = require("./keyless-deploy-functions")
+  const { getArtifactOfContract, deployKeylessly } = require(`./keyless-deploy-functions`)
 
   const artifactOfContractToDeploy = getArtifactOfContract(contractName)
   const cfToken = await ethers.getContractFactory(artifactOfContractToDeploy.abi, artifactOfContractToDeploy.bytecode)
@@ -32,9 +33,9 @@ async function main() {
   const implAddress = await deployKeylessly(contractName, bytecodeWithArgs, gasLimitForImpl, wallet, isDeployEnabled) // gas cost: 3012861
   if (implAddress === undefined) return
 
-  const proxyContractName = "ERC1967Proxy"
+  const proxyContractName = `ERC1967Proxy`
   const cfProxy = await ethers.getContractFactory(proxyContractName)
-  const fragment = cfToken.interface.getFunction("initialize")
+  const fragment = cfToken.interface.getFunction(`initialize`)
   const initializerData = cfToken.interface.encodeFunctionData(fragment, initializerArgs)
   const proxyConstructorArgs = [implAddress, initializerData]
 
@@ -42,20 +43,21 @@ async function main() {
 
   const proxyAddress = await deployKeylessly(proxyContractName, proxyBytecodeWithArgs, gasLimitForProxy, wallet, isDeployEnabled) // gas cost: 378214
 
-  if (isDeployEnabled) proxy = await upgrades.forceImport(proxyAddress, cfToken)
+  if (isDeployEnabled) await upgrades.forceImport(proxyAddress, cfToken)
 
 
   // VERIFY ON BLOCKCHAIN EXPLORER
-  if (isVerifyEnabled)
-    if (!["hardhat", "localhost"].includes(network.name)) {
+  if (isVerifyEnabled) {
+    if (![`hardhat`, `localhost`].includes(network.name)) {
       if (isDeployEnabled) {
         console.log(`Waiting to ensure that it will be ready for verification on etherscan...`)
-        const { setTimeout } = require("timers/promises")
+        const { setTimeout } = require(`timers/promises`)
         await setTimeout(20000)
       }
-      const { verifyContract } = require("./utils")
+      const { verifyContract } = require(`./utils`)
       await verifyContract(proxyAddress) // also verifies implementation
     } else console.log(`Verification on local network skipped`)
+  }
 }
 
 
