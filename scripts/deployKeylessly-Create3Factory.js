@@ -1,8 +1,8 @@
 const { ethers, network } = require(`hardhat`)
 
 // CHOOSE WHICH FACTORY YOU WANT TO USE: "axelarnetwork", "ZeframLou" or "SKYBIT"
-// const factoryToDeploy = "axelarnetwork"
-// const factoryToDeploy = "ZeframLou"
+// const factoryToDeploy = `axelarnetwork`
+// const factoryToDeploy = `ZeframLou`
 const factoryToDeploy = `SKYBIT`
 
 const isDeployEnabled = true // toggle in case you do deployment and verification separately.

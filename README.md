@@ -106,7 +106,7 @@ Gas used for the deployment is 253,282 (or a little more for some blockchains), 
 
 The SKYBIT factory contract will be deployed to this address (if the transaction data is unchanged):
 ```
-0x03b2761e6f97b72349686728cb5fF7C565BF7db4
+0x919AF4Dcb057Eb9eC95C84252647bfc01c5B4Cf5
 ```
 
 ### Usage
