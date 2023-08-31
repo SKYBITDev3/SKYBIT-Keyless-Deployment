@@ -70,7 +70,7 @@ deployAndInit(bytes memory bytecode, bytes32 salt, bytes calldata init)
 which calls a function called `init` in your contract just after it's deployed. This can be used in addition to a constructor, or in place of one (particularly if you are deploying an upgradeable contract, as 
 upgradeable contracts may not use constructors). If you intend to use `deployAndInit` then make sure that your contract does have a function called `init`.
 
-The original solidity files were obtained by firstly adding the npm package `@axelar-network/axelar-gmp-sdk-solidity` and importing `@axelar-network/axelar-gmp-sdk-solidity/contracts/deploy/Create3Deployer.sol` in `contracts/Imports.sol`. Hardhat then compiles it and places the artifacts in `artifacts` directory. `Create3Deployer.json` was then copied to `artifacts-saved/@axelar-network/axelar-gmp-sdk-solidity/contracts/deploy/Create3Deployer.sol/` directory for preservation.
+The original solidity files were obtained by firstly adding the npm package `@axelar-network/axelar-gmp-sdk-solidity` and importing `@axelar-network/axelar-gmp-sdk-solidity/contracts/deploy/Create3Deployer.sol` in `contracts/Imports.sol`. Hardhat then compiles it and places the artifacts in `artifacts` directory. `Create3Deployer.json` was then copied to `artifacts-saved/@axelar-network/axelar-gmp-sdk-solidity/contracts/deploy/Create3Deployer.sol/` directory for preservation of the bytecode.
 
 Gas used for the deployment is 651,262 (or a little more for some blockchains), so gas limit in this deployment transaction has been set to 900,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.09 of native currency at the signer's address before factory deployment.
 
@@ -86,7 +86,7 @@ The original solidity files were obtained by firstly adding the specific github 
 - https://github.com/ZeframLou/create3-factory#18cfad8d118b25a5092cdfed6bea9c932ca5b6eb
 - https://github.com/transmissions11/solmate#f2833c7cc951c50e0b5fd7e505571fddc10c8f77
 
-`@ZeframLou/create3-factory/src/CREATE3Factory.sol` is imported in `contracts/Imports.sol`. The `solmate/utils` directory is copied from `node_modules` to the repository root so that compilation would run without needing to change the line `import {CREATE3} from "solmate/utils/CREATE3.sol";` in the original factory contract. Hardhat then compiles it and places the artifacts in `artifacts` directory. `CREATE3Factory.json` was then copied to `artifacts-saved/@ZeframLou/create3-factory/src/CREATE3Factory.sol/` directory for preservation.
+`@ZeframLou/create3-factory/src/CREATE3Factory.sol` is imported in `contracts/Imports.sol`. The `solmate/utils` directory is copied from `node_modules` to the repository root so that compilation would run without needing to change the line `import {CREATE3} from "solmate/utils/CREATE3.sol";` in the original factory contract. Hardhat then compiles it and places the artifacts in `artifacts` directory. `CREATE3Factory.json` was then copied to `artifacts-saved/@ZeframLou/create3-factory/src/CREATE3Factory.sol/` directory for preservation of the bytecode.
 
 Gas used for the deployment is 394,439 (or a little more for some blockchains), so gas limit in this deployment transaction has been set to 500,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.05 of native currency at the signer's address before factory deployment.
 
@@ -96,11 +96,11 @@ ZeframLou's factory contract will be deployed to this address (if the transactio
 ```
 
 #### SKYBIT & Vectorized/solady
-The Vectorized/solady CREATE3 library has been included because it is gas-efficient. A factory contract is needed to use the library so a new one was created based on ZeframLou's factory.
+The Vectorized/solady CREATE3 library has been included because it is more gas-efficient than other options. A factory contract is needed to use the library so a new one was created based on ZeframLou's factory.
 
 The original Vectorized/solady CREATE3 solidity file was obtained by firstly adding the specific github repository commit to `package.json`:
 https://github.com/Vectorized/solady#03f3fd05fb1da76edc4df83ae6bf32a842c15f12
-`contracts\SKYBITCREATE3Factory.sol` imports `{CREATE3} from "@Vectorized/solady/src/utils/CREATE3.sol";`. Hardhat then compiles it and places the artifacts in `artifacts` directory. `SKYBITCREATE3Factory.json` was then copied to `artifacts-saved/contracts/SKYBITCREATE3Factory.sol/` directory for preservation.
+`contracts\SKYBITCREATE3Factory.sol` imports `{CREATE3} from "@Vectorized/solady/src/utils/CREATE3.sol";`. Hardhat then compiles it and places the artifacts in `artifacts` directory. `SKYBITCREATE3Factory.json` was then copied to `artifacts-saved/contracts/SKYBITCREATE3Factory.sol/` directory for preservation of the bytecode.
 
 Gas used for the deployment is 253,282 (or a little more for some blockchains), so gas limit in this deployment transaction has been set to 400,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.05 of native currency at the signer's address before factory deployment.
 
@@ -245,15 +245,23 @@ yarn hardhat run --network polygonZkEvmTestnet scripts/deployViaCREATE3-[contrac
 
 The final step in the script is an attempt to verify the contract on the blockchain explorer.
 
-## Deploying keylessly without using any factory
-If you don't have many contracts to deploy then skipping the use of a factory is an alternative.
-In the same way that a factory was deployed keylessly above, your contracts themselves can be deployed keylessly.
+## Deploying keylessly without using a factory
+If you don't have many contracts to deploy then skipping the use (and deployment) of a factory is an alternative. In the same way that a factory was deployed keylessly above, your contracts themselves can be deployed keylessly.
 
 Just copy, rename and customize `deployKeylessly-TESTERC20.js`, then run:
 ```
 yarn hardhat run --network [blockchain name] scripts/deployKeylessly-[contract name].js
 ```
 The script will check whether compilation artifacts of your contract exists under the `artifacts-saved` directory, and if so it will ask you whether you want to overwrite it by a possibly newer version from the `artifacts` directory.
+
+## Upgradeable contracts
+If you have upgradeable contracts that follow the UUPS proxy pattern (as recommended by OpenZeppelin in [Transparent vs UUPS Proxies](https://docs.openzeppelin.com/contracts/4.x/api/proxy#transparent-vs-uups) then there are two different options this repository can help you with:
+- Deploy both your implementation and `ERC1967Proxy` contracts keylessly by using a customized version of `scripts\deployKeylessly-TESTERC20UG.js`;
+  - `ERC1967Proxy` has a constructor that takes the address of the implementation and initialization arguments. These affect the address, so you'd have to make sure that they are kept the same when deploying on each blockchain. That means the implementation contract shouldn't be deployed normally as then its own address would be dependent on account nonce.
+- Deploy your implementation normally and `ERC1967Proxy` contract via a keylessly-deployed CREATE3 factory by using a customized version of `scripts\deployViaCREATE3-TESTERC20UG.js`.
+  - Your contract can be deployed normally because by using CREATE3 to deploy `ERC1967Proxy`, the constructor arguments won't affect the address. So regardless of what address your contract is deployed to (and even if source code is different), the proxy will always have the same expected address (as long as other critical variables like salt and deploying account are unchanged).
+
+When it comes time to upgrade your contract, you can use a customized version of `scripts\upgrade-TESTERC20UG.js`, which simply calls `upgradeProxy` in OpenZeppelin's [Upgrades Plugin](https://docs.openzeppelin.com/upgrades-plugins/1.x). The deployed `ERC1967Proxy` contract should remain, but point to a new version of your contract that is deployed normally.
 
 
 ## Problems that this tool solves
@@ -337,7 +345,7 @@ In our scripts, compilation artifacts of contracts are retrieved from `artifacts
 
  have not been modified at all, and should always be left as-is. Though if new versions of any of the files are released, then we may replace the old copies with new ones in this repository, in which case 
 
-If newer versions of factory contract code from third parties become available, a new release of this repository would be published on GitHub with updated version number. **Newer releases may not produce the same addresses** as prior releases due to different code, so if you ever do need to re-download the repository then instead of downloading the latest version, download the exact version that you had used before for production deployments via the releases page at https://github.com/SKYBITDev3/SKYBIT-Keyless-Deployment/releases.
+If newer versions of factory contract code from third parties become available, they will be updated in this repository. This may cause changes in deployment addresses due to different bytecode. So if you ever do need to re-download the repository then instead of downloading the latest version, download the exact commit that you had used before for production deployments. If you haven't yet made any production deployments, make a note of the GitHub commit hash when you do in case.
 
 For your contracts that you want to deploy using a CREATE3 factory, there's no need to use `artifacts-saved` because bytecode isn't used for address calculation in CREATE3, so even after changes in the code or constructor arguments the deployment address will remain the same. But you should still keep the many other factors (e.g. compiler version and settings) unchanged.
 
@@ -393,7 +401,7 @@ If for a particular blockchain you get the error "only replay-protected (EIP-155
 However with our transactions for factory contract deployment we want them to be replayed. There are no issues with replaying these particular transactions because it's only for deployment of the factory, with some  native currency spent for gas. There is no way to use funds at the signer's address for anything else - funds in the account can't be transferred out because nobody knows its private key. Excess funds after the deployment transaction will simply be stuck forever.
 
 ## Licenses
-### SKYBIT CREATE3 Factory Transactions
+### SKYBIT Keyless Deployment
 The software in this repository is released under the [MIT License](https://opensource.org/license/mit), therefore the following notices apply to this work:
 
 Copyright (c) 2023 SKYBIT
@@ -406,9 +414,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 <hr/>
 
-This repository uses (without modification) code from [Axelar GMP SDK Solidity](https://github.com/axelarnetwork/axelar-gmp-sdk-solidity) which has been released under the [MIT License](https://opensource.org/license/mit), therefore the following notices apply to that work:
+This repository uses (without modification) code from [Axelar GMP SDK Solidity](https://github.com/axelarnetwork/axelar-gmp-sdk-solidity) and [Solady](https://github.com/Vectorized/solady) which have been released under the [MIT License](https://opensource.org/license/mit), therefore the following notices apply to those works:
 
 Copyright (c) 2021 Axelar Foundation
+Copyright (c) 2022 Solady
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -418,7 +427,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 <hr/>
 
-This repository uses (without modification) code from ZeframLou's [CREATE3 Factory](https://github.com/ZeframLou/create3-factory) and [solmate](https://github.com/transmissions11/solmate) which have been released under the [GNU AFFERO GENERAL PUBLIC LICENSE Version 3](https://www.gnu.org/licenses/agpl-3.0.txt), therefore the following notices apply to those works:
+This repository uses code from ZeframLou's [CREATE3 Factory](https://github.com/ZeframLou/create3-factory) and [solmate](https://github.com/transmissions11/solmate) which have been released under the [GNU AFFERO GENERAL PUBLIC LICENSE Version 3](https://www.gnu.org/licenses/agpl-3.0.txt), therefore the following notices apply to those works:
 
 Copyright (C) 2022  ZeframLou
 Copyright (C) 2021  transmissions11
