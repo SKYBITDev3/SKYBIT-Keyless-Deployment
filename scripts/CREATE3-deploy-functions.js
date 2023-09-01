@@ -1,6 +1,6 @@
-const { ethers } = require(`hardhat`)
-
 const CREATE3Deploy = async (factoryToUse, addressOfFactory, contractFactory, contractToDeployName, constructorArguments, salt, wallet) => {
+  const { ethers } = require(`hardhat`)
+
   const bytecodeWithArgs = (await contractFactory.getDeployTransaction(...constructorArguments)).data
   // console.log(`bytecodeWithArgs: ${bytecodeWithArgs}`)
 
@@ -9,26 +9,30 @@ const CREATE3Deploy = async (factoryToUse, addressOfFactory, contractFactory, co
 
   console.log(`salt: ${salt}`)
 
-  const expectedAddress = await getDeployedAddress(factoryToUse, instanceOfFactory, bytecodeWithArgs, wallet.address, salt)
-  console.log(`Expected address of ${contractToDeployName} using deployer at ${addressOfFactory}: ${expectedAddress}`)
+  const addressExpected = await getDeployedAddress(factoryToUse, instanceOfFactory, bytecodeWithArgs, wallet.address, salt)
+  console.log(`Expected address of ${contractToDeployName} using deployer at ${addressOfFactory}: ${addressExpected}`)
 
+  if (await ethers.provider.getCode(addressExpected) !== `0x`) {
+    console.log(`The contract already exists at ${addressExpected}`)
+    return
+  }
 
-  const feeData = await ethers.provider.getFeeData()
-  console.log(`feeData: ${JSON.stringify(feeData)}`)
   const functionCallGasCost = await getGasEstimate(factoryToUse, instanceOfFactory, bytecodeWithArgs, salt)
   console.log(`functionCallGasCost: ${functionCallGasCost}`)
+  const feeData = await ethers.provider.getFeeData()
+  console.log(`feeData: ${JSON.stringify(feeData)}`)
   const gasFeeEstimate = feeData.gasPrice * functionCallGasCost
   console.log(`gasFeeEstimate: ${ethers.formatUnits(gasFeeEstimate, `ether`)} of native currency`)
 
   // Call DEPLOY
   console.log(`now calling deploy() in the CREATE3 factory...`)
-  const txRec = await deploy(factoryToUse, instanceOfFactory, bytecodeWithArgs, salt)
+  const txRec = await deploy(factoryToUse, instanceOfFactory, bytecodeWithArgs, salt, feeData)
   await txRec.wait(1)
   // console.log(`txRec: ${JSON.stringify(txRec, null, 2)}`)
 
-  const instanceOfDeployedContract = contractFactory.attach(expectedAddress)
+  const instanceOfDeployedContract = contractFactory.attach(addressExpected)
   console.log(`${contractToDeployName} was successfully deployed to ${instanceOfDeployedContract.target}`)
-  if (instanceOfDeployedContract.target === expectedAddress) console.log(`The actual deployment address matches the expected address`)
+  if (instanceOfDeployedContract.target === addressExpected) console.log(`The actual deployment address matches the expected address`)
 
   return instanceOfDeployedContract
 }
@@ -74,15 +78,17 @@ const getGasEstimate = async (factoryToUse, instanceOfFactory, bytecodeWithArgs,
   }
 }
 
-const deploy = async (factoryToUse, instanceOfFactory, bytecodeWithArgs, salt) => {
+const deploy = async (factoryToUse, instanceOfFactory, bytecodeWithArgs, salt, feeData) => {
+  delete feeData.gasPrice
+  
   switch (factoryToUse) {
     case `axelarnetwork`:
-      return await instanceOfFactory.deploy(bytecodeWithArgs, salt)
+      return await instanceOfFactory.deploy(bytecodeWithArgs, salt, {...feeData})
       break
     case `SKYBIT`:
     case `ZeframLou`:
     default:
-      return await instanceOfFactory.deploy(salt, bytecodeWithArgs)
+      return await instanceOfFactory.deploy(salt, bytecodeWithArgs, {...feeData})
   }
 }
 
