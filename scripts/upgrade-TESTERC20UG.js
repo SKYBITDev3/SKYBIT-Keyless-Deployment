@@ -1,6 +1,5 @@
-const { ethers, network, upgrades } = require(`hardhat`)
-
 async function main() {
+  const { ethers, network, upgrades } = require(`hardhat`)
   const { printNativeCurrencyBalance } = require(`./utils`)
 
   const [wallet, wallet2] = await ethers.getSigners()
@@ -47,4 +46,3 @@ main().catch(error => {
   console.error(error)
   process.exitCode = 1
 })
-

@@ -1,5 +1,3 @@
-const { ethers, network } = require(`hardhat`)
-
 const isDeployEnabled = true // set to false initially to get gas cost or if you've already deployed and need to do verification on explorer.
 
 const isVerifyEnabled = true
@@ -9,6 +7,7 @@ const isVerifyEnabled = true
 const gasLimit = 2500000n
 
 async function main() {
+  const { ethers, network } = require(`hardhat`)
   const [wallet] = await ethers.getSigners()
   const balanceOfWallet = await ethers.provider.getBalance(wallet.address)
   console.log(`Using network: ${network.name} (${network.config.chainId}), account: ${wallet.address} having ${ethers.formatUnits(balanceOfWallet, `ether`)} of native currency, RPC url: ${network.config.url}`)

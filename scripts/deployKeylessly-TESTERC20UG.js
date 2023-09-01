@@ -1,5 +1,4 @@
 // Both implementation and proxy deployed keylessly. If you've already deployed the proxy contract and then change your contract source code or constructor arguments then don't run this script again, otherwise a new proxy contract will be deployed. Instead you should run upgrade.
-const { ethers, network, upgrades } = require(`hardhat`)
 
 let isDeployEnabled = true // set to false initially to get gas cost or if you've already deployed and need to do verification on explorer.
 
@@ -12,6 +11,7 @@ const gasLimitForProxy = 500000n
 
 
 async function main() {
+  const { ethers, network, upgrades } = require(`hardhat`)
   const { printNativeCurrencyBalance } = require(`./utils`)
 
   const [wallet] = await ethers.getSigners()
