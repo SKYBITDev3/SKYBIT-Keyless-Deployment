@@ -1,15 +1,14 @@
-const { ethers, network } = require(`hardhat`)
-
-// CHOOSE WHICH FACTORY YOU WANT TO USE: "axelarnetwork", "ZeframLou" or "SKYBIT"
-const factoryToDeploy = `axelarnetwork`
+// CHOOSE WHICH FACTORY YOU WANT TO USE:
+// const factoryToDeploy = `axelarnetwork`
 // const factoryToDeploy = `ZeframLou`
-// const factoryToDeploy = `SKYBIT`
+const factoryToDeploy = `SKYBIT`
 
 const isDeployEnabled = true // toggle in case you do deployment and verification separately.
 
 const isVerifyEnabled = true
 
 async function main() {
+  const { ethers, network } = require(`hardhat`)
   const [wallet] = await ethers.getSigners()
   const balanceOfWallet = await ethers.provider.getBalance(wallet.address)
   console.log(`Using network: ${network.name} (${network.config.chainId}), account: ${wallet.address} having ${ethers.formatUnits(balanceOfWallet, `ether`)} of native currency, RPC url: ${network.config.url}`)
@@ -35,32 +34,24 @@ async function main() {
 }
 
 
-const getCreate3FactoryArtifact = (factory) => {
-  const { existsSync, cpSync } = require(`fs`)
-
-  let savedArtifactFilePath
+const getCreate3FactoryArtifact = factory => { // not using from hardhat artifacts directory directly because contents will automatically change if there are any changes in many variables
+  let compiledArtifactFilePath
   switch (factory) {
     case `ZeframLou`:
-      savedArtifactFilePath = `artifacts-saved/@ZeframLou/create3-factory/src/CREATE3Factory.sol/CREATE3Factory.json`
+      compiledArtifactFilePath = `artifacts/@ZeframLou/create3-factory/src/CREATE3Factory.sol/CREATE3Factory.json`
       break
     case `axelarnetwork`:
-      savedArtifactFilePath = `artifacts-saved/@axelar-network/axelar-gmp-sdk-solidity/contracts/deploy/Create3Deployer.sol/Create3Deployer.json`
+      compiledArtifactFilePath = `artifacts/@axelar-network/axelar-gmp-sdk-solidity/contracts/deploy/Create3Deployer.sol/Create3Deployer.json`
       break
     case `SKYBIT`:
     default:
-      savedArtifactFilePath = `artifacts-saved/contracts/SKYBITCREATE3Factory.sol/SKYBITCREATE3Factory.json`
+      compiledArtifactFilePath = `artifacts/contracts/SKYBITCREATE3Factory.sol/SKYBITCREATE3Factory.json`
   }
 
-  if(!existsSync(savedArtifactFilePath)) {
-    console.log(`Storing new ${factory} artifact file into artifacts-saved.`)
-    cpSync(savedArtifactFilePath.replace(`artifacts-saved`, `artifacts`), savedArtifactFilePath, { recursive: true })
-  }
-
-  console.log(`Using ${factory} artifact file in artifacts-saved.`)
-
-  const { rootRequire } = require(`./utils`)
-  return rootRequire(savedArtifactFilePath) // not getting from hardhat artifacts directory because contents will automatically change if there are any changes in many variables
+  const { getSavedArtifactFile } = require(`./keyless-deploy-functions`)
+  return getSavedArtifactFile(factory, compiledArtifactFilePath)
 }
+
 
 const getGasLimit = (factory) => {
   switch (factory) {

@@ -34,24 +34,42 @@ const fundTransactionSigner = async (gasPrice, gasLimit, derivedAddressOfSigner,
 }
 
 
-const getArtifactOfContract = contractName => {
-  const { existsSync, cpSync } = require(`fs`)
+const getArtifactOfContract = contractName => { // not using from hardhat artifacts directory directly because contents will automatically change if there are any changes in many variables
+  const compiledArtifactFilePath = `artifacts/contracts/${contractName}.sol/${contractName}.json`
 
-  const savedArtifactFilePath = `artifacts-saved/contracts/${contractName}.sol/${contractName}.json`
+  return getSavedArtifactFile(contractName, compiledArtifactFilePath)
+}
+
+
+const getSavedArtifactFile = (contractName, compiledArtifactFilePath) => {
+  const { statSync, existsSync, cpSync } = require(`fs`)
+
+  const compiledArtifactFileStats = statSync(compiledArtifactFilePath)
+  const compiledArtifactFileLastMod = compiledArtifactFileStats.mtimeMs
+
+  const savedArtifactFilePath = compiledArtifactFilePath.replace(`artifacts`, `artifacts-saved`)
+
   const savedArtifactExists = existsSync(savedArtifactFilePath)
 
   let useSavedArtifact = true
   if (savedArtifactExists) {
-    const readlineSync = require(`readline-sync`)
-    useSavedArtifact = readlineSync.keyInYN(`${contractName} artifact found in artifacts-saved. Reuse it? `)
-    if (!useSavedArtifact) useSavedArtifact = !readlineSync.keyInYN(`The saved ${contractName} artifact will be overwritten, causing your contract to be possibly deployed to a different address. Are you sure? `)
-    if (useSavedArtifact) console.log(`Using ${contractName} artifact that was found in artifacts-saved.`)
+    const savedArtifactFileStats = statSync(savedArtifactFilePath)
+    const savedArtifactFileLastMod = savedArtifactFileStats.mtimeMs
+
+    if (compiledArtifactFileLastMod > savedArtifactFileLastMod) {
+      const readlineSync = require(`readline-sync`)
+      useSavedArtifact = readlineSync.keyInYN(`Old ${contractName} artifact file found in artifacts-saved. Reuse it?`)
+      if (!useSavedArtifact) useSavedArtifact = !readlineSync.keyInYN(`The saved ${contractName} artifact file will be OVERWRITTEN BY THE NEWER FILE, causing your contract to be possibly deployed to a DIFFERENT address than before. Are you sure?`)
+      if (useSavedArtifact) console.log(`Using ${contractName} artifact file that was found in artifacts-saved.`)
+    }
   }
 
   if (!savedArtifactExists || !useSavedArtifact) {
     console.log(`Storing new ${contractName} artifact file into artifacts-saved.`)
-    cpSync(savedArtifactFilePath.replace(`artifacts-saved`, `artifacts`), savedArtifactFilePath, { recursive: true })
+    cpSync(compiledArtifactFilePath, savedArtifactFilePath, { recursive: true })
   }
+
+  console.log(`Using artifact file in artifacts-saved.`)
 
   const { rootRequire } = require(`./utils`)
   return rootRequire(savedArtifactFilePath)
@@ -107,7 +125,7 @@ const deployKeylessly = async (contractName, bytecodeWithArgs, gasLimit, wallet,
   console.log(`Expected address of deployed ${contractName} contract: ${addressExpected}`)
 
   if (await ethers.provider.getCode(addressExpected) !== `0x`) {
-    console.log(`The contract already exists at ${addressExpected}.`)
+    console.log(`The contract already exists at ${addressExpected}`)
     return addressExpected
   }
 
@@ -136,5 +154,6 @@ const deployKeylessly = async (contractName, bytecodeWithArgs, gasLimit, wallet,
 
 module.exports = {
   getArtifactOfContract,
+  getSavedArtifactFile,
   deployKeylessly,
 }
