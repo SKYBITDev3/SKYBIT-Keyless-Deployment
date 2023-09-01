@@ -34,20 +34,20 @@ const CREATE3Deploy = async (factoryToUse, addressOfFactory, contractFactory, co
 }
 
 const getArtifactOfFactory = (factoryToUse) => {
-  let pathToArtifact
+  let savedArtifactFilePath
   switch (factoryToUse) {
     case `ZeframLou`:
-      pathToArtifact = `artifacts-saved/@ZeframLou/create3-factory/src/CREATE3Factory.sol/CREATE3Factory.json`
+      savedArtifactFilePath = `artifacts-saved/@ZeframLou/create3-factory/src/CREATE3Factory.sol/CREATE3Factory.json`
       break
     case `axelarnetwork`:
-      pathToArtifact = `artifacts-saved/@axelar-network/axelar-gmp-sdk-solidity/contracts/deploy/Create3Deployer.sol/Create3Deployer.json`
+      savedArtifactFilePath = `artifacts-saved/@axelar-network/axelar-gmp-sdk-solidity/contracts/deploy/Create3Deployer.sol/Create3Deployer.json`
       break
     case `SKYBIT`:
     default:
-      pathToArtifact = `artifacts-saved/contracts/SKYBITCREATE3Factory.sol/SKYBITCREATE3Factory.json`
+      savedArtifactFilePath = `artifacts-saved/contracts/SKYBITCREATE3Factory.sol/SKYBITCREATE3Factory.json`
   }
   const { rootRequire } = require(`./utils`) // using saved artifact instead of the automatically created one}
-  return rootRequire(pathToArtifact)
+  return rootRequire(savedArtifactFilePath)
 }
 
 const getDeployedAddress = async (factoryToUse, instanceOfFactory, bytecode, walletAddress, salt) => {

@@ -49,7 +49,7 @@ const getArtifactOfContract = contractName => {
   }
 
   if (!savedArtifactExists || !useSavedArtifact) {
-    console.log(`Storing new ${contractName} artifact into artifacts-saved.`)
+    console.log(`Storing new ${contractName} artifact file into artifacts-saved.`)
     cpSync(savedArtifactFilePath.replace(`artifacts-saved`, `artifacts`), savedArtifactFilePath, { recursive: true })
   }
 

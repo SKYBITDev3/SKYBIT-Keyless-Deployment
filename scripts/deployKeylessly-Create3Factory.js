@@ -1,9 +1,9 @@
 const { ethers, network } = require(`hardhat`)
 
 // CHOOSE WHICH FACTORY YOU WANT TO USE: "axelarnetwork", "ZeframLou" or "SKYBIT"
-// const factoryToDeploy = `axelarnetwork`
+const factoryToDeploy = `axelarnetwork`
 // const factoryToDeploy = `ZeframLou`
-const factoryToDeploy = `SKYBIT`
+// const factoryToDeploy = `SKYBIT`
 
 const isDeployEnabled = true // toggle in case you do deployment and verification separately.
 
@@ -36,32 +36,42 @@ async function main() {
 
 
 const getCreate3FactoryArtifact = (factory) => {
-  let pathToArtifact
+  const { existsSync, cpSync } = require(`fs`)
+
+  let savedArtifactFilePath
   switch (factory) {
     case `ZeframLou`:
-      pathToArtifact = `artifacts-saved/@ZeframLou/create3-factory/src/CREATE3Factory.sol/CREATE3Factory.json`
+      savedArtifactFilePath = `artifacts-saved/@ZeframLou/create3-factory/src/CREATE3Factory.sol/CREATE3Factory.json`
       break
     case `axelarnetwork`:
-      pathToArtifact = `artifacts-saved/@axelar-network/axelar-gmp-sdk-solidity/contracts/deploy/Create3Deployer.sol/Create3Deployer.json`
+      savedArtifactFilePath = `artifacts-saved/@axelar-network/axelar-gmp-sdk-solidity/contracts/deploy/Create3Deployer.sol/Create3Deployer.json`
       break
     case `SKYBIT`:
     default:
-      pathToArtifact = `artifacts-saved/contracts/SKYBITCREATE3Factory.sol/SKYBITCREATE3Factory.json`
+      savedArtifactFilePath = `artifacts-saved/contracts/SKYBITCREATE3Factory.sol/SKYBITCREATE3Factory.json`
   }
+
+  if(!existsSync(savedArtifactFilePath)) {
+    console.log(`Storing new ${factory} artifact file into artifacts-saved.`)
+    cpSync(savedArtifactFilePath.replace(`artifacts-saved`, `artifacts`), savedArtifactFilePath, { recursive: true })
+  }
+
+  console.log(`Using ${factory} artifact file in artifacts-saved.`)
+
   const { rootRequire } = require(`./utils`)
-  return rootRequire(pathToArtifact) // not getting from hardhat artifacts directory because contents will automatically change if there are any changes in many variables
+  return rootRequire(savedArtifactFilePath) // not getting from hardhat artifacts directory because contents will automatically change if there are any changes in many variables
 }
 
 const getGasLimit = (factory) => {
   switch (factory) {
     case `ZeframLou`:
-      return 500000n // Gas used: 394,439
+      return 500000n // Gas cost: 394541
       break
     case `axelarnetwork`:
-      return 900000n // Gas used: 651,262
+      return 900000n // Gas cost: 726632
     case `SKYBIT`:
     default:
-      return 400000n // Gas used: 253,282
+      return 350000n // Gas cost: 253282
   }
 }
 

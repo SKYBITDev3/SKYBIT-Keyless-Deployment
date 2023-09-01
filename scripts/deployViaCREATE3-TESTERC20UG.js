@@ -3,13 +3,13 @@ const { ethers, network, upgrades } = require(`hardhat`)
 
 // CHOOSE WHICH FACTORY YOU WANT TO USE: "axelarnetwork", "ZeframLou" or "SKYBIT"
 // const factoryToUse = `axelarnetwork`
-// const addressOfFactory = `0xd63cd4CA70b137399cF4d3ec034117fCb9D7365b`
+// const addressOfFactory = `0xeb650E991A77d3B545416fF8Be8DeB4Df73d8fF9`
 
 // const factoryToUse = `ZeframLou`
 // const addressOfFactory = `0xb3cBfCf8ad9eeccE068D8704C9316f38F6cC54b3`
 
 const factoryToUse = `SKYBIT`
-const addressOfFactory = `0x919AF4Dcb057Eb9eC95C84252647bfc01c5B4Cf5`
+const addressOfFactory = `0xb912951193e833C9bF18b4aE2b5bda230843d58F`
 
 const isDeployEnabled = true // toggle in case you do deployment and verification separately.
 

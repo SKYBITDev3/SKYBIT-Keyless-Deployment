@@ -48,10 +48,10 @@
   dependencies:
     tslib "^2.3.1"
 
-"@axelar-network/axelar-gmp-sdk-solidity@^5.2.0":
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/@axelar-network/axelar-gmp-sdk-solidity/-/axelar-gmp-sdk-solidity-5.2.0.tgz#0d588a596eb50f624952bc24bc3dcb53994623d1"
-  integrity sha512-x7i5BiucCDjZY38J2f9YH54Et7JmcOlhpxCYlIWsDyp+1XcwlPa+DcmIWs6P1TE29xCwVLhbwT/eCuDoo2S8Qg==
+"@axelar-network/axelar-gmp-sdk-solidity@^5.3.0":
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/@axelar-network/axelar-gmp-sdk-solidity/-/axelar-gmp-sdk-solidity-5.3.0.tgz#38ba9a5478d4e75bf1dc634b0cd3fe7f2882532a"
+  integrity sha512-gLAslEu7qamwUic2sTrXBqyY9kKI0jccSeKCleK6PZ3rGuHIDHvaM3Ap75oO6nYmp++i9MqxWlf+MJJk5f0IQA==
 
 "@chainsafe/as-sha256@^0.3.1":
   version "0.3.1"

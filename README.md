@@ -1,17 +1,19 @@
 
 # SKYBIT Keyless Deployment of Smart Contracts
 ## Introduction
-This tool is for anyone who wants to **deploy smart contracts to the same address** on multiple Ethereum-Virtual-Machine (EVM)-based blockchains. There are many ways to achieve this, but there can be pitfalls depending on which path you take (see the section [Problems that this tool solves](#problems-that-this-tool-solves) for details). It's important to consider your options before you start any deployments to a live blockchain, as it'd be **difficult to switch later** after realizing that you had made a bad decision, especially if many users are already using the contracts that you had deployed.
+This repository is for anyone who wants to **deploy smart contracts to the same address** on multiple Ethereum-Virtual-Machine (EVM)-based blockchains. There are many ways to achieve this, but there can be pitfalls depending on which path you take (see the section [Problems that this tool solves](#problems-that-this-tool-solves) for details). It's important to consider your options before you start any deployments to a live blockchain, as it'd be **difficult to switch later** after realizing that you had made a bad decision, especially if many users are already using the contracts that you had deployed.
 
 This repository offers scripts to perform *keyless* smart contract deployment, in which a contract is deployed from a **single-use account** that nobody owns and whose **private keys are unknown and not needed**. Regardless of who does the deployment, as long as the transaction data remains the same, the contract will always get the same address on any EVM blockchain. This method is described in the [ERC-1820: Pseudo-introspection Registry Contract](https://eips.ethereum.org/EIPS/eip-1820#deployment-method) Ethereum standard in which the registry contract is deployed to an expected predetermined address.
 
 The two main options of using keyless deployment are:
-- Use a factory contract that had been deployed keylessly to deploy your contracts;
-	- If the factory contract doesn't yet exist on any blockchains that you want to use, then deploy it yourself keylessly. The factory contract will have the same address as on the other blockchains because of keyless deployment.
+- Use a **factory contract that had been deployed keylessly** to deploy your contracts;
+	- If the factory contract doesn't yet exist on any blockchains that you want to use, first deploy it yourself keylessly then use it. The factory contract will have the same address as on the other blockchains because of keyless deployment.
 	- You must use the same factory having same addresses on each blockchain in order to achieve the same addresses for your contracts across all EVM-based blockchains.
-- Deploy your contracts keylessly (without using any factory) onto all blockchains.
-
-Keyless deployment of a contract is more expensive and complicated than other methods, so if you have many contracts to deploy, you may prefer the first option.
+- **Deploy your contracts keylessly** (without using any factory) onto all blockchains. 
+  - The advantage is that you won't have to safeguard the private key for future deployments, as any account can initiate the deployment.
+  - As any account can initiate the deployment, there may be security considerations e.g. if administrator privileges need to be assigned on deployment.
+  - This is more expensive and complicated than other methods.
+  - You must keep the code and constructor arguments unchanged to get the same address.
 
 Each option will be discussed in more detail below.
 
@@ -76,7 +78,7 @@ Gas used for the deployment is 651,262 (or a little more for some blockchains), 
 
 Axelar's factory contract will be deployed to this address (if the transaction data is unchanged):
 ```
-0xd63cd4CA70b137399cF4d3ec034117fCb9D7365b
+0xeb650E991A77d3B545416fF8Be8DeB4Df73d8fF9
 ```
 
 #### ZeframLou & transmissions11/solmate
@@ -102,11 +104,11 @@ The original Vectorized/solady CREATE3 solidity file was obtained by firstly add
 https://github.com/Vectorized/solady#03f3fd05fb1da76edc4df83ae6bf32a842c15f12
 `contracts\SKYBITCREATE3Factory.sol` imports `{CREATE3} from "@Vectorized/solady/src/utils/CREATE3.sol";`. Hardhat then compiles it and places the artifacts in `artifacts` directory. `SKYBITCREATE3Factory.json` was then copied to `artifacts-saved/contracts/SKYBITCREATE3Factory.sol/` directory for preservation of the bytecode.
 
-Gas used for the deployment is 253,282 (or a little more for some blockchains), so gas limit in this deployment transaction has been set to 400,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.05 of native currency at the signer's address before factory deployment.
+Gas used for the deployment is 253,282 (or a little more for some blockchains), so gas limit in this deployment transaction has been set to 350,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.05 of native currency at the signer's address before factory deployment.
 
 The SKYBIT factory contract will be deployed to this address (if the transaction data is unchanged):
 ```
-0x919AF4Dcb057Eb9eC95C84252647bfc01c5B4Cf5
+0xb912951193e833C9bF18b4aE2b5bda230843d58F
 ```
 
 ### Usage
@@ -246,13 +248,21 @@ yarn hardhat run --network polygonZkEvmTestnet scripts/deployViaCREATE3-[contrac
 The final step in the script is an attempt to verify the contract on the blockchain explorer.
 
 ## Deploying keylessly without using a factory
-If you don't have many contracts to deploy then skipping the use (and deployment) of a factory is an alternative. In the same way that a factory was deployed keylessly above, your contracts themselves can be deployed keylessly.
+If you don't have many contracts to deploy then skipping the use (and deployment) of a factory is an alternative. In the same way that a factory was deployed keylessly above, your contracts themselves can each be deployed keylessly instead.
 
-Just copy, rename and customize `deployKeylessly-TESTERC20.js`, then run:
+Any account can perform the deployment by broadcasting exactly the same saved transaction bytecode, and your contracts will always be deployed to the same address on all EVM-based blockchains. There are no private keys to safeguard for future deployments, incresaing flexibility.
+
+Keyless deployment of *factory* contracts is suitable as factories are meant to be publicly used. But for your contracts, consider whether it's OK for any stranger to deploy them. e.g. if the contract assigns administrator privileges on deployment, the stranger who deployed your contract may become administrator, which you wouldn't want. So you'd either need to modify your code, or use a keylessly-deployed factory instead.
+
+If your contract uses `msg.sender` in the constructor, the value will be the address of the single-use account that nobody owns or controls, which is probably not what you'd expect or want, so you'd need to modify the code. See [Issues to be aware of](#issues-to-be-aware-of).
+
+Keyless deployment is more expensive than other methods because the gas price in the transaction has been set to 100 Gwei, a value that is likely to be higher than in the prevailing gas fee market of most blockchains. The value cannot vary because that would cause different transaction bytecode (which would then cause a different contract address). On some blockchains the market gas price may be 10 Gwei, in which case you'd be paying 10 times the market rate for keyless deployment.
+
+To deploy your contract keylessly just copy, rename and customize `deployKeylessly-TESTERC20.js`, then run:
 ```
 yarn hardhat run --network [blockchain name] scripts/deployKeylessly-[contract name].js
 ```
-The script will check whether compilation artifacts of your contract exists under the `artifacts-saved` directory, and if so it will ask you whether you want to overwrite it by a possibly newer version from the `artifacts` directory.
+The script will check whether compilation artifacts of your contract exists under the `artifacts-saved` directory, and if so it will ask you whether you want to overwrite it by a possibly newer version from the `artifacts` directory. If you had already deployed your contract keylessly on other live blockchains and want it to get the same address, press 'n', otherwise different transaction bytecode may be broadcast, causing a different contract address.
 
 ## Upgradeable contracts
 If you have upgradeable contracts that follow the UUPS proxy pattern (as recommended by OpenZeppelin in [Transparent vs UUPS Proxies](https://docs.openzeppelin.com/contracts/4.x/api/proxy#transparent-vs-uups) then there are two different options this repository can help you with:
