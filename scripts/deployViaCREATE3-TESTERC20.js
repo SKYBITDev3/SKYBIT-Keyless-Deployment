@@ -1,14 +1,14 @@
 const { ethers, network } = require(`hardhat`)
 
-// CHOOSE WHICH FACTORY YOU WANT TO USE: "axelarnetwork", "ZeframLou" or "SKYBIT"
+// CHOOSE WHICH FACTORY YOU WANT TO USE:
 // const factoryToUse = `axelarnetwork`
-// const addressOfFactory = `0xeb650E991A77d3B545416fF8Be8DeB4Df73d8fF9` // commit 4c21dbd29bb8f5ba6a8c1809ee9489efcd118a3b. gas cost: 2248784
+// const addressOfFactory = `0xeb650E991A77d3B545416fF8Be8DeB4Df73d8fF9` // gas cost: 2248784
 
 // const factoryToUse = `ZeframLou`
-// const addressOfFactory = `0xb3cBfCf8ad9eeccE068D8704C9316f38F6cC54b3` // commit 4c21dbd29bb8f5ba6a8c1809ee9489efcd118a3b. gas cost: 2169509
+// const addressOfFactory = `0xb3cBfCf8ad9eeccE068D8704C9316f38F6cC54b3` // gas cost: 2169509
 
 const factoryToUse = `SKYBIT`
-const addressOfFactory = `0xb912951193e833C9bF18b4aE2b5bda230843d58F` // commit 4c21dbd29bb8f5ba6a8c1809ee9489efcd118a3b. gas cost: 2140281
+const addressOfFactory = `0xb912951193e833C9bF18b4aE2b5bda230843d58F` // gas cost: 2140281
 
 
 // PASS YOUR OWN STRING HERE TO GENERATE A UNIQUE SALT. After doing your first production deployment, don't change it in order to have same address on other blockchains.
@@ -38,7 +38,7 @@ async function main() {
 
   const { CREATE3Deploy } = rootRequire(`scripts/CREATE3-deploy-functions.js`)
   const deployedContract = await CREATE3Deploy(factoryToUse, addressOfFactory, cfToken, tokenContractName, constructorArgs, salt, wallet)
-
+  if(deployedContract === undefined) return
 
   // Testing the deployed ERC20 contract. If your contract isn't ERC20 then you can call a function other than balanceOf.
   const totalSupply = ethers.formatUnits(await deployedContract.totalSupply())

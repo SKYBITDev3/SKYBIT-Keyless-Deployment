@@ -1,7 +1,7 @@
 // implementation deployed normally, proxy deployed via CREATE3
 const { ethers, network, upgrades } = require(`hardhat`)
 
-// CHOOSE WHICH FACTORY YOU WANT TO USE: "axelarnetwork", "ZeframLou" or "SKYBIT"
+// CHOOSE WHICH FACTORY YOU WANT TO USE:
 // const factoryToUse = `axelarnetwork`
 // const addressOfFactory = `0xeb650E991A77d3B545416fF8Be8DeB4Df73d8fF9`
 
@@ -46,15 +46,17 @@ async function main() {
     }
   } else { // not using openzeppelin's script
     const nonce = await wallet.getNonce()
-    const expectedAddressOfImpl = ethers.getCreateAddress({ from: wallet.address, nonce })
-    console.log(`Expected address of implementation using nonce ${nonce}: ${expectedAddressOfImpl}`)
-    implAddress = expectedAddressOfImpl
+    const addressExpectedOfImpl = ethers.getCreateAddress({ from: wallet.address, nonce })
+    console.log(`Expected address of implementation using nonce ${nonce}: ${addressExpectedOfImpl}`)
+    implAddress = addressExpectedOfImpl
 
     if (isDeployEnabled) {
-      const impl = await cfToken.deploy()
+      const feeData = await ethers.provider.getFeeData()
+      delete feeData.gasPrice
+      const impl = await cfToken.deploy({ ...feeData })
       await impl.waitForDeployment()
       implAddress = await impl.getAddress()
-      console.log(`implAddress ${implAddress === expectedAddressOfImpl ? `matches` : `doesn't match`} expectedAddressOfImpl`)
+      console.log(`implAddress ${implAddress === addressExpectedOfImpl ? `matches` : `doesn't match`} addressExpectedOfImpl`)
     }
     const proxyContractName = `ERC1967Proxy`
     const cfProxy = await ethers.getContractFactory(proxyContractName)
@@ -66,7 +68,9 @@ async function main() {
       const { getArtifactOfFactory, getDeployedAddress, CREATE3Deploy } = rootRequire(`scripts/CREATE3-deploy-functions.js`)
 
       if (isDeployEnabled) {
-        proxy = await CREATE3Deploy(factoryToUse, addressOfFactory, cfProxy, proxyContractName, proxyConstructorArgs, salt, wallet)
+        proxy = await CREATE3Deploy(factoryToUse, addressOfFactory, cfProxy, proxyContractName, proxyConstructorArgs, salt, wallet) // Gas cost: 425068
+        if (proxy === undefined) return
+
         proxyAddress = proxy.target
       } else {
         const artifactOfFactory = getArtifactOfFactory(factoryToUse)
