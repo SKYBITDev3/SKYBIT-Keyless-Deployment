@@ -78,7 +78,7 @@ Gas used for the deployment is 651,262 (or a little more for some blockchains), 
 
 Axelar's factory contract will be deployed to this address (if the transaction data is unchanged):
 ```
-0xeb650E991A77d3B545416fF8Be8DeB4Df73d8fF9
+0xb56144Efcf9b9F1A23395a3B7cAF295A9Cb494A2
 ```
 
 #### ZeframLou & transmissions11/solmate
@@ -94,7 +94,7 @@ Gas used for the deployment is 394,439 (or a little more for some blockchains), 
 
 ZeframLou's factory contract will be deployed to this address (if the transaction data is unchanged):
 ```
-0xb3cBfCf8ad9eeccE068D8704C9316f38F6cC54b3
+0x3855FB9AE7E051E2e74BfE3f04228762d28D8641
 ```
 
 #### SKYBIT & Vectorized/solady
@@ -108,7 +108,7 @@ Gas used for the deployment is 253,282 (or a little more for some blockchains), 
 
 The SKYBIT factory contract will be deployed to this address (if the transaction data is unchanged):
 ```
-0xb912951193e833C9bF18b4aE2b5bda230843d58F
+0x619Bdd2F58Ba735e9390D7B177e5Ca3C410bf98c
 ```
 
 ### Usage

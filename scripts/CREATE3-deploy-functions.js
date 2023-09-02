@@ -80,15 +80,15 @@ const getGasEstimate = async (factoryToUse, instanceOfFactory, bytecodeWithArgs,
 
 const deploy = async (factoryToUse, instanceOfFactory, bytecodeWithArgs, salt, feeData) => {
   delete feeData.gasPrice
-  
+
   switch (factoryToUse) {
     case `axelarnetwork`:
-      return await instanceOfFactory.deploy(bytecodeWithArgs, salt, {...feeData})
+      return await instanceOfFactory.deploy(bytecodeWithArgs, salt, { ...feeData })
       break
     case `SKYBIT`:
     case `ZeframLou`:
     default:
-      return await instanceOfFactory.deploy(salt, bytecodeWithArgs, {...feeData})
+      return await instanceOfFactory.deploy(salt, bytecodeWithArgs, { ...feeData })
   }
 }
 

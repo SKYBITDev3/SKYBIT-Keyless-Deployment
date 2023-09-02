@@ -59,7 +59,7 @@ const getGasLimit = (factory) => {
       return 500000n // Gas cost: 394541
       break
     case `axelarnetwork`:
-      return 900000n // Gas cost: 726632
+      return 900000n // Gas cost: 726644
     case `SKYBIT`:
     default:
       return 350000n // Gas cost: 253282

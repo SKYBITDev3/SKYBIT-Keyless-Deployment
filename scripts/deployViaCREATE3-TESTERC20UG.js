@@ -3,13 +3,13 @@ const { ethers, network, upgrades } = require(`hardhat`)
 
 // CHOOSE WHICH FACTORY YOU WANT TO USE:
 // const factoryToUse = `axelarnetwork`
-// const addressOfFactory = `0xeb650E991A77d3B545416fF8Be8DeB4Df73d8fF9`
+// const addressOfFactory = `0xb56144Efcf9b9F1A23395a3B7cAF295A9Cb494A2`
 
 // const factoryToUse = `ZeframLou`
-// const addressOfFactory = `0xb3cBfCf8ad9eeccE068D8704C9316f38F6cC54b3`
+// const addressOfFactory = `0x3855FB9AE7E051E2e74BfE3f04228762d28D8641`
 
 const factoryToUse = `SKYBIT`
-const addressOfFactory = `0xb912951193e833C9bF18b4aE2b5bda230843d58F`
+const addressOfFactory = `0x619Bdd2F58Ba735e9390D7B177e5Ca3C410bf98c`
 
 const isDeployEnabled = true // toggle in case you do deployment and verification separately.
 
@@ -59,7 +59,7 @@ async function main() {
       console.log(`implAddress ${implAddress === addressExpectedOfImpl ? `matches` : `doesn't match`} addressExpectedOfImpl`)
     }
     const proxyContractName = `ERC1967Proxy`
-    const cfProxy = await ethers.getContractFactory(proxyContractName)
+    const cfProxy = await ethers.getContractFactory(proxyContractName) // got the artifacts locally from @openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol. The one in @openzeppelin/upgrades-core is old.
     const fragment = cfToken.interface.getFunction(`initialize`)
     initializerData = cfToken.interface.encodeFunctionData(fragment, initializerArgs)
     const proxyConstructorArgs = [implAddress, initializerData]
