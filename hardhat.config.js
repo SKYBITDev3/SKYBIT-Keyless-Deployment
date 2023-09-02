@@ -137,7 +137,7 @@ module.exports = {
         settings: {
           optimizer: {
             enabled: true,
-            runs: 1000000
+            runs: 15000 // changing this affects deployment address
           },
           evmVersion: `paris`, // shanghai is current default but many blockchains don't support push0 opcode yet (causing "ProviderError: invalid opcode: opcode 0x5f not defined" and "ProviderError: execution reverted"). paris is prior version. 
         }
@@ -157,7 +157,7 @@ module.exports = {
       bsc: process.env.BSCSCAN_API_KEY,
       bscTestnet: process.env.BSCSCAN_API_KEY,
       avalanche: process.env.SNOWTRACE_API_KEY,
-      avalancheFujiTestnet: process.env.SNOWTRACE_API_KEY, 
+      avalancheFujiTestnet: process.env.SNOWTRACE_API_KEY,
     },
     customChains,
     timeout: 60000 // 1min (default is 20s)
