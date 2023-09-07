@@ -130,14 +130,14 @@ const customChains = Object.values(networks).filter(network => Object.hasOwn(net
 
 /** @type import(`hardhat/config`).HardhatUserConfig */
 module.exports = {
-  solidity: {
+  solidity: { // changing these values affects deployment address
     compilers: [
       {
         version: `0.8.21`,
         settings: {
           optimizer: {
             enabled: true,
-            runs: 15000 // changing this affects deployment address
+            runs: 15000
           },
           evmVersion: `paris`, // shanghai is current default but many blockchains don't support push0 opcode yet (causing "ProviderError: invalid opcode: opcode 0x5f not defined" and "ProviderError: execution reverted"). paris is prior version. 
         }

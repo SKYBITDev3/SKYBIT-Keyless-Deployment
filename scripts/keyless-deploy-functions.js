@@ -27,7 +27,7 @@ const fundTransactionSigner = async (gasPrice, gasLimit, derivedAddressOfSigner,
         }
       }
     }
-    console.log(`You'll need to transfer at least ${ethers.formatUnits(shortfall, `ether`)} of native currency to there.`)
+    console.log(`You don't have enough funds in your wallet. You'll need to transfer at least ${ethers.formatUnits(shortfall, `ether`)} of native currency to the address of the transaction signer: ${derivedAddressOfSigner}`)
     return false
   }
   return true
