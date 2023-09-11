@@ -8,8 +8,11 @@ const { ethers, network, upgrades } = require(`hardhat`)
 // const factoryToUse = `ZeframLou`
 // const addressOfFactory = `0x3855FB9AE7E051E2e74BfE3f04228762d28D8641`
 
-const factoryToUse = `SKYBIT`
-const addressOfFactory = `0x619Bdd2F58Ba735e9390D7B177e5Ca3C410bf98c`
+// const factoryToUse = `SKYBIT`
+// const addressOfFactory = `0x619Bdd2F58Ba735e9390D7B177e5Ca3C410bf98c`
+
+const factoryToUse = `SKYBITLite`
+const addressOfFactory = `0xe3dCDc516f75Fcd8CA7f3Ecb8387fb85CF0AbEDd`
 
 const isDeployEnabled = true // toggle in case you do deployment and verification separately.
 
@@ -76,7 +79,7 @@ async function main() {
         const artifactOfFactory = getArtifactOfFactory(factoryToUse)
         const instanceOfFactory = await ethers.getContractAt(artifactOfFactory.abi, addressOfFactory)
         const proxyBytecodeWithArgs = (await cfProxy.getDeployTransaction(...proxyConstructorArgs)).data
-        proxyAddress = await getDeployedAddress(factoryToUse, instanceOfFactory, proxyBytecodeWithArgs, wallet.address, salt)
+        proxyAddress = await getDeployedAddress(factoryToUse, instanceOfFactory, proxyBytecodeWithArgs, wallet, salt)
       }
     } else { // not using CREATE3
       proxy = await cfProxy.deploy(implAddress, initializerData)
@@ -91,6 +94,12 @@ async function main() {
   implAddress = await upgrades.erc1967.getImplementationAddress(proxyAddress)
   console.log(`implementation address set in proxy: ${implAddress}`)
 
+
+    // Testing the deployed contract.
+    const deployedContract = await ethers.getContractAt(tokenContractName, proxyAddress)
+    console.log(`point: ${await deployedContract.points(wallet.address)}`)
+    console.log(`Version: ${await deployedContract.getV()}`)
+    
 
   // VERIFY ON BLOCKCHAIN EXPLORER
   if (isVerifyEnabled) {

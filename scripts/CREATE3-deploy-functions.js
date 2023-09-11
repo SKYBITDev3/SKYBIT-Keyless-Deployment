@@ -9,15 +9,15 @@ const CREATE3Deploy = async (factoryToUse, addressOfFactory, contractFactory, co
 
   console.log(`salt: ${salt}`)
 
-  const addressExpected = await getDeployedAddress(factoryToUse, instanceOfFactory, bytecodeWithArgs, wallet.address, salt)
-  console.log(`Expected address of ${contractToDeployName} using deployer at ${addressOfFactory}: ${addressExpected}`)
+  const addressExpected = await getDeployedAddress(factoryToUse, instanceOfFactory, bytecodeWithArgs, wallet, salt)
+  console.log(`Expected address of ${contractToDeployName} using factory at ${addressOfFactory}: ${addressExpected}`)
 
   if (await ethers.provider.getCode(addressExpected) !== `0x`) {
     console.log(`The contract already exists at ${addressExpected}`)
     return
   }
 
-  const functionCallGasCost = await getGasEstimate(factoryToUse, instanceOfFactory, bytecodeWithArgs, salt)
+  const functionCallGasCost = await getGasEstimate(factoryToUse, instanceOfFactory, bytecodeWithArgs, wallet, salt)
   console.log(`functionCallGasCost: ${functionCallGasCost}`)
   const feeData = await ethers.provider.getFeeData()
   console.log(`feeData: ${JSON.stringify(feeData)}`)
@@ -26,9 +26,8 @@ const CREATE3Deploy = async (factoryToUse, addressOfFactory, contractFactory, co
 
   // Call DEPLOY
   console.log(`now calling deploy() in the CREATE3 factory...`)
-  const txRec = await deploy(factoryToUse, instanceOfFactory, bytecodeWithArgs, salt, feeData)
+  const txRec = await deploy(factoryToUse, instanceOfFactory, bytecodeWithArgs, wallet, salt, feeData)
   await txRec.wait(1)
-  // console.log(`txRec: ${JSON.stringify(txRec, null, 2)}`)
 
   const instanceOfDeployedContract = contractFactory.attach(addressExpected)
   console.log(`${contractToDeployName} was successfully deployed to ${instanceOfDeployedContract.target}`)
@@ -47,48 +46,75 @@ const getArtifactOfFactory = (factoryToUse) => {
       savedArtifactFilePath = `artifacts-saved/@axelar-network/axelar-gmp-sdk-solidity/contracts/deploy/Create3Deployer.sol/Create3Deployer.json`
       break
     case `SKYBIT`:
-    default:
       savedArtifactFilePath = `artifacts-saved/contracts/SKYBITCREATE3Factory.sol/SKYBITCREATE3Factory.json`
+      break
+    case `SKYBITLite`:
+    default:
+      return { abi: [] }
   }
   const { rootRequire } = require(`./utils`) // using saved artifact instead of the automatically created one}
   return rootRequire(savedArtifactFilePath)
 }
 
-const getDeployedAddress = async (factoryToUse, instanceOfFactory, bytecode, walletAddress, salt) => {
+const getDeployedAddress = async (factoryToUse, instanceOfFactory, bytecode, wallet, salt) => {
   switch (factoryToUse) {
     case `axelarnetwork`:
-      return await instanceOfFactory.deployedAddress(bytecode, walletAddress, salt)
+      return await instanceOfFactory.deployedAddress(bytecode, wallet.address, salt)
       break
     case `SKYBIT`:
     case `ZeframLou`:
+      return await instanceOfFactory.getDeployed(wallet.address, salt)
+      break
+    case `SKYBITLite`:
     default:
-      return await instanceOfFactory.getDeployed(walletAddress, salt)
+      const txData = {
+        from: wallet.address,
+        to: instanceOfFactory.target,
+        data: bytecode.replace(`0x`, salt),
+      }
+      return await wallet.call(txData)
   }
 }
 
-const getGasEstimate = async (factoryToUse, instanceOfFactory, bytecodeWithArgs, salt) => {
+const getGasEstimate = async (factoryToUse, instanceOfFactory, bytecode, wallet, salt) => {
   switch (factoryToUse) {
     case `axelarnetwork`:
-      return await instanceOfFactory.deploy.estimateGas(bytecodeWithArgs, salt)
+      return await instanceOfFactory.deploy.estimateGas(bytecode, salt)
       break
     case `SKYBIT`:
     case `ZeframLou`:
+      return await instanceOfFactory.deploy.estimateGas(salt, bytecode)
+      break
+    case `SKYBITLite`:
     default:
-      return await instanceOfFactory.deploy.estimateGas(salt, bytecodeWithArgs)
+      const txData = {
+        from: wallet.address,
+        to: instanceOfFactory.target,
+        data: bytecode.replace(`0x`, salt),
+      }
+      return await wallet.estimateGas(txData)
   }
 }
 
-const deploy = async (factoryToUse, instanceOfFactory, bytecodeWithArgs, salt, feeData) => {
+const deploy = async (factoryToUse, instanceOfFactory, bytecode, wallet, salt, feeData) => {
   delete feeData.gasPrice
 
   switch (factoryToUse) {
     case `axelarnetwork`:
-      return await instanceOfFactory.deploy(bytecodeWithArgs, salt, { ...feeData })
+      return await instanceOfFactory.deploy(bytecode, salt, { ...feeData })
       break
     case `SKYBIT`:
     case `ZeframLou`:
+      return await instanceOfFactory.deploy(salt, bytecode, { ...feeData })
+      break
+    case `SKYBITLite`:
     default:
-      return await instanceOfFactory.deploy(salt, bytecodeWithArgs, { ...feeData })
+      const txData = {
+        from: wallet.address,
+        to: instanceOfFactory.target,
+        data: bytecode.replace(`0x`, salt),
+      }
+      return await wallet.sendTransaction(txData, { ...feeData })
   }
 }
 

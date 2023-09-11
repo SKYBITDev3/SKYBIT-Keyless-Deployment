@@ -1,3 +1,4 @@
+
 # SKYBIT Keyless Deployment of Smart Contracts
 ## Introduction
 This repository is for anyone who wants to **deploy smart contracts to the same address** on multiple Ethereum-Virtual-Machine (EVM)-based blockchains. There are many ways to achieve this, but there can be pitfalls depending on which path you take (see the section [Problems that this tool solves](#problems-that-this-tool-solves) for details). It's important to consider your options before you start any deployments to a live blockchain, as it'd be **difficult to switch later** after realizing that you had made a bad decision, especially if many users are already using the contracts that you had deployed.
@@ -22,7 +23,7 @@ Each option will be discussed in more detail below.
 
 
 ### CREATE, CREATE2 and CREATE3
-`CREATE` and `CREATE2` are opcodes in EVM-based blockchains for creating a smart contract from another smart contract.
+`CREATE` and `CREATE2` are operation codes ("opcodes") in EVM-based blockchains for creating a smart contract from another smart contract.
 
 #### `CREATE`
 Contract addresses are calculated using the:
@@ -61,6 +62,7 @@ This repository creates signed raw deployment transactions of unmodified CREATE3
 - Axelar
 - ZeframLou & transmissions11/solmate
 - SKYBIT & Vectorized/solady
+- SKYBITLite
 
 Gas price in the deployment transaction has been set to 100 Gwei = 10<sup>-7</sup> native currency of the blockchain. This is a high value for most blockchains but it's to ensure that the contract will be deployable.
 
@@ -77,7 +79,7 @@ upgradeable contracts may not use constructors). If you intend to use `deployAnd
 
 The original solidity files were obtained by firstly adding the npm package `@axelar-network/axelar-gmp-sdk-solidity` and importing `@axelar-network/axelar-gmp-sdk-solidity/contracts/deploy/Create3Deployer.sol` in `contracts/Imports.sol`. Hardhat then compiles it and places the artifacts in `artifacts` directory. `Create3Deployer.json` is then copied to `artifacts-saved/@axelar-network/axelar-gmp-sdk-solidity/contracts/deploy/Create3Deployer.sol/` directory for preservation of the bytecode.
 
-Gas used for the deployment is 651,262 (or a little more for some blockchains), so gas limit in this deployment transaction has been set to 900,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.09 of native currency at the signer's address before factory deployment.
+Gas used for the deployment is 726,644 (or a little more for some blockchains), so gas limit in this deployment transaction has been set to 900,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.09 of native currency at the signer's address before factory deployment.
 
 Axelar's factory contract will be deployed to this address (if the transaction bytecode is unchanged):
 ```
@@ -112,7 +114,7 @@ The Vectorized/solady CREATE3 library has been included because it is more gas-e
 
 The original Vectorized/solady CREATE3 solidity file was obtained by firstly adding the specific github repository commit to `package.json`:
 https://github.com/Vectorized/solady#03f3fd05fb1da76edc4df83ae6bf32a842c15f12
-`contracts\SKYBITCREATE3Factory.sol` imports `{CREATE3} from "@Vectorized/solady/src/utils/CREATE3.sol";`. Hardhat then compiles it and places the artifacts in `artifacts` directory. `SKYBITCREATE3Factory.json` was then copied to `artifacts-saved/contracts/SKYBITCREATE3Factory.sol/` directory for preservation of the bytecode.
+`contracts/SKYBITCREATE3Factory.sol` imports `{CREATE3} from "@Vectorized/solady/src/utils/CREATE3.sol";`. Hardhat then compiles it and places the artifacts in `artifacts` directory. `SKYBITCREATE3Factory.json` was then copied to `artifacts-saved/contracts/SKYBITCREATE3Factory.sol/` directory for preservation of the bytecode.
 
 Gas used for the deployment is 253,282 (or a little more for some blockchains), so gas limit in this deployment transaction has been set to 350,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.035 of native currency at the signer's address before factory deployment.
 
@@ -124,6 +126,24 @@ The derived address of the account that would sign the deployment transaction, a
 ```
 0x4ac8d0FF33fad2E2C83AAf383eb1A452a9374a96
 ```
+
+#### SKYBITLite
+We've developed a new highly gas-efficient light-weight CREATE3 factory in pure Yul language. It costs only a third of the gas to deploy the factory contract compared with the SKYBIT & Vectorized/solady factory, and almost a tenth when compared with Axelar's factory.
+
+The node package [@tovarishfin/hardhat-yul](https://www.npmjs.com/package/@tovarishfin/hardhat-yul) compiles the Yul source code in `contracts/SKYBITCREATE3FactoryLite.yul` and places the artifacts in `artifacts` directory. `SKYBITCREATE3FactoryLite.json` was then copied to `artifacts-saved/contracts/SKYBITCREATE3FactoryLite.sol/` directory for preservation of the bytecode.
+
+Gas used for the deployment is 84,540 (or a little more for some blockchains), so gas limit in this deployment transaction has been set to 100,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.01 of native currency at the signer's address before factory deployment.
+
+The SKYBITLite factory contract will be deployed to this address (if the transaction bytecode is unchanged):
+```
+0xe3dCDc516f75Fcd8CA7f3Ecb8387fb85CF0AbEDd
+```
+The derived address of the account that would sign the deployment transaction, and that you'd need to fund in order to pay the gas fee, is:
+```
+0x62dF0289c0120c00A7a67a353cD2600A882d8198
+```
+
+
 ### Usage
 Other people may have already deployed the factory contract onto some of your desired blockchains to the expected address (if they didn't change the deployment transaction data), in which case you won't need to deploy it on those blockchains - you can then just use those already-deployed factory contracts to deploy whatever other contracts you want to deploy. So first check the expected address on a blockchain explorer to see if a factory contract already exists there.
 
@@ -184,7 +204,7 @@ Output like this appears:
 ```
 Using network: localhost (31337), account: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 having 9999.909981625 of native currency, RPC url: http://127.0.0.1:8545
 salt: 0x534b594249542e41534941205445535445524332302e2e2e2e2e2e2e2e2e2e00
-Expected address of TESTERC20 using deployer at 0xDd9F606e518A955Cd3800f18126DC14E54e4E995: 0x88DCddf9FC5EecA013cFe5919606695E8Db36ce6
+Expected address of TESTERC20 using factory at 0xDd9F606e518A955Cd3800f18126DC14E54e4E995: 0x88DCddf9FC5EecA013cFe5919606695E8Db36ce6
 feeData: {"_type":"FeeData","gasPrice":"1674213014","maxFeePerGas":"2531556250","maxPriorityFeePerGas":"1000000000"}
 functionCallGasCost: 2254028
 gasFeeEstimate: 0.003773723011520392 of native currency
@@ -279,12 +299,12 @@ The script will check whether compilation artifacts of your contract exists unde
 
 ## Upgradeable contracts
 If you have upgradeable contracts that follow the UUPS proxy pattern (as recommended by OpenZeppelin in [Transparent vs UUPS Proxies](https://docs.openzeppelin.com/contracts/4.x/api/proxy#transparent-vs-uups) then there are two different options this repository can help you with:
-- Deploy both your implementation and `ERC1967Proxy` contracts keylessly by using a customized version of `scripts\deployKeylessly-TESTERC20UG.js`;
+- Deploy both your implementation and `ERC1967Proxy` contracts keylessly by using a customized version of `scripts/deployKeylessly-TESTERC20UG.js`;
   - `ERC1967Proxy` has a constructor that takes the address of the implementation and initialization arguments. These affect the address, so you'd have to make sure that they are kept the same when deploying on each blockchain. That means the implementation contract shouldn't be deployed normally as then its own address would be dependent on account nonce.
-- Deploy your implementation normally and `ERC1967Proxy` contract via a keylessly-deployed CREATE3 factory by using a customized version of `scripts\deployViaCREATE3-TESTERC20UG.js`.
+- Deploy your implementation normally and `ERC1967Proxy` contract via a keylessly-deployed CREATE3 factory by using a customized version of `scripts/deployViaCREATE3-TESTERC20UG.js`.
   - Your contract can be deployed normally because by using CREATE3 to deploy `ERC1967Proxy`, the constructor arguments won't affect the address, because contract bytecode isn't used for address calculation. So regardless of what address your contract is deployed to (and even if source code is different), the proxy will always have the same expected address (as long as other critical variables like salt, and solidity compiler configuration are unchanged).
 
-When it comes time to upgrade your contract, you can use a customized version of `scripts\upgrade-TESTERC20UG.js`, which simply calls `upgradeProxy` in OpenZeppelin's [Upgrades Plugin](https://docs.openzeppelin.com/upgrades-plugins/1.x). The originally-deployed `ERC1967Proxy` contract will remain, but point to a new version of your contract that's deployed normally.
+When it comes time to upgrade your contract, you can use a customized version of `scripts/upgrade-TESTERC20UG.js`, which simply calls `upgradeProxy` in OpenZeppelin's [Upgrades Plugin](https://docs.openzeppelin.com/upgrades-plugins/1.x). The originally-deployed `ERC1967Proxy` contract will remain, but point to a new version of your contract that's deployed normally.
 
 
 ## Problems that this tool solves
@@ -422,9 +442,53 @@ const cf = await ethers.getContractFactory(contractName)
 const bytecodeWithArgs = (await cf.getDeployTransaction(...constructorArgs)).data
 ```
 
-See also `contracts\TESTERC20.sol` in which the constructor accepts an array of addresses, and mints some tokens to each.
+See also `contracts/TESTERC20.sol` in which the constructor accepts an array of addresses, and mints some tokens to each.
 
 An alternative is to replace `msg.sender` with `tx.origin`, but Vitalik said that we shouldn't rely on `tx.origin`. Feel free to do some research if you're curious.
+
+### Invalid opcode
+If you try to deploy to non-Ethereum blockchains contracts that were compiled using the latest version of Solidity compiler, you may get the error "invalid opcode", because most blockchains have not implemented `PUSH0` opcode yet. It was introduced in Ethereum's shanghai upgrade which happened in April 2023. Based on our tests, the blockchain that support `PUSH0` opcode are:
+-   auroraTestnet
+-   edgeware
+-   edgewareTestnet
+-   gnosis
+-   chiado
+-   goerli
+-   mainnet
+-   moonbaseAlpha
+-   moonbeam
+-   moonriver
+-   polygonZkEvm
+-   polygonZkEvmTestnet
+-   pulsechain
+-   pulsechainV4
+-   sapphire
+-   sapphireTestnet
+-   scrollSepolia
+-   sepolia
+-   syscoin
+-   syscoinTestnet
+-   taikoTestnetSepolia
+
+If the blockchain that you want to use does not yet support `PUSHO` then in the meantime you can set the value of `evmVersion` to a previous version in `hardhat.config.js` like this:
+```js
+  solidity: { // changing these values affects deployment address
+    compilers: [
+      {
+        version: `0.8.21`,
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 15000
+          },
+          evmVersion: `paris`, // shanghai is current default but many blockchains don't support push0 opcode yet (causing "ProviderError: invalid opcode: opcode 0x5f not defined" and "ProviderError: execution reverted"). paris is prior version. 
+        }
+      },
+    ],
+  },
+```
+Note that this would mean that once you start deploying your contracts to live blockchains for production, **you cannot change this**, as if you do then subsequent deployments of the same contract may not get the same address. So if you really do want to use the latest EVM version, you'll have to wait for the blockchain to start supporting `PUSH0` before deploying without the explicit `evmVersion` setting for live operations.
+
 
 ### Replay protection
 If for a particular blockchain you get the error "only replay-protected (EIP-155) transactions allowed over RPC" then you can try a different RPC URL, find a node provider that doesn't enforce EIP-155, or run your own node using `--rpc.allow-unprotected-txs`. The protection is to prevent a transaction that was done on one blockchain (e.g. transfer 1B USDC from Peter to Mary on Ethereum) to be executed again on another blockchain (or a fork of the same blockchain) (e.g. transfer 1B USDC from Peter to Mary on Polygon). If Peter had 1B on Polygon at the same address then he'd lose it if Mary was able to replay the transaction on Polygon, so it makes sense to prevent such replay attacks.

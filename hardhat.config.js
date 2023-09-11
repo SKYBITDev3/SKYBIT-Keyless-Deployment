@@ -1,6 +1,7 @@
 require(`@nomicfoundation/hardhat-toolbox`)
 require(`@openzeppelin/hardhat-upgrades`)
 require(`dotenv`).config()
+require(`@tovarishfin/hardhat-yul`)
 
 BigInt.prototype[`toJSON`] = () => this.toString() // To prevent TypeError: Do not know how to serialize a BigInt
 
@@ -165,7 +166,8 @@ module.exports = {
 }
 
 // override hardhat compilation subtask
-subtask(`compile:solidity:get-dependency-graph`)
+const { TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH } =require("hardhat/builtin-tasks/task-names")
+subtask(TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH)
   .setAction(
     async (args, hre, runSuper) => {
       let filePath = `node_modules/@ZeframLou/create3-factory/package.json` // to create package.json required to import solidity file for compilation
@@ -177,7 +179,7 @@ subtask(`compile:solidity:get-dependency-graph`)
       // console.log(`Created ${filePath}`)
 
       filePath = `node_modules/@transmissions11/solmate/src/utils/Bytes32AddressLib.sol` // to handle "import {CREATE3} from "solmate/utils/CREATE3.sol";"
-      fileDest = `solmate/utils/Bytes32AddressLib.sol`
+      let fileDest = `solmate/utils/Bytes32AddressLib.sol`
       fs.cpSync(filePath, fileDest, { recursive: true })
       // console.log(`Copied ${filePath} to ${fileDest}`)
 

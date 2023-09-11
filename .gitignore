@@ -27,4 +27,3 @@ artifacts
 .pnp.loader.mjs
 *.dbg.json
 solmate
-artifacts-saved
