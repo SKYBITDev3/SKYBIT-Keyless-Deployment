@@ -166,7 +166,7 @@ module.exports = {
 }
 
 // override hardhat compilation subtask
-const { TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH } =require("hardhat/builtin-tasks/task-names")
+const { TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH } = require(`hardhat/builtin-tasks/task-names`)
 subtask(TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH)
   .setAction(
     async (args, hre, runSuper) => {

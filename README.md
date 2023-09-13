@@ -27,14 +27,14 @@ Each option will be discussed in more detail below.
 
 #### `CREATE`
 Contract addresses are calculated using the:
-- address of the account that uses the factory to deploy the contract;
+- address of the factory contract (that calls `CREATE` opcode) itself;
 - nonce (number of transactions the creator has done).
 
 #### `CREATE2`
 Contract addresses are calculated using the:
+- address of the factory contract (that calls `CREATE2` opcode) itself;
 - bytecode of the contract;
-- address of the factory contract itself;
-- salt (a chosen value);
+- salt (a chosen value).
 
 CREATE2 factories may also factor in the address of the account that uses the factory to deploy the contract to ensure uniqueness of the deployment address.
 
