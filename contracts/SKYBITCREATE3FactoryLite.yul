@@ -54,7 +54,7 @@ object "SKYBITCREATE3FactoryLite" {
             // 0xd6 = 0xc0 (short RLP prefix) + 0x16 (length of: 0x94 ++ proxy ++ 0x01)
             // 0x94 = 0x80 + 0x14 (0x14 = the length of an address, 20 bytes, in hex)
             mstore(0, 0xd694) // Store RLP encoding prefix just before proxy address
-            mstore8(0x34, 1) // Store single byte: nonce of the proxy contract just after proxy address
+            mstore8(0x34, 1) // Store single byte: nonce of the proxy contract just after proxy address.  EIP-161 specifies contract nonce to start at 1.
 
             let deployed:= keccak256(0x1e, 0x17) // Address from CREATE = hash of RLP-encoded proxy address and nonce
 

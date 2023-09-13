@@ -28,7 +28,7 @@ Each option will be discussed in more detail below.
 #### `CREATE`
 Contract addresses are calculated using the:
 - address of the factory contract (that calls `CREATE` opcode) itself;
-- nonce (number of transactions the creator has done).
+- nonce of the factory contract ([EIP-161](https://eips.ethereum.org/EIPS/eip-161) specifies that contract nonce starts at 1, not 0 like EOAs).
 
 #### `CREATE2`
 Contract addresses are calculated using the:

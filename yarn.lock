@@ -48,10 +48,10 @@
   dependencies:
     tslib "^2.3.1"
 
-"@axelar-network/axelar-gmp-sdk-solidity@^5.3.0":
-  version "5.3.0"
-  resolved "https://registry.yarnpkg.com/@axelar-network/axelar-gmp-sdk-solidity/-/axelar-gmp-sdk-solidity-5.3.0.tgz#38ba9a5478d4e75bf1dc634b0cd3fe7f2882532a"
-  integrity sha512-gLAslEu7qamwUic2sTrXBqyY9kKI0jccSeKCleK6PZ3rGuHIDHvaM3Ap75oO6nYmp++i9MqxWlf+MJJk5f0IQA==
+"@axelar-network/axelar-gmp-sdk-solidity@^5.3.1":
+  version "5.3.1"
+  resolved "https://registry.yarnpkg.com/@axelar-network/axelar-gmp-sdk-solidity/-/axelar-gmp-sdk-solidity-5.3.1.tgz#66d46d6ff750a031d83f4f459007ebccd815f910"
+  integrity sha512-pwhSKbHjByavmJdETxf21lRekclAO5RBJkCYGVT/MmsfacNEAKbVFdOVbJ/JPLTIc5bPKWdp9ak4ET3GKrSjhg==
 
 "@chainsafe/as-sha256@^0.3.1":
   version "0.3.1"
@@ -88,16 +88,6 @@
     "@chainsafe/as-sha256" "^0.3.1"
     "@chainsafe/persistent-merkle-tree" "^0.4.2"
     case "^1.6.3"
-
-"@controlcpluscontrolv/hardhat-yul@^2.0.4":
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/@controlcpluscontrolv/hardhat-yul/-/hardhat-yul-2.0.4.tgz#f570b8acb18c99cf5cdec6bbf67a3cc517665095"
-  integrity sha512-gVY7o3/oIZ3w8ADliuUbXurTFoMulnfj4yzCjQkbCdbZC56KPtHkU95gis/6/2H9PN5CyBiaLIQ3Jw51UjaAYw==
-  dependencies:
-    fs-extra "^7.0.1"
-    glob "^7.1.3"
-    solpp "^0.10.1"
-    yulp "^0.2.0"
 
 "@ethereumjs/rlp@^4.0.1":
   version "4.0.1"
@@ -1277,11 +1267,6 @@ ansi-styles@^4.0.0, ansi-styles@^4.1.0:
   dependencies:
     color-convert "^2.0.1"
 
-antlr4@^4.7.1:
-  version "4.13.1"
-  resolved "https://registry.yarnpkg.com/antlr4/-/antlr4-4.13.1.tgz#1e0a1830a08faeb86217cb2e6c34716004e4253d"
-  integrity sha512-kiXTspaRYvnIArgE97z5YVVf/cDVQABr3abFRR6mE7yesLMkgu4ujuyV/sgxafQ8wgve0DJQUJ38Z8tkgA2izA==
-
 antlr4@~4.8.0:
   version "4.8.0"
   resolved "https://registry.yarnpkg.com/antlr4/-/antlr4-4.8.0.tgz#f938ec171be7fc2855cd3a533e87647185b32b6a"
@@ -1443,7 +1428,7 @@ aws4@^1.8.0:
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.12.0.tgz#ce1c9d143389679e253b314241ea9aa5cec980d3"
   integrity sha512-NmWvPnx0F1SfrQbYwOi7OeaNGokp9XhzNioJ/CSBs8Qa4vxug81mhJEAVZwxXuBmYB5KDRfMq/F3RR0BIU7sWg==
 
-axios@^0.18.0, axios@^0.18.1:
+axios@^0.18.1:
   version "0.18.1"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.18.1.tgz#ff3f0de2e7b5d180e757ad98000f1081b87bcea3"
   integrity sha512-0BfJq4NSfQXd+SkFdrvFbG7addhYSBA2mQwISr46pD6E5iqkWg02RAs8vyTT/j0RTnoYmeXauBuSv1qKwR179g==
@@ -3142,10 +3127,10 @@ hardhat-gas-reporter@^1.0.9:
     eth-gas-reporter "^0.2.25"
     sha1 "^1.1.1"
 
-hardhat@^2.17.2:
-  version "2.17.2"
-  resolved "https://registry.yarnpkg.com/hardhat/-/hardhat-2.17.2.tgz#250a8c8e76029e9bfbfb9b9abee68d5b350b5d4a"
-  integrity sha512-oUv40jBeHw0dKpbyQ+iH9cmNMziweLoTW3MnkNxJ2Gc0KGLrQR/1n4vV4xY60zn2LdmRgnwPqy3CgtY0mfwIIA==
+hardhat@^2.17.3:
+  version "2.17.3"
+  resolved "https://registry.yarnpkg.com/hardhat/-/hardhat-2.17.3.tgz#4cb15f2afdea5f108970ed72e5b81e6e53052cfb"
+  integrity sha512-SFZoYVXW1bWJZrIIKXOA+IgcctfuKXDwENywiYNT2dM3YQc4fXNaTbuk/vpPzHIF50upByx4zW5EqczKYQubsA==
   dependencies:
     "@ethersproject/abi" "^5.1.2"
     "@metamask/eth-sig-util" "^4.0.0"
@@ -5131,21 +5116,6 @@ solidity-to-abi@^1.0.4:
   resolved "https://registry.yarnpkg.com/solidity-to-abi/-/solidity-to-abi-1.0.4.tgz#b5d1c095e7cb8ee402d5f7a49d2c2ff0e0d63a15"
   integrity sha512-2WZpksSLXBAGHBJvv/+M9zI/W4OGxHY3Hmgb75ZqO9hd1rcJMJx/u0zD8DKRWNuzKBw1f5J91VmntewGIrgRjg==
 
-solpp@^0.10.1:
-  version "0.10.2"
-  resolved "https://registry.yarnpkg.com/solpp/-/solpp-0.10.2.tgz#fb25c9032ccd9396c5169a4a9feabe1d402524b3"
-  integrity sha512-NtDgMzJXVD7NofxolLDspvukEMA++tktab7pobGI11xf46LXSOWICthVzfA+bmItcGAnFcNKwDX6s1GqNlf6HQ==
-  dependencies:
-    antlr4 "^4.7.1"
-    axios "^0.18.0"
-    bn-str-256 "^1.9.1"
-    commander "^2.19.0"
-    ethereumjs-util "^6.0.0"
-    lodash "^4.17.11"
-    mz "^2.7.0"
-    resolve "^1.10.0"
-    semver "^5.6.0"
-
 solpp@^0.11.5:
   version "0.11.5"
   resolved "https://registry.yarnpkg.com/solpp/-/solpp-0.11.5.tgz#e5f38b5acc952e1cc2e3871d490fdbed910938dd"
@@ -6042,7 +6012,7 @@ yocto-queue@^0.1.0:
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
 
-yulp@^0.2.0, yulp@^0.2.3:
+yulp@^0.2.3:
   version "0.2.3"
   resolved "https://registry.yarnpkg.com/yulp/-/yulp-0.2.3.tgz#f8055cb7784b44a955d76c607f712b5911c701f8"
   integrity sha512-2XX6g9hTB5OAMhPYw0Qq9inEmssVFSnq6dZxfkDQyipiZO70NgrrCTcQGt2Dw+jhUCwUkjPKTA6DF7RG7RRpKQ==
