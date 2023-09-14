@@ -136,11 +136,11 @@ Gas used for the deployment is 84,540 (or a little more for some blockchains), s
 
 The SKYBITLite factory contract will be deployed to this address (if the transaction bytecode is unchanged):
 ```
-0xe3dCDc516f75Fcd8CA7f3Ecb8387fb85CF0AbEDd
+0xcAb20EC9d599aCc6253be7fbfB1fa215E8c9f993
 ```
 The derived address of the account that would sign the deployment transaction, and that you'd need to fund in order to pay the gas fee, is:
 ```
-0x62dF0289c0120c00A7a67a353cD2600A882d8198
+0xb40a5c3217929e1b2631debb680b7C50ec054EBc
 ```
 
 
@@ -225,11 +225,11 @@ In `hardhat.config.js` do the following:
 
 Set `accounts` to the one(s) that you will use.
 
-Check whether the blockchains you will use are listed in [@wagmi/chains](https://github.com/wagmi-dev/references/blob/main/packages/chains/src/index.ts). If not, then add the blockchain info in `additionalNetworks`.
+Check whether the blockchains you will use are listed in [@wagmi/chains](https://github.com/wagmi-dev/viem/blob/main/src/chains/index.ts). If not, then add the blockchain info in `additionalNetworks`.
 
-For the few blockchain names in [@wagmi/chains](https://github.com/wagmi-dev/references/blob/main/packages/chains/src/index.ts) that don't match exactly with names in [hardhat-verify](https://github.com/NomicFoundation/hardhat/blob/main/packages/hardhat-verify/src/internal/chain-config.ts), use the [hardhat-verify](https://github.com/NomicFoundation/hardhat/blob/main/packages/hardhat-verify/src/internal/chain-config.ts) version as shown in this table:
+For the few blockchain names in [@wagmi/chains](https://github.com/wagmi-dev/viem/blob/main/src/chains/index.ts) that don't match exactly with names in [hardhat-verify](https://github.com/NomicFoundation/hardhat/blob/main/packages/hardhat-verify/src/internal/chain-config.ts), use the [hardhat-verify](https://github.com/NomicFoundation/hardhat/blob/main/packages/hardhat-verify/src/internal/chain-config.ts) version as shown in this table:
 
-| In [@wagmi/chains](https://github.com/wagmi-dev/references/blob/main/packages/chains/src/index.ts) | In [hardhat-verify](https://github.com/NomicFoundation/hardhat/blob/main/packages/hardhat-verify/src/internal/chain-config.ts) (use these) |
+| In [@wagmi/chains](https://github.com/wagmi-dev/viem/blob/main/src/chains/index.ts) | In [hardhat-verify](https://github.com/NomicFoundation/hardhat/blob/main/packages/hardhat-verify/src/internal/chain-config.ts) (use these) |
 |--|--|
 | arbitrum | arbitrumOne |
 | avalancheFuji | avalancheFujiTestnet |
