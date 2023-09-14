@@ -57,7 +57,9 @@ object "SKYBITCREATE3FactoryLite" {
         object "runtime" {
             code {
                     calldatacopy(0, 0, calldatasize())
-                    mstore(0, create(0, 0, calldatasize()))
+                    let deployedAddress := create(0, 0, calldatasize())
+                    if iszero(extcodesize(deployedAddress)) { revert(0, 0) }
+                    mstore(0, deployedAddress)
                     return (12, 20) // Addresses are only 20 bytes, so skip the first 12 bytes
                 }
             }

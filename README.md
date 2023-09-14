@@ -136,11 +136,11 @@ Gas used for the deployment is 84,540 (or a little more for some blockchains), s
 
 The SKYBITLite factory contract will be deployed to this address (if the transaction bytecode is unchanged):
 ```
-0xcAb20EC9d599aCc6253be7fbfB1fa215E8c9f993
+0xF17893CC7A1046378dead7c4798D86ADDDaC2Ce5
 ```
 The derived address of the account that would sign the deployment transaction, and that you'd need to fund in order to pay the gas fee, is:
 ```
-0xb40a5c3217929e1b2631debb680b7C50ec054EBc
+0x5f85c992B86050acb18dcDdcFE6C40eabbA0dc5E
 ```
 
 

@@ -22,7 +22,7 @@ async function main() {
 
 
   // VERIFY ON BLOCKCHAIN EXPLORER
-  if (isVerifyEnabled && ![`hardhat`, `localhost`].includes(network.name)) {
+  if (isVerifyEnabled && factoryToDeploy !== `SKYBITLite` && ![`hardhat`, `localhost`].includes(network.name)) {
     if (isDeployEnabled) {
       console.log(`Waiting to ensure that it will be ready for verification on etherscan...`)
       const { setTimeout } = require(`timers/promises`)
@@ -30,7 +30,7 @@ async function main() {
     }
     const { verifyContract } = require(`./utils`)
     await verifyContract(address, [])
-  } else console.log(`Verification on local network skipped`)
+  } else console.log(`Verification on explorer skipped`)
 
 }
 
