@@ -123,7 +123,7 @@ networks.polygonMumbai.url = `https://polygon-mumbai.blockpi.network/v1/rpc/publ
 
 networks.bscTestnet.url = `https://data-seed-prebsc-2-s2.bnbchain.org:8545`
 
-networks.sepolia.url = `https://eth-sepolia.g.alchemy.com/v2/demo`
+networks.sepolia.url = `https://eth-sepolia.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`
 
 
 const customChains = Object.values(networks).filter(network => Object.hasOwn(network, `urls`))

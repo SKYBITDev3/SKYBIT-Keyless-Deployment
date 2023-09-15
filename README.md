@@ -128,19 +128,19 @@ The derived address of the account that would sign the deployment transaction, a
 ```
 
 #### SKYBITLite
-We've developed a new highly gas-efficient light-weight CREATE3 factory in pure Yul language. It costs only a third of the gas to deploy the factory contract compared with the SKYBIT & Vectorized/solady factory, and almost a tenth when compared with Axelar's factory.
+We've developed a new highly gas-efficient light-weight CREATE3 factory in pure Yul language. It costs only around a third of the gas to deploy the factory contract compared with the SKYBIT & Vectorized/solady factory, and almost a tenth when compared with Axelar's factory.
 
 The node package [@tovarishfin/hardhat-yul](https://www.npmjs.com/package/@tovarishfin/hardhat-yul) compiles the Yul source code in `contracts/SKYBITCREATE3FactoryLite.yul` and places the artifacts in `artifacts` directory. `SKYBITCREATE3FactoryLite.json` was then copied to `artifacts-saved/contracts/SKYBITCREATE3FactoryLite.sol/` directory for preservation of the bytecode.
 
-Gas used for the deployment is 84,540 (or a little more for some blockchains), so gas limit in this deployment transaction has been set to 100,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.01 of native currency at the signer's address before factory deployment.
+Gas used for the deployment is 86,004 (or a little more for some blockchains), so gas limit in this deployment transaction has been set to 100,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.01 of native currency at the signer's address before factory deployment.
 
 The SKYBITLite factory contract will be deployed to this address (if the transaction bytecode is unchanged):
 ```
-0xF17893CC7A1046378dead7c4798D86ADDDaC2Ce5
+0xb0c211d66A1B3F393C197533E3A1140834729df8
 ```
 The derived address of the account that would sign the deployment transaction, and that you'd need to fund in order to pay the gas fee, is:
 ```
-0x5f85c992B86050acb18dcDdcFE6C40eabbA0dc5E
+0x17b61C311e299086232385FB462c9064530c5767
 ```
 
 
