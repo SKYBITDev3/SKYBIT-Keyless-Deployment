@@ -1,7 +1,7 @@
 require(`@nomicfoundation/hardhat-toolbox`)
 require(`@openzeppelin/hardhat-upgrades`)
 require(`dotenv`).config()
-require(`@tovarishfin/hardhat-yul`)
+require(`@skybit/hardhat-yul`)
 
 BigInt.prototype[`toJSON`] = () => this.toString() // To prevent TypeError: Do not know how to serialize a BigInt
 
