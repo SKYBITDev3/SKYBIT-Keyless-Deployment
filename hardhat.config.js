@@ -140,7 +140,7 @@ module.exports = {
             enabled: true,
             runs: 15000
           },
-          evmVersion: `paris`, // shanghai is current default but many blockchains don't support push0 opcode yet (causing "ProviderError: invalid opcode: opcode 0x5f not defined" and "ProviderError: execution reverted"). paris is prior version. 
+          // evmVersion: `shanghai`, // default is paris as of hardhat v2.17.3. Enable `shanghai` if you're sure that the blockchains that you will use support PUSH0 opcode.
         }
       },
     ],

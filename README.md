@@ -132,15 +132,15 @@ We've developed a new highly gas-efficient light-weight CREATE3 factory in pure 
 
 The node package [@tovarishfin/hardhat-yul](https://www.npmjs.com/package/@tovarishfin/hardhat-yul) compiles the Yul source code in `contracts/SKYBITCREATE3FactoryLite.yul` and places the artifacts in `artifacts` directory. `SKYBITCREATE3FactoryLite.json` was then copied to `artifacts-saved/contracts/SKYBITCREATE3FactoryLite.sol/` directory for preservation of the bytecode.
 
-Gas used for the deployment is 86,004 (or a little more for some blockchains), so gas limit in this deployment transaction has been set to 100,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.01 of native currency at the signer's address before factory deployment.
+Gas used for the deployment is 85,332 (or a little more for some blockchains), so gas limit in this deployment transaction has been set to 100,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.01 of native currency at the signer's address before factory deployment.
 
 The SKYBITLite factory contract will be deployed to this address (if the transaction bytecode is unchanged):
 ```
-0xb0c211d66A1B3F393C197533E3A1140834729df8
+0x74AF27F066B953455B3B832c156A49C1C76BC42a
 ```
 The derived address of the account that would sign the deployment transaction, and that you'd need to fund in order to pay the gas fee, is:
 ```
-0x17b61C311e299086232385FB462c9064530c5767
+0xf884312A6D52D1eA28Fd9D71307dA0a2F8B1d37D
 ```
 
 

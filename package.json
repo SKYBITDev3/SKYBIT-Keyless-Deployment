@@ -1,6 +1,6 @@
 {
   "name": "SKYBIT-Keyless-Deployment",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "packageManager": "yarn@3.6.1",
   "devDependencies": {
     "@Vectorized/solady": "https://github.com/Vectorized/solady#03f3fd05fb1da76edc4df83ae6bf32a842c15f12",
@@ -16,7 +16,7 @@
     "@openzeppelin/contracts": "^4.9.3",
     "@openzeppelin/contracts-upgradeable": "^4.9.3",
     "@openzeppelin/hardhat-upgrades": "^2.2.1",
-    "@skybit/hardhat-yul": "^4.0.1",
+    "@skybit/hardhat-yul": "^4.0.3",
     "@transmissions11/solmate": "https://github.com/transmissions11/solmate#f2833c7cc951c50e0b5fd7e505571fddc10c8f77",
     "@typechain/ethers-v6": "^0.5.0",
     "@typechain/hardhat": "^9.0.0",
