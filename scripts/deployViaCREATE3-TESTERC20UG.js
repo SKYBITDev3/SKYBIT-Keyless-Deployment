@@ -12,8 +12,8 @@ const { ethers, network, upgrades } = require(`hardhat`)
 // const addressOfFactory = `0x619Bdd2F58Ba735e9390D7B177e5Ca3C410bf98c`
 
 const factoryToUse = `SKYBITLite`
-const addressOfFactory = `0x78846a368116C53b2b031Cf69F4AA9567067885e` // if evmVersion: `paris`
-// const addressOfFactory = `0x2890c4912b66DbF2a5113aFeaB35D6A324e15767` // if evmVersion: `shanghai`
+const addressOfFactory = `0x74AF27F066B953455B3B832c156A49C1C76BC42a` // if evmVersion: `paris`
+// const addressOfFactory = `0x6517FD9813788A9916310D7C6656276e2c1C8726` // if evmVersion: `shanghai`
 
 const isDeployEnabled = true // toggle in case you do deployment and verification separately.
 
@@ -99,6 +99,7 @@ async function main() {
 
 
     // Testing the deployed contract.
+    console.log(`Testing:`)
     const deployedContract = await ethers.getContractAt(tokenContractName, proxyAddress)
     console.log(`point: ${await deployedContract.points(wallet.address)}`)
     console.log(`Version: ${await deployedContract.getV()}`)
