@@ -132,24 +132,24 @@ We've developed a new highly gas-efficient light-weight CREATE3 factory in pure 
 
 The node package [@tovarishfin/hardhat-yul](https://www.npmjs.com/package/@tovarishfin/hardhat-yul) compiles the Yul source code in `contracts/SKYBITCREATE3FactoryLite.yul` and places the artifacts in `artifacts` directory. `SKYBITCREATE3FactoryLite.json` was then copied to `artifacts-saved/contracts/SKYBITCREATE3FactoryLite.sol/` directory for preservation of the bytecode.
 
-Gas used for the deployment is 85,332 (or 83,892 if the latest EVM is used (`shanghai`) (which you can enable in `hardhat.config.js`)), so gas limit in this deployment transaction has been set to 100,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.01 of native currency at the signer's address before factory deployment.
+Gas used for the deployment is 85,116 (or 83,676 if the latest EVM is used (`shanghai`) (which you can enable in `hardhat.config.js`)), so gas limit in this deployment transaction has been set to 100,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.01 of native currency at the signer's address before factory deployment.
 
 The SKYBITLite factory contract will be deployed to this address (if the transaction bytecode is unchanged):
 ```
-0x74AF27F066B953455B3B832c156A49C1C76BC42a
+0x7f1a18EA6D565D6Dc46750C1978113a50979ac8c
 ```
 The derived address of the account that would sign the deployment transaction, and that you'd need to fund in order to pay the gas fee, is:
 ```
-0xf884312A6D52D1eA28Fd9D71307dA0a2F8B1d37D
+0x526e295BdfBc446026f8C397D14547454a46900E
 ```
 
 If instead EVM version is `shanghai`, the factory contract will be deployed to:
 ```
-0x6517FD9813788A9916310D7C6656276e2c1C8726
+0x7a843AbD8541ce366ADb7A1c23B6cc4A7262ada7
 ```
 and the derived address will be:
 ```
-0x5E3c5866539464cf019ef76A45520Ff482A4eD39
+0x8DD9485dC00De0c251f954e451F11171f6164980
 ```
 
 ### Usage

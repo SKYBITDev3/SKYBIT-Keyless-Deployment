@@ -11,8 +11,8 @@ const { ethers, network } = require(`hardhat`)
 // const addressOfFactory = `0x619Bdd2F58Ba735e9390D7B177e5Ca3C410bf98c` // gas cost: 2140281
 
 const factoryToUse = `SKYBITLite`
-const addressOfFactory = `0x74AF27F066B953455B3B832c156A49C1C76BC42a` // if evmVersion: `paris`. gas cost: 2135500
-// const addressOfFactory = `0x6517FD9813788A9916310D7C6656276e2c1C8726` // if evmVersion: `shanghai`. gas cost: 2117438
+const addressOfFactory = `0x7f1a18EA6D565D6Dc46750C1978113a50979ac8c` // if evmVersion: `paris`. gas cost: 2135494
+// const addressOfFactory = `0x7a843AbD8541ce366ADb7A1c23B6cc4A7262ada7` // if evmVersion: `shanghai`. gas cost: 2111524
 
 // PASS YOUR OWN STRING HERE TO GENERATE A UNIQUE SALT. After doing your first production deployment, don't change it in order to have same address on other blockchains.
 const salt = ethers.encodeBytes32String(`SKYBIT.ASIA TESTERC20..........`)

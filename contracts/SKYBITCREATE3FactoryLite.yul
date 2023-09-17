@@ -12,11 +12,11 @@ object "SKYBITCREATE3FactoryLite" {
         code { // Executable code of the object
             if gt(callvalue(), 0) { revert(0, 0) } // Protection against sending Ether
 
-            datacopy(0x20, dataoffset("CREATEFactory"), datasize("CREATEFactory")) // Write CREATEFactory bytecode to memory position 0x20 (we'll reserve 0 for call output later). 25 bytes on left of slot, 0-padded on right
+            datacopy(0x20, dataoffset("CREATEFactory"), datasize("CREATEFactory")) // Write CREATEFactory bytecode to memory position 0x20 (we'll reserve 0 for call output later). Bytes are on left of slot, 0-padded on right
             mstore(0x40, caller()) // 32 bytes. to be hashed with salt to help ensure unique address.
             mstore(0x60, calldataload(0)) // 32 bytes. User-provided salt
 
-            let createFactoryAddress:= create2(0, 0x20, datasize("CREATEFactory"), keccak256(0x40, 0x60)) // Deploy the CREATE factory via CREATE2, store address on the stack
+            let createFactoryAddress:= create2(0, 0x20, datasize("CREATEFactory"), keccak256(0x40, 0x40)) // Deploy the CREATE factory via CREATE2, store address on the stack
 
             if iszero(createFactoryAddress) {
                 mstore(0, 0x6e0df51b) // Store ABI encoding of `Deployment of CREATEFactory contract failed`
