@@ -132,17 +132,25 @@ We've developed a new highly gas-efficient light-weight CREATE3 factory in pure 
 
 The node package [@tovarishfin/hardhat-yul](https://www.npmjs.com/package/@tovarishfin/hardhat-yul) compiles the Yul source code in `contracts/SKYBITCREATE3FactoryLite.yul` and places the artifacts in `artifacts` directory. `SKYBITCREATE3FactoryLite.json` was then copied to `artifacts-saved/contracts/SKYBITCREATE3FactoryLite.sol/` directory for preservation of the bytecode.
 
-Gas used for the deployment is 85,332 (or a little more for some blockchains), so gas limit in this deployment transaction has been set to 100,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.01 of native currency at the signer's address before factory deployment.
+Gas used for the deployment is 84,250 (or 82,812 if the latest EVM is used (`shanghai`) (which you can enable in `hardhat.config.js`)), so gas limit in this deployment transaction has been set to 100,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.01 of native currency at the signer's address before factory deployment.
 
 The SKYBITLite factory contract will be deployed to this address (if the transaction bytecode is unchanged):
 ```
-0x74AF27F066B953455B3B832c156A49C1C76BC42a
+0x78846a368116C53b2b031Cf69F4AA9567067885e
 ```
 The derived address of the account that would sign the deployment transaction, and that you'd need to fund in order to pay the gas fee, is:
 ```
-0xf884312A6D52D1eA28Fd9D71307dA0a2F8B1d37D
+0x5F1BeD42778FEd39742B38B4cA71D64D697D98C3
 ```
 
+If instead EVM version is `shanghai`, the factory contract will be deployed to:
+```
+0x2890c4912b66DbF2a5113aFeaB35D6A324e15767
+```
+and the derived address will be:
+```
+0xA72a15d287279561172135B07253C9d98A3519Df
+```
 
 ### Usage
 Other people may have already deployed the factory contract onto some of your desired blockchains to the expected address (if they didn't change the deployment transaction data), in which case you won't need to deploy it on those blockchains - you can then just use those already-deployed factory contracts to deploy whatever other contracts you want to deploy. So first check the expected address on a blockchain explorer to see if a factory contract already exists there.

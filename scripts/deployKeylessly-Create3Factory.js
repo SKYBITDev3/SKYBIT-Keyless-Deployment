@@ -70,7 +70,7 @@ const getGasLimit = (factory) => {
       break
     case `SKYBITLite`:
     default:
-      return 100000n // Gas cost: 82812
+      return 100000n // Gas cost: if evmVersion: `paris`: 84250, if evmVersion: `shanghai`: 82812
   }
 }
 

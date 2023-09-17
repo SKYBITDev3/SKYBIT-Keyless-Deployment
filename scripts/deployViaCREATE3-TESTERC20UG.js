@@ -12,7 +12,8 @@ const { ethers, network, upgrades } = require(`hardhat`)
 // const addressOfFactory = `0x619Bdd2F58Ba735e9390D7B177e5Ca3C410bf98c`
 
 const factoryToUse = `SKYBITLite`
-const addressOfFactory = `0x74AF27F066B953455B3B832c156A49C1C76BC42a`
+const addressOfFactory = `0x78846a368116C53b2b031Cf69F4AA9567067885e` // if evmVersion: `paris`
+// const addressOfFactory = `0x2890c4912b66DbF2a5113aFeaB35D6A324e15767` // if evmVersion: `shanghai`
 
 const isDeployEnabled = true // toggle in case you do deployment and verification separately.
 
@@ -82,7 +83,9 @@ async function main() {
         proxyAddress = await getDeployedAddress(factoryToUse, instanceOfFactory, proxyBytecodeWithArgs, wallet, salt)
       }
     } else { // not using CREATE3
-      proxy = await cfProxy.deploy(implAddress, initializerData)
+      const feeData = await ethers.provider.getFeeData()
+      delete feeData.gasPrice
+      proxy = await cfProxy.deploy(implAddress, initializerData, { ...feeData })
       await proxy.waitForDeployment()
       proxyAddress = proxy.target
     }

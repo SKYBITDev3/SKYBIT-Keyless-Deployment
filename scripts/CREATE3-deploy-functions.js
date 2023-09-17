@@ -68,7 +68,6 @@ const getDeployedAddress = async (factoryToUse, instanceOfFactory, bytecode, wal
     case `SKYBITLite`:
     default:
       const txData = {
-        from: wallet.address,
         to: instanceOfFactory.target,
         data: bytecode.replace(`0x`, salt),
       }
@@ -88,7 +87,6 @@ const getGasEstimate = async (factoryToUse, instanceOfFactory, bytecode, wallet,
     case `SKYBITLite`:
     default:
       const txData = {
-        from: wallet.address,
         to: instanceOfFactory.target,
         data: bytecode.replace(`0x`, salt),
       }
@@ -110,7 +108,6 @@ const deploy = async (factoryToUse, instanceOfFactory, bytecode, wallet, salt, f
     case `SKYBITLite`:
     default:
       const txData = {
-        from: wallet.address,
         to: instanceOfFactory.target,
         data: bytecode.replace(`0x`, salt),
       }
