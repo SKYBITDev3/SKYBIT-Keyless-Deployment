@@ -2,17 +2,17 @@ const { ethers, network } = require(`hardhat`)
 
 // CHOOSE WHICH FACTORY YOU WANT TO USE:
 // const factoryToUse = `axelarnetwork`
-// const addressOfFactory = `0xb56144Efcf9b9F1A23395a3B7cAF295A9Cb494A2` // gas cost: 2248784
+// const addressOfFactory = `0xf0d5258610A5eF4ac7b894DDaAD1c314De8d56a5` // gas cost: 2222365
 
 // const factoryToUse = `ZeframLou`
-// const addressOfFactory = `0x3855FB9AE7E051E2e74BfE3f04228762d28D8641` // gas cost: 2169509
+// const addressOfFactory = `0xd8696189F687663c50535f588039FE538Cc31C04` // gas cost: 2145541
 
 // const factoryToUse = `SKYBIT`
-// const addressOfFactory = `0x619Bdd2F58Ba735e9390D7B177e5Ca3C410bf98c` // gas cost: 2140281
+// const addressOfFactory = `0xdD4Be472a59a5272C6970D759565cf38d26d4010` // gas cost: 2116813
 
 const factoryToUse = `SKYBITLite`
-const addressOfFactory = `0x7f1a18EA6D565D6Dc46750C1978113a50979ac8c` // if evmVersion: `paris`. gas cost: 2135494
-// const addressOfFactory = `0x7a843AbD8541ce366ADb7A1c23B6cc4A7262ada7` // if evmVersion: `shanghai`. gas cost: 2111524
+const addressOfFactory = `0x789c5e7247D643816a34fB6713aA9d6a98D17bE4` // gas cost: 2117435
+
 
 // PASS YOUR OWN STRING HERE TO GENERATE A UNIQUE SALT. After doing your first production deployment, don't change it in order to have same address on other blockchains.
 const salt = ethers.encodeBytes32String(`SKYBIT.ASIA TESTERC20..........`)

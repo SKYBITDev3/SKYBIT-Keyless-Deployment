@@ -60,17 +60,17 @@ const getCreate3FactoryArtifact = factory => { // not using from hardhat artifac
 const getGasLimit = (factory) => {
   switch (factory) {
     case `ZeframLou`:
-      return 500000n // Gas cost: 394541
+      return 500000n // Gas cost: 389011
       break
     case `axelarnetwork`:
-      return 900000n // Gas cost: 726644
+      return 900000n // Gas cost: 712665
       break
     case `SKYBIT`:
-      return 350000n // Gas cost: 253282
+      return 350000n // Gas cost: 247752
       break
     case `SKYBITLite`:
     default:
-      return 100000n // Gas cost: if evmVersion: `paris`: 85116, if evmVersion: `shanghai`: 83676
+      return 100000n // Gas cost: 80426
   }
 }
 

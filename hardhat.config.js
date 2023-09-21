@@ -6,9 +6,9 @@ require(`@skybit/hardhat-yul`)
 BigInt.prototype[`toJSON`] = () => this.toString() // To prevent TypeError: Do not know how to serialize a BigInt
 
 // SET YOUR ACCOUNT HERE
-const accounts = { mnemonic: process.env.MNEMONIC || `test test test test test test test test test test test junk` }
+// const accounts = { mnemonic: process.env.MNEMONIC || `test test test test test test test test test test test junk` }
 // const accounts = [process.env.PRIVATE_KEY0]
-// const accounts = [process.env.PRIVATE_KEY1, process.env.PRIVATE_KEY2]
+const accounts = [process.env.PRIVATE_KEY1, process.env.PRIVATE_KEY2]
 
 // You can add more blockchains to this list if they don't already exist in @wagmi/chains
 const additionalNetworks = { // See https://github.com/wagmi-dev/references/blob/main/packages/chains/src/index.ts
@@ -116,7 +116,7 @@ for (let [chainName, chainData] of Object.entries(chains)) {
 
 networks = { ...networks, ...additionalNetworks }
 
-// RPC URL overrides in case the one in @wagmi/chains doesn't work:
+// RPC URL overrides in case you dont want to use the one in @wagmi/chains:
 // networks.mainnet.url = `https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`
 
 networks.polygonMumbai.url = `https://polygon-mumbai.blockpi.network/v1/rpc/public`
@@ -125,13 +125,15 @@ networks.bscTestnet.url = `https://data-seed-prebsc-2-s2.bnbchain.org:8545`
 
 networks.sepolia.url = `https://eth-sepolia.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`
 
+networks.chiado.url = `https://endpoints.omniatech.io/v1/gnosis/chiado/public`
+
 
 const customChains = Object.values(networks).filter(network => Object.hasOwn(network, `urls`))
 
 
 /** @type import(`hardhat/config`).HardhatUserConfig */
 module.exports = {
-  solidity: { // changing these values affects deployment address
+  solidity: { // changing these values changes bytecode, so can affect deployment address if not using CREATE3
     compilers: [
       {
         version: `0.8.21`,
@@ -140,7 +142,7 @@ module.exports = {
             enabled: true,
             runs: 15000
           },
-          // evmVersion: `shanghai`, // default is paris as of hardhat v2.17.3. Enable `shanghai` if you're sure that the blockchains that you will use support PUSH0 opcode.
+          evmVersion: `shanghai`, // downgrade to `paris` if you encounter 'invalid opcode' error
         }
       },
     ],

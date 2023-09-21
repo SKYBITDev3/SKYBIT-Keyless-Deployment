@@ -3,17 +3,17 @@ const { ethers, network, upgrades } = require(`hardhat`)
 
 // CHOOSE WHICH FACTORY YOU WANT TO USE:
 // const factoryToUse = `axelarnetwork`
-// const addressOfFactory = `0xb56144Efcf9b9F1A23395a3B7cAF295A9Cb494A2`
+// const addressOfFactory = `0xf0d5258610A5eF4ac7b894DDaAD1c314De8d56a5`
 
 // const factoryToUse = `ZeframLou`
-// const addressOfFactory = `0x3855FB9AE7E051E2e74BfE3f04228762d28D8641`
+// const addressOfFactory = `0xd8696189F687663c50535f588039FE538Cc31C04`
 
 // const factoryToUse = `SKYBIT`
-// const addressOfFactory = `0x619Bdd2F58Ba735e9390D7B177e5Ca3C410bf98c`
+// const addressOfFactory = `0xdD4Be472a59a5272C6970D759565cf38d26d4010`
 
 const factoryToUse = `SKYBITLite`
 const addressOfFactory = `0x7f1a18EA6D565D6Dc46750C1978113a50979ac8c` // if evmVersion: `paris`
-// const addressOfFactory = `0x7a843AbD8541ce366ADb7A1c23B6cc4A7262ada7` // if evmVersion: `shanghai`
+// const addressOfFactory = `0x789c5e7247D643816a34fB6713aA9d6a98D17bE4` // if evmVersion: `shanghai`
 
 const isDeployEnabled = true // toggle in case you do deployment and verification separately.
 

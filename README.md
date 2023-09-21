@@ -75,15 +75,15 @@ Axelar's factory was included because they are a trustworthy organization doing 
 
 The original solidity files were obtained by firstly adding the npm package `@axelar-network/axelar-gmp-sdk-solidity` and importing `@axelar-network/axelar-gmp-sdk-solidity/contracts/deploy/Create3Deployer.sol` in `contracts/Imports.sol`. Hardhat then compiles it and places the artifacts in `artifacts` directory. `Create3Deployer.json` is then copied to `artifacts-saved/@axelar-network/axelar-gmp-sdk-solidity/contracts/deploy/Create3Deployer.sol/` directory for preservation of the bytecode.
 
-Gas used for the deployment is around 726,644, so gas limit in this deployment transaction has been set to 900,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.09 of native currency at the signer's address before factory deployment.
+Gas used for the deployment is around 712,665, so gas limit in this deployment transaction has been set to 900,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.09 of native currency at the signer's address before factory deployment.
 
-If the EVM version is `paris`, Axelar's factory contract will be deployed to this address (if the transaction bytecode is unchanged):
+Axelar's factory contract will be deployed to this address (if the EVM version is `shanghai` and transaction bytecode is unchanged):
 ```
-0xb56144Efcf9b9F1A23395a3B7cAF295A9Cb494A2
+0xf0d5258610A5eF4ac7b894DDaAD1c314De8d56a5
 ```
 The derived address of the account that would sign the deployment transaction, and that you'd need to fund in order to pay the gas fee, is:
 ```
-0x8A41d12f9573164B407953BdD14061AB5d81be46
+0xf8EdB7E9C459455791d9bA08ED9b68d044E6b5Ba
 ```
 
 #### ZeframLou & transmissions11/solmate
@@ -95,15 +95,15 @@ The original solidity files were obtained by firstly adding the specific github 
 
 `@ZeframLou/create3-factory/src/CREATE3Factory.sol` is imported in `contracts/Imports.sol`. The `solmate/utils` directory is automatically copied by an overridden hardhat compilation subtask (specified in `hardhat.config.js`) from `node_modules` to the repository root so that compilation would run without needing to change the line `import {CREATE3} from "solmate/utils/CREATE3.sol";` in the original factory contract. Hardhat then compiles it and places the artifacts in `artifacts` directory. `CREATE3Factory.json` is then copied to `artifacts-saved/@ZeframLou/create3-factory/src/CREATE3Factory.sol/` directory for preservation of the bytecode.
 
-Gas used for the deployment is around 394,439, so gas limit in this deployment transaction has been set to 500,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.05 of native currency at the signer's address before factory deployment.
+Gas used for the deployment is around 389,011, so gas limit in this deployment transaction has been set to 500,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.05 of native currency at the signer's address before factory deployment.
 
-If the EVM version is `paris`, ZeframLou's factory contract will be deployed to this address (if the transaction bytecode is unchanged):
+ZeframLou's factory contract will be deployed to this address (if the EVM version is `shanghai` and transaction bytecode is unchanged):
 ```
-0x3855FB9AE7E051E2e74BfE3f04228762d28D8641
+0xd8696189F687663c50535f588039FE538Cc31C04
 ```
 The derived address of the account that would sign the deployment transaction, and that you'd need to fund in order to pay the gas fee, is:
 ```
-0x39C104112A9436FF51188F0D7dF84c3bAAf4e096
+0x7c2F8728483c72e0fD5D18bB38d7B1e18116241b
 ```
 #### SKYBIT & Vectorized/solady
 The Vectorized/solady CREATE3 library has been included because it is more gas-efficient than other options. A factory contract is needed to use the library so a new one was created based on ZeframLou's factory.
@@ -114,15 +114,15 @@ The original Vectorized/solady CREATE3 solidity file was obtained by firstly add
  
 `contracts/SKYBITCREATE3Factory.sol` imports `{CREATE3} from "@Vectorized/solady/src/utils/CREATE3.sol";`. Hardhat then compiles it and places the artifacts in `artifacts` directory. `SKYBITCREATE3Factory.json` is then copied to `artifacts-saved/contracts/SKYBITCREATE3Factory.sol/` directory for preservation of the bytecode.
 
-Gas used for the deployment is around 253,282, so gas limit in this deployment transaction has been set to 350,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.035 of native currency at the signer's address before factory deployment.
+Gas used for the deployment is around 247,752, so gas limit in this deployment transaction has been set to 350,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.035 of native currency at the signer's address before factory deployment.
 
-If the EVM version is `paris`, the SKYBIT factory contract will be deployed to this address (if the transaction bytecode is unchanged):
+The SKYBIT factory contract will be deployed to this address (if the EVM version is `shanghai` and transaction bytecode is unchanged):
 ```
-0x619Bdd2F58Ba735e9390D7B177e5Ca3C410bf98c
+0xdD4Be472a59a5272C6970D759565cf38d26d4010
 ```
 The derived address of the account that would sign the deployment transaction, and that you'd need to fund in order to pay the gas fee, is:
 ```
-0x4ac8d0FF33fad2E2C83AAf383eb1A452a9374a96
+0x5f9bc74b96054F8DC18832B6ef39943466430931
 ```
 
 #### SKYBITLite
@@ -130,26 +130,15 @@ We've developed a new highly gas-efficient light-weight CREATE3 factory in pure 
 
 The node package [@skybit/hardhat-yul](https://www.npmjs.com/package/@skybit/hardhat-yul) compiles the Yul source code in `contracts/SKYBITCREATE3FactoryLite.yul` and places the artifacts in `artifacts` directory. `SKYBITCREATE3FactoryLite.json` is then copied to `artifacts-saved/contracts/SKYBITCREATE3FactoryLite.sol/` directory for preservation of the bytecode.
 
-Gas used for the deployment is 85,116 (or 83,676 if `shanghai` EVM is used), so gas limit in this deployment transaction has been set to 100,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.01 of native currency at the signer's address before factory deployment.
+Gas used for the deployment is 80,426, so gas limit in this deployment transaction has been set to 100,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.01 of native currency at the signer's address before factory deployment.
 
-`shanghai` is the latest EVM however if you encounter `invalid opcode` when deploying you'll need to set `evmVersion` to `paris`.
-
-If the EVM version is `paris`, the SKYBITLite factory contract will be deployed to this address (if the transaction bytecode is unchanged):
+The SKYBITLite factory contract will be deployed to this address (if the EVM version is `shanghai` and transaction bytecode is unchanged):
 ```
-0x7f1a18EA6D565D6Dc46750C1978113a50979ac8c
-```
-The derived address of the account that would sign the deployment transaction, and that you'd need to fund in order to pay the gas fee, is:
-```
-0x526e295BdfBc446026f8C397D14547454a46900E
-```
-
-If instead the EVM version is `shanghai`, the factory contract will be deployed to:
-```
-0x7a843AbD8541ce366ADb7A1c23B6cc4A7262ada7
+0x789c5e7247D643816a34fB6713aA9d6a98D17bE4
 ```
 and the derived address will be:
 ```
-0x8DD9485dC00De0c251f954e451F11171f6164980
+0x5596dFc660D4015C010F3fF30d89Cd7871256D95
 ```
 
 ### Usage
@@ -468,7 +457,7 @@ See also `contracts/TESTERC20.sol` in which the constructor accepts an array of 
 An alternative is to replace `msg.sender` with `tx.origin`, but Vitalik said that we shouldn't rely on `tx.origin`. Feel free to do some research if you're curious.
 
 ### Invalid opcode
-It's generally best practice to use the latest released versions of technology. However Hardhat v2.17.3 downgraded the default EVM version from `shanghai` to `paris`. So if you want to and can use the latest EVM then you need to set the EVM version explicity in  `hardhat.config.js` like this:
+It's generally best practice to use the latest released versions of technology. However Hardhat v2.17.3 downgraded the default EVM version from `shanghai` to `paris`. So if you want to use the latest EVM then you need to set the EVM version explicity in `hardhat.config.js` like this:
 ```js
   solidity: { // changing these values affects deployment address
     compilers: [
@@ -486,7 +475,7 @@ It's generally best practice to use the latest released versions of technology. 
   },
 ```
 
-However you may get the error "invalid opcode", because most blockchains have not implemented `PUSH0` opcode yet. It was introduced in Ethereum's shanghai upgrade which happened in April 2023. Based on our tests, the blockchains that support `PUSH0` opcode are:
+However you may get the error "invalid opcode", because most blockchains have not implemented `PUSH0` opcode yet. It was introduced in Ethereum's shanghai upgrade which happened in April 2023 and offers improvements such as gas savings. Based on our tests, the blockchains that support `PUSH0` opcode are:
 -   auroraTestnet
 -   edgeware
 -   edgewareTestnet
@@ -510,7 +499,7 @@ However you may get the error "invalid opcode", because most blockchains have no
 -   taikoTestnetSepolia
 -   telos
 
-If you get the error then in the meantime you can set the value of `evmVersion` to `paris`, but note that this would mean that once you start deploying your contracts to live blockchains for production, **you cannot change this**, otherwise subsequent keyless deployments of the same contract will not get the same address. So if you really do want to use the latest EVM version, you'll have to wait for the blockchain to start supporting `PUSH0`.
+If you get the "invalid opcode" error then you can set the value of `evmVersion` to `paris`, but note that this would mean that once you start deploying your contracts to live blockchains for production, **you cannot change this**, otherwise subsequent keyless deployments of the same contract will not get the same address as before. So if you really do want to use the latest EVM version, you'll have to wait for the blockchain to start supporting `PUSH0`.
 
 
 ### Replay protection

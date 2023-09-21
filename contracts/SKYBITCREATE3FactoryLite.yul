@@ -12,40 +12,44 @@ object "SKYBITCREATE3FactoryLite" {
         code { // Executable code of the object
             if gt(callvalue(), 0) { revert(0, 0) } // Protection against sending Ether
 
-            datacopy(0x20, dataoffset("CREATEFactory"), datasize("CREATEFactory")) // Write CREATEFactory bytecode to memory position 0x20 (we'll reserve 0 for call output later). Bytes are on left of slot, 0-padded on right
-            mstore(0x40, caller()) // 32 bytes. to be hashed with salt to help ensure unique address.
-            mstore(0x60, calldataload(0)) // 32 bytes. User-provided salt
+            mstore(0, caller()) // 32 bytes. The user's address.
+            mstore(0x20, calldataload(0)) // 32 bytes. User-provided salt.
+            let callerAndSaltHash := keccak256(0, 0x40) // hash caller with salt to help ensure unique address, prevent front-running. It's cheaper to take whole slots (include padded 0s). Store result on stack.
 
-            let createFactoryAddress:= create2(0, 0x20, datasize("CREATEFactory"), keccak256(0x40, 0x40)) // Deploy the CREATE factory via CREATE2, store address on the stack
+            datacopy(0, dataoffset("CREATEFactory"), datasize("CREATEFactory")) // Write CREATEFactory bytecode to memory position 0, overwriting previous data. Data is on left of slot, 0-padded on right.
+            let createFactoryAddress := create2(0, 0, datasize("CREATEFactory"), callerAndSaltHash) // Deploy the CREATE factory via CREATE2, store its address on the stack.
 
             if iszero(createFactoryAddress) {
-                mstore(0, 0x6e0df51b) // Store ABI encoding of `Deployment of CREATEFactory contract failed`
-                revert(0x1c, 4) // Revert with the stored 4 bytes skipping 0-padding
+                mstore8(0, 1) // An error code made up to help identify where it failed
+                revert(0, 1) // Return the error code so that it appears for user
             }
 
-            calldatacopy(0x20, 32, sub(calldatasize(), 32)) // Overwrite scratch at memory position 0x20 (we'll reserve 0 for call output later) with incoming contract bytecode (skipping first 32 bytes which is salt). We take full control of memory because it won't return to Solidity code. We don't need the previously stored data anymore.
+            mstore(0, 0) // make first slot 0 to reserve for address from call output
+            
+            let creationCodeSize := sub(calldatasize(), 32) // Store creation code size on stack. Skipping first 32 bytes of calldata which is salt.
+            calldatacopy(0x20, 32, creationCodeSize) // Overwrite memory from position 0x20 with incoming contract creation code. We take full control of memory because it won't return to Solidity code.
 
             if iszero(
-                call( // Use the deployed CREATEFactory to deploy the users' contract. Returns 0 on error (eg. out of gas) and 1 on success.
+                call( // Use the deployed CREATEFactory to deploy the user's contract. Returns 0 on error (eg. out of gas) and 1 on success.
                     gas(), // Gas remaining
                     createFactoryAddress,
-                    0, // Ether value
-                    0x20, // Start of contract bytecode or "creation code"
-                    sub(calldatasize(), 32), // Length of contract bytecode
-                    0, // Offset of output (resulting address of deployed user's contract). If call fails whatever was here may remain, so we left it empty beforehand.
-                    20 // Length of output
+                    0, // Native currency value to send
+                    0x20, // Start of contract creation code
+                    creationCodeSize, // Length of contract creation code
+                    0, // Offset of output. Resulting address of deployed user's contract starts here. If call fails then whatever was here may remain, so we left it empty beforehand.
+                    20 // Length of output (address is 20 bytes)
                 )
             ) {
-                mstore(0, 0xec4cb4b6) // Store ABI encoding of `CREATEFactory call failed`
-                revert(0x1c, 4)
+                mstore8(0, 2) // An error code made up to help identify where it failed
+                revert(0, 1)
             }
 
             if iszero(mload(0)) { // Call output was 0 or not received
-                mstore(0, 0xc6831bdb) // Store ABI encoding of `No address`
-                revert(0x1c, 4)
+                mstore8(0, 3) // An error code made up to help identify where it failed
+                revert(0, 1)
             }
 
-            return (0, 20) // Return the call output, which is the address of the contract that was deployed via CREATEFactory
+            return (0, 20) // Return the call output, which is the address (20 bytes) of the contract that was deployed via CREATEFactory
         }
 
         object "CREATEFactory" {
