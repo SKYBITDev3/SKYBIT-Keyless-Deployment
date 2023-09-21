@@ -77,7 +77,7 @@ The original solidity files were obtained by firstly adding the npm package `@ax
 
 Gas used for the deployment is around 726,644, so gas limit in this deployment transaction has been set to 900,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.09 of native currency at the signer's address before factory deployment.
 
-Axelar's factory contract will be deployed to this address (if the transaction bytecode is unchanged):
+If the EVM version is `paris`, Axelar's factory contract will be deployed to this address (if the transaction bytecode is unchanged):
 ```
 0xb56144Efcf9b9F1A23395a3B7cAF295A9Cb494A2
 ```
@@ -97,7 +97,7 @@ The original solidity files were obtained by firstly adding the specific github 
 
 Gas used for the deployment is around 394,439, so gas limit in this deployment transaction has been set to 500,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.05 of native currency at the signer's address before factory deployment.
 
-ZeframLou's factory contract will be deployed to this address (if the transaction bytecode is unchanged):
+If the EVM version is `paris`, ZeframLou's factory contract will be deployed to this address (if the transaction bytecode is unchanged):
 ```
 0x3855FB9AE7E051E2e74BfE3f04228762d28D8641
 ```
@@ -116,7 +116,7 @@ The original Vectorized/solady CREATE3 solidity file was obtained by firstly add
 
 Gas used for the deployment is around 253,282, so gas limit in this deployment transaction has been set to 350,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.035 of native currency at the signer's address before factory deployment.
 
-The SKYBIT factory contract will be deployed to this address (if the transaction bytecode is unchanged):
+If the EVM version is `paris`, the SKYBIT factory contract will be deployed to this address (if the transaction bytecode is unchanged):
 ```
 0x619Bdd2F58Ba735e9390D7B177e5Ca3C410bf98c
 ```
@@ -289,15 +289,19 @@ yarn hardhat run --network polygonZkEvmTestnet scripts/deployViaCREATE3-[contrac
 The final step in the script is an attempt to verify the contract on the blockchain explorer.
 
 ## Deploying keylessly without using a factory
-If you don't have many contracts to deploy then skipping the use (and deployment) of a factory is an alternative. In the same way that a factory was deployed keylessly above, your contracts themselves can each be deployed keylessly instead.
+If you don't have many contracts to deploy then skipping the use (and deployment) of a factory is an alternative. In the same way that a factory was deployed keylessly as described above, your contracts themselves can each be deployed keylessly instead.
 
-Any account can perform the deployment by broadcasting exactly the same saved transaction bytecode, and your contracts will always be deployed to the same address on all EVM-based blockchains. There are no private keys to safeguard for future deployments, increasing flexibility.
+Any account can perform the deployment by broadcasting exactly the same saved transaction bytecode, and your contracts will always be deployed to the same address on all EVM-based blockchains. You won't need to safeguard the private key of the account that was used to do the deployment, increasing flexibility. Even if you use a different account (or someone else performs the deployment), the contract will still be deployed to the same address. 
 
-Keyless deployment of *factory* contracts is suitable as factories are meant to be publicly used. But for your contracts, consider whether it's OK for any stranger to deploy them. e.g. if the contract assigns administrator privileges on deployment, the stranger who deployed your contract may become administrator, which you wouldn't want. So you'd either need to modify your code, or use a keylessly-deployed factory instead.
+However, please be aware of the issues described below.
+
+Keyless deployment of *factory* contracts in particular is suitable as factories are meant for the public. But for your contracts, consider whether it's OK for any stranger to deploy them. e.g. if the contract assigns administrator privileges on deployment, there would be possibility of front-running by a stranger, which would be a security risk. The stranger who deployed your contract may become owner and administrator, which you wouldn't want. So you'd either need to modify your code, or use a keylessly-deployed *factory* to deploy.
 
 If your contract uses `msg.sender` in the constructor, the value will be the address of the single-use account that nobody owns or controls, which is not what you'd expect or want, so you'd need to modify the code. See [Issues to be aware of](#issues-to-be-aware-of).
 
-Keyless deployment is more expensive than other methods because the gas price in the transaction has been set to 100 Gwei, a value that is likely to be higher than in the gas fee market of most blockchains. The value cannot vary because that would cause different transaction bytecode (which would then cause a different contract address). On some blockchains the market gas price may be 10 Gwei, in which case you'd be paying 10 times the market rate for keyless deployment.
+Keyless deployment is more expensive than other methods because the gas price in the transaction has been intentionally set to 100 Gwei, a value that is likely to be higher than in the gas fee market of most blockchains. The value cannot vary because that would cause different transaction bytecode (which would then cause a different contract address). On some blockchains the market gas price may be 10 Gwei, in which case you'd be paying 10 times the market rate for keyless deployment. If you have many contracts to deploy then you'd have to spend highly in total. You'd also have to fund a different address for each contract, so there would be some funds left over in each after deployment. Such remaining funds will be wasted because there is no way to recover them, as nobody has the keys required to spend from the addresses.
+
+The contract bytecode affects the address. Even slight changes to the source code or constructor arguments will change the bytecode, resulting in a different deployment address.
 
 To deploy your contract keylessly just copy, rename and customize `deployKeylessly-TESTERC20.js`, then run:
 ```
@@ -386,9 +390,6 @@ There would also be no risk of the account owner accidentally increasing the non
 
 The factory then effectively becomes a **shared public good** that nobody owns or controls, existing at the same address on all EVM-based blockchains and available for anyone to use without requiring permission. If it doesn't yet exist on a particular (e.g. future) blockchain, **anyone can deploy the factory** contract onto that blockchain, and the factory will then have the same address as on other blockchains.
 
-If you deploy your contracts keylessly without using a factory, the added advantage is that you won't need to safeguard the private key of the account that was used to do the deployment - even if you use a different account (or someone else performs the deployment), the contract will still be deployed to the same address. Though disadvantages include:
-- Front-run risk, which would be a security risk e.g. if your contract assigns privileged access to functions;
-- Higher cost, because the gas price has been intentionally set high. If you have many contracts to deploy you'd have to spend highly for each. You'd also have to fund a different address for each contract, so there would be some funds left over in each after deployment. Such remaining funds will be wasted because there is no way to recover them, as nobody has the keys required to spend from the addresses.
 
 ## Future-proofing to ensure same deployment address in future
 Innovation will never stop and new blockchains with useful features are likely to continue to arise as time goes by. So you would want to be able to add support in your ecosystem for any amazing new and popular blockchains that appear, **possibly years into the future**. What can you do now to ensure that your contract is likely to have the same address on those blockchains as on the other blockchains that you support?
@@ -418,7 +419,9 @@ If newer versions of factory contract code from third parties become available, 
 
 For your contracts that you want to deploy using a CREATE3 factory, there's no need to use `artifacts-saved` because bytecode isn't used for address calculation in CREATE3, so even after changes in the code or constructor arguments the deployment address will remain the same. But you should still keep the many other factors (e.g. compiler version and settings) unchanged.
 
-If you use factories that factor in your account address (and you should, to prevent front-running) to calculate deployment address, then you need to safeguard the private key / mnemonic passphrase so that in future you can use it again to continue to get the same addresses for your contracts on any new EVM-based blockchains.
+For your contracts that you deploy keylessly *without* a factory, you need to ensure that the code, constructor arguments, and compiler configuration are unchanged.
+
+If you use factories that factor in your account address (and you should, to prevent front-running) to calculate deployment address, then you need to safeguard the private key / mnemonic passphrase of the account so that in future you can return to it and continue to get the same addresses for your contracts on any new EVM-based blockchains.
 
 
 ## Issues to be aware of
@@ -465,7 +468,7 @@ See also `contracts/TESTERC20.sol` in which the constructor accepts an array of 
 An alternative is to replace `msg.sender` with `tx.origin`, but Vitalik said that we shouldn't rely on `tx.origin`. Feel free to do some research if you're curious.
 
 ### Invalid opcode
-It's generally best practice to use the latest released versions of technology. However Hardhat v2.17.3 downgraded the default EVM version from `shanghai` to `paris`. So you need to set the EVM version explicity in  `hardhat.config.js` like this:
+It's generally best practice to use the latest released versions of technology. However Hardhat v2.17.3 downgraded the default EVM version from `shanghai` to `paris`. So if you want to and can use the latest EVM then you need to set the EVM version explicity in  `hardhat.config.js` like this:
 ```js
   solidity: { // changing these values affects deployment address
     compilers: [
