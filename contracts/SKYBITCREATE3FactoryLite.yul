@@ -10,11 +10,9 @@ object "SKYBITCREATE3FactoryLite" {
 
     object "runtime" {
         code { // Executable code of the object
-            if gt(callvalue(), 0) { revert(0, 0) } // Protection against sending Ether
-
             mstore(0, caller()) // 32 bytes. The user's address.
             mstore(0x20, calldataload(0)) // 32 bytes. User-provided salt.
-            let callerAndSaltHash := keccak256(0, 0x40) // hash caller with salt to help ensure unique address, prevent front-running. It's cheaper to take whole slots (include padded 0s). Store result on stack.
+            let callerAndSaltHash := keccak256(0x0c, 0x34) // Hash caller with salt to help ensure unique address, prevent front-running. 12 0s skipped as addresses are only 20 bytes. Store result on stack.
 
             datacopy(0, dataoffset("CREATEFactory"), datasize("CREATEFactory")) // Write CREATEFactory bytecode to memory position 0, overwriting previous data. Data is on left of slot, 0-padded on right.
             let createFactoryAddress := create2(0, 0, datasize("CREATEFactory"), callerAndSaltHash) // Deploy the CREATE factory via CREATE2, store its address on the stack.

@@ -12,8 +12,7 @@ const { ethers, network, upgrades } = require(`hardhat`)
 // const addressOfFactory = `0xdD4Be472a59a5272C6970D759565cf38d26d4010`
 
 const factoryToUse = `SKYBITLite`
-const addressOfFactory = `0x7f1a18EA6D565D6Dc46750C1978113a50979ac8c` // if evmVersion: `paris`
-// const addressOfFactory = `0x789c5e7247D643816a34fB6713aA9d6a98D17bE4` // if evmVersion: `shanghai`
+const addressOfFactory = `0xb8462884791B873F68Bc5e2FD90E5BfEc8034D69`
 
 const isDeployEnabled = true // toggle in case you do deployment and verification separately.
 

@@ -6,9 +6,9 @@ require(`@skybit/hardhat-yul`)
 BigInt.prototype[`toJSON`] = () => this.toString() // To prevent TypeError: Do not know how to serialize a BigInt
 
 // SET YOUR ACCOUNT HERE
-// const accounts = { mnemonic: process.env.MNEMONIC || `test test test test test test test test test test test junk` }
+const accounts = { mnemonic: process.env.MNEMONIC || `test test test test test test test test test test test junk` }
 // const accounts = [process.env.PRIVATE_KEY0]
-const accounts = [process.env.PRIVATE_KEY1, process.env.PRIVATE_KEY2]
+// const accounts = [process.env.PRIVATE_KEY1, process.env.PRIVATE_KEY2]
 
 // You can add more blockchains to this list if they don't already exist in @wagmi/chains
 const additionalNetworks = { // See https://github.com/wagmi-dev/references/blob/main/packages/chains/src/index.ts

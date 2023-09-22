@@ -26,8 +26,8 @@ const CREATE3Deploy = async (factoryToUse, addressOfFactory, contractFactory, co
 
   // Call DEPLOY
   console.log(`now calling deploy() in the CREATE3 factory...`)
-  const txRec = await deploy(factoryToUse, instanceOfFactory, bytecodeWithArgs, wallet, salt, feeData)
-  await txRec.wait(1)
+  const txResponse = await deploy(factoryToUse, instanceOfFactory, bytecodeWithArgs, wallet, salt, feeData)
+  await txResponse.wait()
 
   const instanceOfDeployedContract = contractFactory.attach(addressExpected)
   console.log(`${contractToDeployName} was successfully deployed to ${instanceOfDeployedContract.target}`)

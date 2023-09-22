@@ -70,7 +70,7 @@ const getGasLimit = (factory) => {
       break
     case `SKYBITLite`:
     default:
-      return 100000n // Gas cost: 80426
+      return 100000n // Gas cost: 78914
   }
 }
 

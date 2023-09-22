@@ -19,8 +19,8 @@ const fundTransactionSigner = async (gasPrice, gasLimit, derivedAddressOfSigner,
 
           const feeData = await ethers.provider.getFeeData()
           delete feeData.gasPrice
-          let txRec = await wallet.sendTransaction({ to: derivedAddressOfSigner, value: shortfall, ...feeData })
-          await txRec.wait(1)
+          let txResponse = await wallet.sendTransaction({ to: derivedAddressOfSigner, value: shortfall, ...feeData })
+          await txResponse.wait()
           balanceOfSigner = await ethers.provider.getBalance(derivedAddressOfSigner)
           console.log(`${derivedAddressOfSigner} now has ${ethers.formatUnits(balanceOfSigner, `ether`)} of native currency`)
           return true
