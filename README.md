@@ -1,6 +1,8 @@
 # SKYBIT Keyless Deployment of Smart Contracts
 ## Introduction
-This repository is for anyone who wants to **deploy smart contracts to the same address** on multiple Ethereum-Virtual-Machine (EVM)-based blockchains. There are many ways to achieve this, but there can be pitfalls depending on which path you take (see the section [Problems that this tool solves](#problems-that-this-tool-solves) for details). It's important to consider your options before you start any deployments to a live blockchain, as it'd be **difficult to switch later** after realizing that you had made a bad decision, especially if many users are already using the contracts that you had deployed.
+This repository is for anyone who wants to **deploy smart contracts to the same address** on multiple Ethereum-Virtual-Machine (EVM)-based blockchains. Having the same addresses for the same contracts deployed on multiple blockchains helps to make things more *simple* and *elegant* for both developers and users.
+
+There are many ways to do it, but there can be pitfalls depending on which path you take (see the section [Problems that this tool solves](#problems-that-this-tool-solves) for details). It's important to consider your options before you start any deployments to a live blockchain, as it'd be **difficult to switch later** after realizing that you had made a bad decision, especially if many users are already using the contracts that you had deployed.
 
 This repository offers scripts to perform *keyless* smart contract deployment, in which a contract is deployed from a **single-use account** that nobody owns and whose **private keys are unknown and not needed**. Regardless of who does the deployment, as long as the transaction bytecode remains the same, the contract will always get the same address on any EVM blockchain. This method is described in the [ERC-1820: Pseudo-introspection Registry Contract](https://eips.ethereum.org/EIPS/eip-1820#deployment-method) Ethereum standard in which the registry contract is deployed keylessly to an expected predetermined address.
 
@@ -20,9 +22,9 @@ Each option will be discussed in more detail below.
 
 ## Using factory contracts
 ### CREATE, CREATE2 and CREATE3
-[CREATE2](https://eips.ethereum.org/EIPS/eip-1014) or CREATE3 factories help to achieve same addresses on multipe blockchains because the deployment address can be known any time beforehand. They are smart contracts that you can use to create instances of your contracts on EVM-based blockchains.
-
 `CREATE` and `CREATE2` are operation codes ("opcodes") in EVM-based blockchains for creating a smart contract from another smart contract.
+
+[CREATE2](https://eips.ethereum.org/EIPS/eip-1014) or CREATE3 factories help to achieve same addresses on multipe blockchains because the deployment address can be known any time beforehand. They are smart contracts that you can use to create instances of your contracts on EVM-based blockchains.
 
 #### `CREATE`
 If deploying from an externally-owned account (EOA), e.g. by calling `ethers.deployContract` from a hardhat script, the `CREATE` opcode will run in the EVM and contract addresses will be calculated using the:
@@ -353,10 +355,10 @@ Here is a list of some CREATE2 factories that have already been deployed on vari
 #### Axelar's [Constant Address Deployer](https://docs.axelar.dev/dev/general-message-passing/solidity-utilities#constant-address-deployer) and pcaversaccio's [xdeployer](https://github.com/pcaversaccio/xdeployer)
 These CREATE2 factories have been deployed on many blockchains and are ready to use by anyone. But they face the same problems as described in [Using an existing factory that wasn't deployed keylessly](#using-an-existing-factory-that-wasn't-deployed-keylessly) - you become dependent on the person or organization that deployed the factory. e.g. they may not agree to deploy their factories to your desired new blockchain, or their nonce in their account on a particular blockchain may increase due to a transaction before factory deployment, which actually happened with xdeployer - **the factory can no longer be deployed on Base to the same address as on other blockchains**: https://github.com/pcaversaccio/xdeployer/issues/164.
 
-Note also that pcaversaccio's xdeployer does not hash your account address with your salt, which makes front-running by others possible - others could deploy your contract on any blockchain before you do, which would be unacceptable if your contract grants privileged access.
+Note also that pcaversaccio's xdeployer does not hash your account address with your salt, which makes front-running by others possible - others could deploy your contract on any blockchain before you do, which would be unacceptable if, for example, your contract grants privileged access to the account that did the deployment.
 
 #### Arachnid's [Deterministic Deployment Proxy](https://github.com/Arachnid/deterministic-deployment-proxy)
-This CREATE2 factory was deployed keylessly, so anyone can deploy the factory contract and it will have the same address as on other blockchains. So you can deploy it yourself to any EVM-based blockchain (if it hasn't already been deployed by somoeone else) instead of asking Arachnid to do it for you. 
+This CREATE2 factory was deployed keylessly, so anyone can deploy the factory contract and it will have the same address as on other blockchains. You can deploy it yourself to any EVM-based blockchain (if it hasn't already been deployed by someone else) instead of asking Arachnid to do it for you. 
 
 Issues with this factory include:
 - It assumes that you use linux, docker and geth; you'd need to make many changes if you don't use those;
@@ -366,7 +368,9 @@ Arachnid's repository is a fork of Zoltu's one, but with salt added. As Zoltu's 
 
 
 ### Using an already-deployed CREATE2 factory to deploy a CREATE3 factory
-Using a CREATE2 factory to deploy a CREATE3 factory can help to ensure that the CREATE3 factory contract gets the same address on any EVM-based blockchain, so that your contracts would also get the same addresses. But deploying the CREATE2 factory would be an additional step, adding complication and requiring more effort which may be unnecessary.
+Using a CREATE2 factory to deploy a CREATE3 factory can help to ensure that the CREATE3 factory contract gets the same address on any EVM-based blockchain, so that your contracts would also get the same addresses. But deploying the CREATE2 factory would be an additional step, adding complication and requiring more effort which may be unnecessary, especially when new blockchains appear that you want to use - you'd first need to deploy the CREATE2 factory (or ask the one who had deployed it on the other blockchains to do it, and hope he or she does it), then use that to deploy the CREATE3 factory that you would then use to deploy your contract to the new blockchain.
+
+Axelar's recently-deployed Create3Deployer was done this way - they used their old Create2Deployer to deploy their Create3Deployer contract onto many blockchains to the address [0xf49B10ccFB7D82C3a8749fFB1aAF3e0c936Eba36](https://blockscan.com/address/0xf49B10ccFB7D82C3a8749fFB1aAF3e0c936Eba36). If you use their Create3Deployer to deploy your contract onto some blockchains, e.g. Polygon zkEVM and Avalanche, then decide that you want to deploy your contract onto Gnosis, you'd need to first ask Axelar to deploy the Create3Deployer onto Gnosis, which would require them to first deploy their Create2Deployer contract. Having more chained dependencies make it less likely that it would happen.
 
 
 ## Solution and advantages
