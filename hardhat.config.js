@@ -11,7 +11,7 @@ const accounts = { mnemonic: process.env.MNEMONIC || `test test test test test t
 // const accounts = [process.env.PRIVATE_KEY1, process.env.PRIVATE_KEY2]
 
 // You can add more blockchains to this list if they don't already exist in @wagmi/chains
-const additionalNetworks = { // See https://github.com/wagmi-dev/references/blob/main/packages/chains/src/index.ts
+const additionalNetworks = { // See https://github.com/wagmi-dev/viem/blob/main/src/chains/index.ts
   bttc: {
     chainId: 199,
     url: `https://rpc.bittorrentchain.io`,
@@ -125,7 +125,7 @@ networks.bscTestnet.url = `https://data-seed-prebsc-2-s2.bnbchain.org:8545`
 
 networks.sepolia.url = `https://eth-sepolia.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`
 
-networks.chiado.url = `https://endpoints.omniatech.io/v1/gnosis/chiado/public`
+// networks.chiado.url = `https://endpoints.omniatech.io/v1/gnosis/chiado/public`
 
 
 const customChains = Object.values(networks).filter(network => Object.hasOwn(network, `urls`))
