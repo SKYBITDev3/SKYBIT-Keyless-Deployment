@@ -39,7 +39,22 @@ const verifyContract = async (address, constructorArguments) => {
 
 const printNativeCurrencyBalance = async (walletAddress, decimals = `ether`) => ethers.formatUnits(await ethers.provider.getBalance(walletAddress), decimals)
 
+
 const printContractBalanceOf = async (tokenContract, holderAddress, decimals = `ether`) => ethers.formatUnits(await tokenContract.balanceOf(holderAddress), decimals)
+
+
+const getCreate3Address = async (addressOfFactory, callerAddress, salt) => {
+  const bytecodeOfCreateFactory = `0x601180600a5f395ff3fe365f6020373660205ff05f526014600cf3` // This needs to be updated if CREATEFactory object in contracts/SKYBITCREATE3FactoryLite.yul is changed
+
+  const keccak256Calculated = ethers.solidityPackedKeccak256([`address`, `bytes32`], [callerAddress, salt]) // same as ethers.keccak256(callerAddress + salt.slice(2)) //. Inputs must not be 0-padded.
+
+  const addressOfCreateFactory = ethers.getCreate2Address(addressOfFactory, keccak256Calculated, ethers.keccak256(bytecodeOfCreateFactory))
+
+  return ethers.getCreateAddress({ 
+    from: addressOfCreateFactory,
+    nonce: 1 // nonce starts at 1 in contracts. Don't use getTransactionCount to get nonce because if a deployment is repeated with same inputs getCreate2Address would fail before it gets here.
+  })  
+}
 
 
 module.exports = {
@@ -49,4 +64,5 @@ module.exports = {
   verifyContract,
   printNativeCurrencyBalance,
   printContractBalanceOf,
+  getCreate3Address,
 }

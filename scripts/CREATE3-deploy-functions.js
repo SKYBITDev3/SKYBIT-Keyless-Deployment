@@ -67,11 +67,14 @@ const getDeployedAddress = async (factoryToUse, instanceOfFactory, bytecode, wal
       break
     case `SKYBITLite`:
     default:
-      const txData = {
-        to: instanceOfFactory.target,
-        data: bytecode.replace(`0x`, salt),
-      }
-      return await wallet.call(txData)
+      // const txData = {
+      //   to: instanceOfFactory.target,
+      //   data: bytecode.replace(`0x`, salt),
+      // }
+      // return await wallet.call(txData)
+
+      const { getCreate3Address } = require(`./utils`)
+      return await getCreate3Address(instanceOfFactory.target, wallet.address, salt)
   }
 }
 
