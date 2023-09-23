@@ -13,7 +13,7 @@ const fundTransactionSigner = async (gasPrice, gasLimit, derivedAddressOfSigner,
       console.log(`There are insufficient funds at ${derivedAddressOfSigner} on ${network.name} to broadcast the transaction.`)
 
       if (isDeployEnabled) {
-        const readlineSync = require(`readline-sync`)
+        const readlineSync = require(`@thundernetworkrad/readline-sync`)
         if (readlineSync.keyInYN(`Do you want to try to transfer ${ethers.formatUnits(shortfall, `ether`)} of native currency from your wallet ${wallet.address} to there now? `)) {
           console.log(`Transferring ${ethers.formatUnits(shortfall, `ether`)} of native currency from ${wallet.address} to ${derivedAddressOfSigner} on ${network.name}...`)
 
@@ -57,7 +57,7 @@ const getSavedArtifactFile = (contractName, compiledArtifactFilePath) => {
     const savedArtifactFileLastMod = savedArtifactFileStats.mtimeMs
 
     if (compiledArtifactFileLastMod > savedArtifactFileLastMod) {
-      const readlineSync = require(`readline-sync`)
+      const readlineSync = require(`@thundernetworkrad/readline-sync`)
       useSavedArtifact = readlineSync.keyInYN(`Old ${contractName} artifact file found in artifacts-saved. Reuse it?`)
       if (!useSavedArtifact) useSavedArtifact = !readlineSync.keyInYN(`The saved ${contractName} artifact file will be OVERWRITTEN BY THE NEWER FILE, causing your contract to be possibly deployed to a DIFFERENT address than before. Are you sure?`)
       if (useSavedArtifact) console.log(`Using ${contractName} artifact file that was found in artifacts-saved.`)
@@ -89,7 +89,7 @@ const deployKeylessly = async (contractName, bytecodeWithArgs, gasLimit, wallet,
   console.log(`gasLimit: ${gasLimit} (${gasLimitPercentageAboveCost}% above expected cost)`)
   if (gasLimitPercentageAboveCost < 10) {
     console.log(`gasLimit may be too low to accommodate for possibly increasing future opcode cost. Once you choose a gasLimit, you'll need to use the same value for deployments on other blockchains any time in the future in order for your contract to have the same address.`)
-    return
+    // return
   }
 
   // Keep this data consistent otherwise the deployment address will become different
