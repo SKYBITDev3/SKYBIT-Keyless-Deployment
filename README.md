@@ -36,7 +36,7 @@ if deploying using a `CREATE` factory contract,  contract addresses are calculat
 - nonce of the factory contract ([EIP-161](https://eips.ethereum.org/EIPS/eip-161) specifies that contract nonce starts at 1, not 0 like EOAs).
 
 #### `CREATE2`
-	The `CREATE2` opcode must be run from a deployed contract, so usually it's done from a `CREATE2` factory contract. Contract addresses are calculated using the:
+The `CREATE2` opcode must be run from a deployed contract, so usually it's done from a `CREATE2` factory contract. Contract addresses are calculated using the:
 - address of the factory contract (that calls `CREATE2` opcode) itself;
 - bytecode of the contract;
 - salt (a chosen value).
