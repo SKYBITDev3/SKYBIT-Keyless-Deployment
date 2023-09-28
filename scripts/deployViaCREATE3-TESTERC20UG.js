@@ -6,7 +6,7 @@ const { ethers, network, upgrades } = require(`hardhat`)
 // const addressOfFactory = `0xf0d5258610A5eF4ac7b894DDaAD1c314De8d56a5`
 
 // const factoryToUse = `ZeframLou`
-// const addressOfFactory = `0xd8696189F687663c50535f588039FE538Cc31C04`
+// const addressOfFactory = `0x92B9db5453E03E516Fd461a1852E67EAF8Bc6dad`
 
 // const factoryToUse = `SKYBIT`
 // const addressOfFactory = `0xdD4Be472a59a5272C6970D759565cf38d26d4010`
@@ -89,7 +89,10 @@ async function main() {
       proxyAddress = proxy.target
     }
 
-    if (isDeployEnabled) await upgrades.forceImport(proxyAddress, cfToken)
+    if (isDeployEnabled) {
+      await upgrades.forceImport(proxyAddress, cfToken)
+      console.log(`implementation has been connected with proxy`)
+    }
   }
   console.log(`proxy address: ${proxyAddress}`)
 

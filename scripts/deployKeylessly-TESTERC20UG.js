@@ -43,7 +43,10 @@ async function main() {
 
   const proxyAddress = await deployKeylessly(proxyContractName, proxyBytecodeWithArgs, gasLimitForProxy, wallet, isDeployEnabled) // gas cost: 378214
 
-  if (isDeployEnabled) await upgrades.forceImport(proxyAddress, cfToken)
+  if (isDeployEnabled) {
+    await upgrades.forceImport(proxyAddress, cfToken)
+    console.log(`implementation has been connected with proxy`)
+  }
 
 
   // VERIFY ON BLOCKCHAIN EXPLORER

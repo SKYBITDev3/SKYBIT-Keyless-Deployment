@@ -41,7 +41,7 @@ const getArtifactOfContract = contractName => { // not using from hardhat artifa
 }
 
 
-const getSavedArtifactFile = (contractName, compiledArtifactFilePath) => {
+const getSavedArtifactFile = (contractName, compiledArtifactFilePath) => { // compare hardhat's compiled artifact file with saved copy
   const { statSync, existsSync, cpSync } = require(`fs`)
 
   const compiledArtifactFileStats = statSync(compiledArtifactFilePath)
@@ -87,9 +87,11 @@ const deployKeylessly = async (contractName, bytecodeWithArgs, gasLimit, wallet,
 
   const gasLimitPercentageAboveCost = Number(gasLimit * 100n / gasCost) - 100
   console.log(`gasLimit: ${gasLimit} (${gasLimitPercentageAboveCost}% above expected cost)`)
-  if (gasLimitPercentageAboveCost < 10) {
+  if (gasLimitPercentageAboveCost < 0) {
+    console.log(`gasLimit isn't high enough to proceed.`)
+    return
+  } else if (gasLimitPercentageAboveCost < 10) {
     console.log(`gasLimit may be too low to accommodate for possibly increasing future opcode cost. Once you choose a gasLimit, you'll need to use the same value for deployments on other blockchains any time in the future in order for your contract to have the same address.`)
-    // return
   }
 
   // Keep this data consistent otherwise the deployment address will become different

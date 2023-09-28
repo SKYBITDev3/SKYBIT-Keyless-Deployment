@@ -13,7 +13,7 @@ const CREATE3Deploy = async (factoryToUse, addressOfFactory, contractFactory, co
   console.log(`Expected address of ${contractToDeployName} using factory at ${addressOfFactory}: ${addressExpected}`)
 
   if (await ethers.provider.getCode(addressExpected) !== `0x`) {
-    console.log(`The contract already exists at ${addressExpected}`)
+    console.log(`The contract already exists at ${addressExpected}. Change the salt if you want to deploy your contract to a different address.`)
     return
   }
 
@@ -40,7 +40,7 @@ const getArtifactOfFactory = (factoryToUse) => {
   let savedArtifactFilePath
   switch (factoryToUse) {
     case `ZeframLou`:
-      savedArtifactFilePath = `artifacts-saved/@ZeframLou/create3-factory/src/CREATE3Factory.sol/CREATE3Factory.json`
+      savedArtifactFilePath = `artifacts-saved/@SKYBITDev3/ZeframLou-create3-factory/src/CREATE3Factory.sol/CREATE3Factory.json`
       break
     case `axelarnetwork`:
       savedArtifactFilePath = `artifacts-saved/@axelar-network/axelar-gmp-sdk-solidity/contracts/deploy/Create3Deployer.sol/Create3Deployer.json`

@@ -35,11 +35,11 @@ async function main() {
 }
 
 
-const getCreate3FactoryArtifact = factory => { // not using from hardhat artifacts directory directly because contents will automatically change if there are any changes in many variables
+const getCreate3FactoryArtifact = factory => {
   let compiledArtifactFilePath
-  switch (factory) {
+  switch (factory) { // Get hardhat's compiled artifact file first for comparison with saved copy
     case `ZeframLou`:
-      compiledArtifactFilePath = `artifacts/@ZeframLou/create3-factory/src/CREATE3Factory.sol/CREATE3Factory.json`
+      compiledArtifactFilePath = `artifacts/@SKYBITDev3/ZeframLou-create3-factory/src/CREATE3Factory.sol/CREATE3Factory.json`
       break
     case `axelarnetwork`:
       compiledArtifactFilePath = `artifacts/@axelar-network/axelar-gmp-sdk-solidity/contracts/deploy/Create3Deployer.sol/Create3Deployer.json`
@@ -60,7 +60,7 @@ const getCreate3FactoryArtifact = factory => { // not using from hardhat artifac
 const getGasLimit = (factory) => {
   switch (factory) {
     case `ZeframLou`:
-      return 500000n // Gas cost: 389011
+      return 500000n // Gas cost: 388999
       break
     case `axelarnetwork`:
       return 900000n // Gas cost: 712665

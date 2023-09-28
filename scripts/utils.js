@@ -45,6 +45,7 @@ const printContractBalanceOf = async (tokenContract, holderAddress, decimals = `
 
 const getCreate3Address = async (addressOfFactory, callerAddress, salt) => {
   const { evmVersion } = hre.config.solidity.compilers[0].settings
+
   const bytecodeOfCreateFactory = evmVersion === `shanghai` ? `0x601180600a5f395ff3fe365f6020373660205ff05f526014600cf3` : `0x601480600c6000396000f3fe3660006020373660206000f06000526014600cf3` // This needs to be updated if CREATEFactory object in contracts/SKYBITCREATE3FactoryLite.yul is changed
 
   const keccak256Calculated = ethers.solidityPackedKeccak256([`address`, `bytes32`], [callerAddress, salt]) // same as ethers.keccak256(callerAddress + salt.slice(2)) //. Inputs must not be 0-padded.

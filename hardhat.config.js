@@ -143,6 +143,7 @@ module.exports = {
             runs: 15000
           },
           evmVersion: `shanghai`, // downgrade to `paris` if you encounter 'invalid opcode' error
+          // evmVersion: `paris`,
         }
       },
     ],
@@ -167,6 +168,8 @@ module.exports = {
   }
 }
 
+
+/* Not needed anymore after forking https://github.com/ZeframLou/create3-factory
 // override hardhat compilation subtask
 const { TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH } = require(`hardhat/builtin-tasks/task-names`)
 subtask(TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH)
@@ -193,3 +196,4 @@ subtask(TASK_COMPILE_SOLIDITY_GET_DEPENDENCY_GRAPH)
       return await runSuper(args) // run the original subtask
     }
   )
+*/

@@ -91,21 +91,23 @@ The derived address of the account that would sign the deployment transaction, a
 #### ZeframLou & transmissions11/solmate
 ZeframLou's factory was included because it's well-known, as is the solmate CREATE3 library that it imports.
 
-The original solidity files were obtained by firstly adding the specific github repository commits to `package.json`:
-- https://github.com/ZeframLou/create3-factory#18cfad8d118b25a5092cdfed6bea9c932ca5b6eb
-- https://github.com/transmissions11/solmate#f2833c7cc951c50e0b5fd7e505571fddc10c8f77
+The main branch of https://github.com/ZeframLou/create3-factory (commit [06ec0ff36d41853dcd4399fbe2127aef801c4077](https://github.com/ZeframLou/create3-factory/commit/06ec0ff36d41853dcd4399fbe2127aef801c4077)) was forked to https://github.com/SKYBITDev3/ZeframLou-create3-factory for the following reasons:
+- it was missing `package.json`, causing the error `Manifest not found` when importing using `yarn`.
+- In `@ZeframLou/create3-factory/src/CREATE3Factory.sol`, `import {CREATE3} from "solmate/utils/CREATE3.sol";` needed to be changed to `import {CREATE3} from "@transmissions11/solmate/src/utils/CREATE3.sol";` so that it could be accessed normally from the imported package.
 
-`@ZeframLou/create3-factory/src/CREATE3Factory.sol` is imported in `contracts/Imports.sol`. The `solmate/utils` directory is automatically copied by an overridden hardhat compilation subtask (specified in `hardhat.config.js`) from `node_modules` to the repository root so that compilation would run without needing to change the line `import {CREATE3} from "solmate/utils/CREATE3.sol";` in the original factory contract. Hardhat then compiles it and places the artifacts in `artifacts` directory. `CREATE3Factory.json` is then copied to `artifacts-saved/@ZeframLou/create3-factory/src/CREATE3Factory.sol/` directory for preservation of the bytecode.
+The solmate CREATE3 library was obtained by adding the github repository commit [f2833c7cc951c50e0b5fd7e505571fddc10c8f77](https://github.com/transmissions11/solmate/commit/f2833c7cc951c50e0b5fd7e505571fddc10c8f77) to `package.json`.
 
-Gas used for the deployment is around 389,011, so gas limit in this deployment transaction has been set to 500,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.05 of native currency at the signer's address before factory deployment.
+`@SKYBITDev3/ZeframLou-create3-factory/src/CREATE3Factory.sol` is imported in `contracts/Imports.sol`. Hardhat then compiles it and places the artifacts in `artifacts` directory. `CREATE3Factory.json` is then copied to `artifacts-saved/@SKYBITDev3/ZeframLou-create3-factory/src/CREATE3Factory.sol/` directory for preservation of the bytecode.
+
+Gas used for the deployment is around 388,999, so gas limit in this deployment transaction has been set to 500,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.05 of native currency at the signer's address before factory deployment.
 
 ZeframLou's factory contract will be deployed to this address (if the EVM version is `shanghai` and transaction bytecode is unchanged):
 ```
-0xd8696189F687663c50535f588039FE538Cc31C04
+0x0dDB4d6F105300A2eFa47DAf7EC47e6b17a70350
 ```
 The derived address of the account that would sign the deployment transaction, and that you'd need to fund in order to pay the gas fee, is:
 ```
-0x7c2F8728483c72e0fD5D18bB38d7B1e18116241b
+0x92B9db5453E03E516Fd461a1852E67EAF8Bc6dad
 ```
 #### SKYBIT & Vectorized/solady
 The Vectorized/solady CREATE3 library has been included because it is more gas-efficient than other options. A factory contract is needed to use the library so a new one was created based on ZeframLou's factory.
