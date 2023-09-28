@@ -120,13 +120,13 @@ The original Vectorized/solady CREATE3 solidity file was obtained by firstly add
 
 Gas used for the deployment is around 247,752, so gas limit in this deployment transaction has been set to 350,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.035 of native currency at the signer's address before factory deployment.
 
-The SKYBIT factory contract will be deployed to this address (if the EVM version is `shanghai` and transaction bytecode is unchanged):
+The SKYBITSolady factory contract will be deployed to this address (if the EVM version is `shanghai` and transaction bytecode is unchanged):
 ```
-0xdD4Be472a59a5272C6970D759565cf38d26d4010
+0x7008e1DEECA3E45E61b379BBA882134b3A15d9dF
 ```
 The derived address of the account that would sign the deployment transaction, and that you'd need to fund in order to pay the gas fee, is:
 ```
-0x5f9bc74b96054F8DC18832B6ef39943466430931
+0x6610a846957021103477DB54c18172cd80d953b7
 ```
 
 #### SKYBITLite

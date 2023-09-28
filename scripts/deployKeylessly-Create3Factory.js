@@ -1,7 +1,7 @@
 // CHOOSE WHICH FACTORY YOU WANT TO USE:
 // const factoryToDeploy = `axelarnetwork`
 // const factoryToDeploy = `ZeframLou`
-// const factoryToDeploy = `SKYBIT`
+// const factoryToDeploy = `SKYBITSolady`
 const factoryToDeploy = `SKYBITLite`
 
 const isDeployEnabled = true // toggle in case you do deployment and verification separately.
@@ -44,7 +44,7 @@ const getCreate3FactoryArtifact = factory => {
     case `axelarnetwork`:
       compiledArtifactFilePath = `artifacts/@axelar-network/axelar-gmp-sdk-solidity/contracts/deploy/Create3Deployer.sol/Create3Deployer.json`
       break
-    case `SKYBIT`:
+    case `SKYBITSolady`:
       compiledArtifactFilePath = `artifacts/contracts/SKYBITCREATE3Factory.sol/SKYBITCREATE3Factory.json`
       break
     case `SKYBITLite`:
@@ -65,7 +65,7 @@ const getGasLimit = (factory) => {
     case `axelarnetwork`:
       return 900000n // Gas cost: 712665
       break
-    case `SKYBIT`:
+    case `SKYBITSolady`:
       return 350000n // Gas cost: 247752
       break
     case `SKYBITLite`:

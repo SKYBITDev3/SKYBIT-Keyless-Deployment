@@ -1,17 +1,10 @@
 const { ethers, network } = require(`hardhat`)
 
 // CHOOSE WHICH FACTORY YOU WANT TO USE:
-// const factoryToUse = `axelarnetwork`
-// const addressOfFactory = `0xf0d5258610A5eF4ac7b894DDaAD1c314De8d56a5` // gas cost: 2222365
-
-// const factoryToUse = `ZeframLou`
-// const addressOfFactory = `0x92B9db5453E03E516Fd461a1852E67EAF8Bc6dad` // gas cost: 2145541
-
-// const factoryToUse = `SKYBIT`
-// const addressOfFactory = `0xdD4Be472a59a5272C6970D759565cf38d26d4010` // gas cost: 2116813
-
-const factoryToUse = `SKYBITLite`
-const addressOfFactory = `0xb8462884791B873F68Bc5e2FD90E5BfEc8034D69` // gas cost: 2117420
+// const factoryToUse = { name: `axelarnetwork`, address: `0xf0d5258610A5eF4ac7b894DDaAD1c314De8d56a5` } // gas cost: 2222365
+// const factoryToUse = { name: `ZeframLou`, address: `0x92B9db5453E03E516Fd461a1852E67EAF8Bc6dad` } // gas cost: 2145541
+// const factoryToUse = { name: `SKYBITSolady`, address: `0x7008e1DEECA3E45E61b379BBA882134b3A15d9dF` } // gas cost: 2116813
+const factoryToUse = { name: `SKYBITLite`, address: `0xb8462884791B873F68Bc5e2FD90E5BfEc8034D69` } // gas cost: 2117420
 
 
 // PASS YOUR OWN STRING HERE TO GENERATE A UNIQUE SALT. After doing your first production deployment, don't change it in order to have same address on other blockchains.
@@ -40,7 +33,7 @@ async function main() {
   const cfToken = await ethers.getContractFactory(tokenContractName) // No need to use artifacts-saved for your contract because with CREATE3 deployment address isn't dependent on bytecode
 
   const { CREATE3Deploy } = rootRequire(`scripts/CREATE3-deploy-functions.js`)
-  const deployedContract = await CREATE3Deploy(factoryToUse, addressOfFactory, cfToken, tokenContractName, constructorArgs, salt, wallet)
+  const deployedContract = await CREATE3Deploy(factoryToUse.name, factoryToUse.address, cfToken, tokenContractName, constructorArgs, salt, wallet)
   if(deployedContract === undefined) return
 
   // Testing the deployed ERC20 contract. If your contract isn't ERC20 then you can call a function other than balanceOf.

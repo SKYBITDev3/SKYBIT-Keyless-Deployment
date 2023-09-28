@@ -2,17 +2,10 @@
 const { ethers, network, upgrades } = require(`hardhat`)
 
 // CHOOSE WHICH FACTORY YOU WANT TO USE:
-// const factoryToUse = `axelarnetwork`
-// const addressOfFactory = `0xf0d5258610A5eF4ac7b894DDaAD1c314De8d56a5`
-
-// const factoryToUse = `ZeframLou`
-// const addressOfFactory = `0x92B9db5453E03E516Fd461a1852E67EAF8Bc6dad`
-
-// const factoryToUse = `SKYBIT`
-// const addressOfFactory = `0xdD4Be472a59a5272C6970D759565cf38d26d4010`
-
-const factoryToUse = `SKYBITLite`
-const addressOfFactory = `0xb8462884791B873F68Bc5e2FD90E5BfEc8034D69`
+// const factoryToUse = { name: `axelarnetwork`, address: `0xf0d5258610A5eF4ac7b894DDaAD1c314De8d56a5` } // gas cost: 2222365
+// const factoryToUse = { name: `ZeframLou`, address: `0x92B9db5453E03E516Fd461a1852E67EAF8Bc6dad` } // gas cost: 2145541
+// const factoryToUse = { name: `SKYBITSolady`, address: `0x7008e1DEECA3E45E61b379BBA882134b3A15d9dF` } // gas cost: 2116813
+const factoryToUse = { name: `SKYBITLite`, address: `0xb8462884791B873F68Bc5e2FD90E5BfEc8034D69` } // gas cost: 2117420
 
 const isDeployEnabled = true // toggle in case you do deployment and verification separately.
 
@@ -71,15 +64,15 @@ async function main() {
       const { getArtifactOfFactory, getDeployedAddress, CREATE3Deploy } = rootRequire(`scripts/CREATE3-deploy-functions.js`)
 
       if (isDeployEnabled) {
-        proxy = await CREATE3Deploy(factoryToUse, addressOfFactory, cfProxy, proxyContractName, proxyConstructorArgs, salt, wallet) // Gas cost: 425068
+        proxy = await CREATE3Deploy(factoryToUse.name, factoryToUse.address, cfProxy, proxyContractName, proxyConstructorArgs, salt, wallet) // Gas cost: 425068
         if (proxy === undefined) return
 
         proxyAddress = proxy.target
       } else {
-        const artifactOfFactory = getArtifactOfFactory(factoryToUse)
-        const instanceOfFactory = await ethers.getContractAt(artifactOfFactory.abi, addressOfFactory)
+        const artifactOfFactory = getArtifactOfFactory(factoryToUse.name)
+        const instanceOfFactory = await ethers.getContractAt(artifactOfFactory.abi, factoryToUse.address)
         const proxyBytecodeWithArgs = (await cfProxy.getDeployTransaction(...proxyConstructorArgs)).data
-        proxyAddress = await getDeployedAddress(factoryToUse, instanceOfFactory, proxyBytecodeWithArgs, wallet, salt)
+        proxyAddress = await getDeployedAddress(factoryToUse.name, instanceOfFactory, proxyBytecodeWithArgs, wallet, salt)
       }
     } else { // not using CREATE3
       const feeData = await ethers.provider.getFeeData()

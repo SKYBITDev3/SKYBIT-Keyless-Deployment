@@ -45,7 +45,7 @@ const getArtifactOfFactory = (factoryToUse) => {
     case `axelarnetwork`:
       savedArtifactFilePath = `artifacts-saved/@axelar-network/axelar-gmp-sdk-solidity/contracts/deploy/Create3Deployer.sol/Create3Deployer.json`
       break
-    case `SKYBIT`:
+    case `SKYBITSolady`:
       savedArtifactFilePath = `artifacts-saved/contracts/SKYBITCREATE3Factory.sol/SKYBITCREATE3Factory.json`
       break
     case `SKYBITLite`:
@@ -61,7 +61,7 @@ const getDeployedAddress = async (factoryToUse, instanceOfFactory, bytecode, wal
     case `axelarnetwork`:
       return await instanceOfFactory.deployedAddress(bytecode, wallet.address, salt)
       break
-    case `SKYBIT`:
+    case `SKYBITSolady`:
     case `ZeframLou`:
       return await instanceOfFactory.getDeployed(wallet.address, salt)
       break
@@ -83,7 +83,7 @@ const getGasEstimate = async (factoryToUse, instanceOfFactory, bytecode, wallet,
     case `axelarnetwork`:
       return await instanceOfFactory.deploy.estimateGas(bytecode, salt)
       break
-    case `SKYBIT`:
+    case `SKYBITSolady`:
     case `ZeframLou`:
       return await instanceOfFactory.deploy.estimateGas(salt, bytecode)
       break
@@ -104,7 +104,7 @@ const deploy = async (factoryToUse, instanceOfFactory, bytecode, wallet, salt, f
     case `axelarnetwork`:
       return await instanceOfFactory.deploy(bytecode, salt, { ...feeData })
       break
-    case `SKYBIT`:
+    case `SKYBITSolady`:
     case `ZeframLou`:
       return await instanceOfFactory.deploy(salt, bytecode, { ...feeData })
       break
