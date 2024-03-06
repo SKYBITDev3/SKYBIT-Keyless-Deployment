@@ -1,4 +1,4 @@
-const CREATE3Deploy = async (factoryToUse, addressOfFactory, contractFactory, contractToDeployName, constructorArguments, salt, wallet) => {
+const CREATE3Deploy = async (factoryToUse, addressOfFactory, contractFactory, contractToDeployName, constructorArguments, salt, wallet, isDeployEnabled) => {
   const { ethers } = require(`hardhat`)
 
   const bytecodeWithArgs = (await contractFactory.getDeployTransaction(...constructorArguments)).data
@@ -12,6 +12,7 @@ const CREATE3Deploy = async (factoryToUse, addressOfFactory, contractFactory, co
   const addressExpected = await getDeployedAddress(factoryToUse, instanceOfFactory, bytecodeWithArgs, wallet, salt)
   console.log(`Expected address of ${contractToDeployName} using factory at ${addressOfFactory}: ${addressExpected}`)
 
+  if (isDeployEnabled) {
   if (await ethers.provider.getCode(addressExpected) !== `0x`) {
     console.log(`The contract already exists at ${addressExpected}. Change the salt if you want to deploy your contract to a different address.`)
     return
@@ -27,11 +28,17 @@ const CREATE3Deploy = async (factoryToUse, addressOfFactory, contractFactory, co
   // Call DEPLOY
   console.log(`now calling deploy() in the CREATE3 factory...`)
   const txResponse = await deploy(factoryToUse, instanceOfFactory, bytecodeWithArgs, wallet, salt, feeData)
-  await txResponse.wait()
+    const txReceipt = await txResponse.wait()
+    // console.log(`txReceipt: ${JSON.stringify(txReceipt)}`)
+    // console.log(`txReceipt.logs[0].address: ${txReceipt.logs[0].address}`)
+    console.log(`txReceipt: ${JSON.stringify(txReceipt, null, 2)}`)
+  }
 
   const instanceOfDeployedContract = contractFactory.attach(addressExpected)
-  console.log(`${contractToDeployName} was successfully deployed to ${instanceOfDeployedContract.target}`)
+  if (await ethers.provider.getCode(addressExpected) !== `0x`) {
+    console.log(`${contractToDeployName} was successfully deployed via ${factoryToUse} to ${instanceOfDeployedContract.target}`)
   if (instanceOfDeployedContract.target === addressExpected) console.log(`The actual deployment address matches the expected address`)
+  }
 
   return instanceOfDeployedContract
 }
