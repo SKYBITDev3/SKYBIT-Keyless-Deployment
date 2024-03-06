@@ -103,11 +103,11 @@ Gas used for the deployment is around 388,999, so gas limit in this deployment t
 
 ZeframLou's factory contract will be deployed to this address (if the EVM version is `shanghai` and transaction bytecode is unchanged):
 ```
-0x0dDB4d6F105300A2eFa47DAf7EC47e6b17a70350
+0x92B9db5453E03E516Fd461a1852E67EAF8Bc6dad
 ```
 The derived address of the account that would sign the deployment transaction, and that you'd need to fund in order to pay the gas fee, is:
 ```
-0x92B9db5453E03E516Fd461a1852E67EAF8Bc6dad
+0x0dDB4d6F105300A2eFa47DAf7EC47e6b17a70350
 ```
 #### SKYBIT & Vectorized/solady
 The Vectorized/solady CREATE3 library has been included because it is more gas-efficient than other options. A factory contract is needed to use the library so a new one was created based on ZeframLou's factory.
@@ -408,7 +408,7 @@ By using keyless deployment, particularly keylessly-deployed CREATE2 or CREATE3 
 
 But you still need to be careful not to change other factors. Once you start doing deployments to live blockchains for a production environment, it's important to try to keep everything the same for future use so that the address will be the same as before. That means not making any further updates to contract code, salt, settings, or maybe even imported packages. Consider renaming the project directory by appending the date of your first production deployment and Github commit hash, to remind that anything in it should be **kept frozen**.
 
-Hardhat automatically creates compilation artifact files under the `artifacts` directory. The keyless deployment scripts copy them to `artifacts-saved` directory if there were non in there. This directory was created to preserve the exact versions of the factories that were used for deployment. If files were found in there, it asks you whether you want to reuse them, to protect them from being overwritten. So be careful to answer correctly so that the files are not accidentally overwritten.
+Hardhat automatically creates compilation artifact files under the `artifacts` directory. The keyless deployment scripts copy them to `artifacts-saved` directory if there were none in there. This directory was created to preserve the exact versions of the factories that were used for deployment. If files were found in there, it asks you whether you want to reuse them, to protect them from being overwritten. So be careful to answer correctly so that the files are not accidentally overwritten.
 
 If newer versions of factory contract code from third parties become available, they will be updated in this repository. This may cause changes in deployment addresses due to different bytecode. So if you ever do need to re-download the repository then instead of downloading the latest version, download the exact commit that you had used before for production deployments. If you haven't yet made any production deployments, make a note of the GitHub commit hash when you do in case you need to redownload in future.
 
