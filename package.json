@@ -1,7 +1,7 @@
 {
   "name": "SKYBIT-Keyless-Deployment",
   "version": "4.0.0",
-  "packageManager": "yarn@3.6.1",
+  "packageManager": "yarn@4.1.1",
   "devDependencies": {
     "@SKYBITDev3/ZeframLou-create3-factory": "https://github.com/SKYBITDev3/ZeframLou-create3-factory#3a8db987b8a6e1b63845a0ee1d0206cb4b5748f9",
     "@Vectorized/solady": "https://github.com/Vectorized/solady#03f3fd05fb1da76edc4df83ae6bf32a842c15f12",
