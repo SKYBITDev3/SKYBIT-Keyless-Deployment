@@ -40,15 +40,17 @@ const verifyContract = async (address, constructorArguments) => {
 const printNativeCurrencyBalance = async (walletAddress, decimals = `ether`) => ethers.formatUnits(await ethers.provider.getBalance(walletAddress), decimals)
 
 
-const printContractBalanceOf = async (tokenContract, holderAddress, decimals = `ether`) => ethers.formatUnits(await tokenContract.balanceOf(holderAddress), decimals)
+const printTokenBalanceOf = async (tokenContract, holderAddress, decimals = `ether`) => ethers.formatUnits(await tokenContract.balanceOf(holderAddress), decimals)
 
 
 const getCreate3Address = async (addressOfFactory, callerAddress, salt) => {
-  const { evmVersion } = hre.config.solidity.compilers[0].settings
+  // const { evmVersion } = hre.config.solidity.compilers[0].settings
 
-  const bytecodeOfCreateFactory = evmVersion === `shanghai` ? `0x601180600a5f395ff3fe365f6020373660205ff05f526014600cf3` : `0x601480600c6000396000f3fe3660006020373660206000f06000526014600cf3` // This needs to be updated if CREATEFactory object in contracts/SKYBITCREATE3FactoryLite.yul is changed
+  // const bytecodeOfCreateFactory = evmVersion === `shanghai` ? `0x601180600a5f395ff3fe365f6020373660205ff05f526014600cf3` : `0x601480600c6000396000f3fe3660006020373660206000f06000526014600cf3` // This needs to be updated if CREATEFactory object in contracts/SKYBITCREATE3FactoryLite.yul is changed
+  const factoryContractArtifacts = await hre.artifacts.readArtifact(`CREATEFactory`) // Generate the CREATEFactory bytecode from CREATEFactory.yul instead of using hardcoded bytecode above.
+  const bytecodeOfCreateFactory = factoryContractArtifacts.bytecode
 
-  const keccak256Calculated = ethers.solidityPackedKeccak256([`address`, `bytes32`], [callerAddress, salt]) // same as ethers.keccak256(callerAddress + salt.slice(2)) //. Inputs must not be 0-padded.
+  const keccak256Calculated = ethers.solidityPackedKeccak256([`address`, `bytes32`], [callerAddress, salt]) // same as ethers.keccak256(callerAddress + salt.slice(2)) // Inputs must not be 0-padded.
 
   const addressOfCreateFactory = ethers.getCreate2Address(addressOfFactory, keccak256Calculated, ethers.keccak256(bytecodeOfCreateFactory))
 
@@ -65,6 +67,6 @@ module.exports = {
   getContractAbi,
   verifyContract,
   printNativeCurrencyBalance,
-  printContractBalanceOf,
+  printTokenBalanceOf,
   getCreate3Address,
 }
