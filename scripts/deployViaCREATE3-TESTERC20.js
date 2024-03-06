@@ -7,8 +7,10 @@ const { ethers, network } = require(`hardhat`)
 const factoryToUse = { name: `SKYBITLite`, address: `0xb8462884791B873F68Bc5e2FD90E5BfEc8034D69` } // gas cost: 2117420
 
 
+const isDeployEnabled = true // toggle in case you do deployment and verification separately.
+const isVerifyEnabled = true
 // PASS YOUR OWN STRING HERE TO GENERATE A UNIQUE SALT. After doing your first production deployment, don't change it in order to have same address on other blockchains.
-const salt = ethers.encodeBytes32String(`SKYBIT.ASIA TESTERC20..........`)
+const saltForCREATE3 = ethers.encodeBytes32String(`SKYBIT.ASIA TESTERC20..........`)
 
 async function main() {
   const { rootRequire, printNativeCurrencyBalance, verifyContract } = require(`./utils`)
@@ -33,7 +35,7 @@ async function main() {
   const cfToken = await ethers.getContractFactory(tokenContractName) // No need to use artifacts-saved for your contract because with CREATE3 deployment address isn't dependent on bytecode
 
   const { CREATE3Deploy } = rootRequire(`scripts/CREATE3-deploy-functions.js`)
-  const deployedContract = await CREATE3Deploy(factoryToUse.name, factoryToUse.address, cfToken, tokenContractName, constructorArgs, salt, wallet)
+  const deployedContract = await CREATE3Deploy(factoryToUse.name, factoryToUse.address, cfToken, tokenContractName, constructorArgs, saltForCREATE3, wallet, isDeployEnabled)
   if(deployedContract === undefined) return
 
   // Testing the deployed ERC20 contract. If your contract isn't ERC20 then you can call a function other than balanceOf.
@@ -47,6 +49,7 @@ async function main() {
 
 
   // VERIFY ON BLOCKCHAIN EXPLORER
+  if (isVerifyEnabled) {
   if (![`hardhat`, `localhost`].includes(network.name)) {
     console.log(`Waiting to ensure that it will be ready for verification on etherscan...`)
     const { setTimeout } = require(`timers/promises`)
@@ -55,7 +58,7 @@ async function main() {
     await verifyContract(deployedContract.target, constructorArgs)
   }
 }
-
+}
 
 main().catch(error => {
   console.error(error)

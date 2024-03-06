@@ -64,7 +64,7 @@ async function main() {
       const { getArtifactOfFactory, getDeployedAddress, CREATE3Deploy } = rootRequire(`scripts/CREATE3-deploy-functions.js`)
 
       if (isDeployEnabled) {
-        proxy = await CREATE3Deploy(factoryToUse.name, factoryToUse.address, cfProxy, proxyContractName, proxyConstructorArgs, salt, wallet) // Gas cost: 425068
+        proxy = await CREATE3Deploy(factoryToUse.name, factoryToUse.address, cfProxy, proxyContractName, proxyConstructorArgs, salt, wallet, isDeployEnabled) // Gas cost: 425068
         if (proxy === undefined) return
 
         proxyAddress = proxy.target
