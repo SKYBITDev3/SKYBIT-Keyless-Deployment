@@ -372,7 +372,7 @@ Arachnid's repository is a fork of Zoltu's one, but with salt added. As Zoltu's 
 ### Using an already-deployed CREATE2 factory to deploy a CREATE3 factory
 Using a CREATE2 factory to deploy a CREATE3 factory can help to ensure that the CREATE3 factory contract gets the same address on any EVM-based blockchain, so that your contracts would also get the same addresses. But deploying the CREATE2 factory would be an additional step, adding complication and requiring more effort which may be unnecessary, especially when new blockchains appear that you want to use - you'd first need to deploy the CREATE2 factory (or ask the one who had deployed it on the other blockchains to do it, and hope he or she does it), then use that to deploy the CREATE3 factory that you would then use to deploy your contract to the new blockchain.
 
-Axelar's recently-deployed Create3Deployer was done this way - they used their old Create2Deployer to deploy their Create3Deployer contract onto many blockchains to the address [0xf49B10ccFB7D82C3a8749fFB1aAF3e0c936Eba36](https://blockscan.com/address/0xf49B10ccFB7D82C3a8749fFB1aAF3e0c936Eba36). If you use their Create3Deployer to deploy your contract onto some blockchains, e.g. Polygon zkEVM and Avalanche, then decide that you want to deploy your contract onto Gnosis, you'd need to first ask Axelar to deploy the Create3Deployer onto Gnosis, which would require them to first deploy their Create2Deployer contract. Having more chained dependencies make it less likely that it would happen.
+Axelar's recently-deployed Create3Deployer was done this way - they used their old CREATE2 Deployer at [0x98B2920D53612483F91F12Ed7754E51b4A77919e](https://blockscan.com/address/0x98B2920D53612483F91F12Ed7754E51b4A77919e) to deploy their Create3Deployer contract onto many blockchains to the address [0x6513Aedb4D1593BA12e50644401D976aebDc90d8](https://blockscan.com/address/0x6513Aedb4D1593BA12e50644401D976aebDc90d8). If you use their Create3Deployer to deploy your contract onto some blockchains, e.g. Polygon zkEVM and Avalanche, then decide that you want to deploy your contract onto Gnosis, you'd need to first ask Axelar to deploy the Create3Deployer onto Gnosis, which would require them to first deploy their Create2Deployer contract. Having more chained dependencies make it less likely that it would happen.
 
 
 ## Solution and advantages
@@ -423,7 +423,7 @@ If you use factories that factor in your account address (and you should, to pre
 ### `msg.sender`
 When you create or interact with a contract on a blockchain normally `msg.sender` in the contract code will be the address of the account that you are using. However when you use a contract (e.g. a CREATE2 or CREATE3 factory) to deploy a contract, `msg.sender` **will instead be the address of the factory** contract (or a temporary proxy).
 
-This would be a big problem e.g. if you're deploying an ERC20 token contract having a constructor that mints the total supply to `msg.sender` and assigns it the admin role. The [OpenZeppelin Contracts Wizard](https://wizard.openzeppelin.com) generates this code:
+This would be a big problem e.g. if you're deploying an ERC20 token contract having a constructor that mints the total supply to `msg.sender` and assigns it the admin role. The [OpenZeppelin Contracts Wizard](https://wizard.openzeppelin.com) used to generate this code (which should not be followed):
 ```solidity
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
@@ -481,31 +481,9 @@ It's generally best practice to use the latest released versions of technology. 
   },
 ```
 
-However you may get the error "invalid opcode", because most blockchains have not implemented `PUSH0` opcode yet. It was introduced in Ethereum's shanghai upgrade which happened in April 2023 and offers improvements such as gas savings. Based on our tests, the blockchains that support `PUSH0` opcode are:
--   auroraTestnet
--   edgeware
--   edgewareTestnet
--   gnosis
--   chiado
--   goerli
--   mainnet
--   moonbaseAlpha
--   moonbeam
--   moonriver
--   polygonZkEvm
--   polygonZkEvmTestnet
--   pulsechain
--   pulsechainV4
--   sapphire
--   sapphireTestnet
--   scrollSepolia
--   sepolia
--   syscoin
--   syscoinTestnet
--   taikoTestnetSepolia
--   telos
+However, you may get the error "invalid opcode", because some blockchains may still have not implemented `PUSH0` opcode yet. It was introduced in Ethereum's shanghai upgrade which happened in April 2023 and offers improvements such as gas savings.
 
-If you get the "invalid opcode" error then you can set the value of `evmVersion` to `paris`, but note that this would mean that once you start deploying your contracts to live blockchains for production, **you cannot change this**, otherwise subsequent keyless deployments of the same contract will not get the same address as before. So if you really do want to use the latest EVM version, you'll have to wait for the blockchain to start supporting `PUSH0`.
+So if you get the "invalid opcode" error then you can set the value of `evmVersion` to `paris`, but note that this would mean that once you start deploying your contracts to live blockchains for production, **you cannot change this**, otherwise subsequent keyless deployments of the same contract will not get the same address as before. So if you really do want to use the latest EVM version, you'll have to wait for the blockchain to start supporting `PUSH0`.
 
 
 ### Replay protection
