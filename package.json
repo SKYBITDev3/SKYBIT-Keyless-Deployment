@@ -4,7 +4,7 @@
   "packageManager": "yarn@4.1.1",
   "devDependencies": {
     "@SKYBITDev3/ZeframLou-create3-factory": "https://github.com/SKYBITDev3/ZeframLou-create3-factory#3a8db987b8a6e1b63845a0ee1d0206cb4b5748f9",
-    "@Vectorized/solady": "https://github.com/Vectorized/solady#03f3fd05fb1da76edc4df83ae6bf32a842c15f12",
+    "@Vectorized/solady": "https://github.com/Vectorized/solady#e0530438df525d42279ffcb126e6836dd4f1741e",
     "@axelar-network/axelar-gmp-sdk-solidity": "5.6.4",
     "@nomicfoundation/ethereumjs-trie": "^6.0.4",
     "@nomicfoundation/ethereumjs-util": "^9.0.4",

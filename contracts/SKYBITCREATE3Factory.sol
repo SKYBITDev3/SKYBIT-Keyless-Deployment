@@ -20,9 +20,7 @@ contract SKYBITCREATE3Factory {
     function getDeployed(
         address deployer,
         bytes32 salt
-    ) external view returns (address deployed) {
-        // hash salt with the deployer address to give each deployer its own namespace
-        salt = keccak256(abi.encodePacked(deployer, salt));
-        return CREATE3.getDeployed(salt);
+    ) external pure returns (address deployed) {
+        return CREATE3.getDeployed(salt, deployer);
     }
 }

@@ -1,7 +1,7 @@
 // CHOOSE WHICH FACTORY YOU WANT TO USE:
-const factoryToDeploy = `axelarnetwork`
+// const factoryToDeploy = `axelarnetwork`
 // const factoryToDeploy = `ZeframLou`
-// const factoryToDeploy = `SKYBITSolady`
+const factoryToDeploy = `SKYBITSolady`
 // const factoryToDeploy = `SKYBITLite`
 
 const isDeployEnabled = true // toggle in case you do deployment and verification separately.
@@ -60,17 +60,17 @@ const getCreate3FactoryArtifact = factory => {
 const getGasLimit = (factory) => {
   switch (factory) {
     case `ZeframLou`:
-      return 500000n // Gas cost: 388999
+      return 500000n
       break
     case `axelarnetwork`:
-      return 900000n // Gas cost: 712665
+      return 900000n
       break
     case `SKYBITSolady`:
-      return 350000n // Gas cost: 247752
+      return 300000n
       break
     case `SKYBITLite`:
     default:
-      return 100000n // Gas cost: 78914
+      return 100000n
   }
 }
 

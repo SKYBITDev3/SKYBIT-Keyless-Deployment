@@ -114,19 +114,19 @@ The Vectorized/solady CREATE3 library has been included because it is more gas-e
 
 The original Vectorized/solady CREATE3 solidity file was obtained by firstly adding the specific github repository commit to `package.json`:
 
- - https://github.com/Vectorized/solady#03f3fd05fb1da76edc4df83ae6bf32a842c15f12
+ - https://github.com/Vectorized/solady#e0530438df525d42279ffcb126e6836dd4f1741e
  
 `contracts/SKYBITCREATE3Factory.sol` imports `{CREATE3} from "@Vectorized/solady/src/utils/CREATE3.sol";`. Hardhat then compiles it and places the artifacts in `artifacts` directory. `SKYBITCREATE3Factory.json` is then copied to `artifacts-saved/contracts/SKYBITCREATE3Factory.sol/` directory for preservation of the bytecode.
 
-Gas used for the deployment is around 251,856, so gas limit in this deployment transaction has been set to 350,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.035 of native currency at the signer's address before factory deployment.
+Gas used for the deployment is around 230,784, so gas limit in this deployment transaction has been set to 300,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.03 of native currency at the signer's address before factory deployment.
 
 The SKYBITSolady factory contract will be deployed to this address (if the EVM version is `shanghai` and transaction bytecode is unchanged):
 ```
-0x86fBf559A7e637e8355c7d4ba8d8734Af1F97687
+0x594719ec88e7049B7678fB931f903A3B7c99E30B
 ```
 The derived address of the account that would sign the deployment transaction, and that you'd need to fund in order to pay the gas fee, is:
 ```
-0xCE14Da04922322eac43b39f8255C0A589524f4f8
+0xB8FBb9467CB727E32eF1619bb3f032cE8B7BeD76
 ```
 
 #### SKYBITLite

@@ -14,10 +14,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@Vectorized/solady@https://github.com/Vectorized/solady#03f3fd05fb1da76edc4df83ae6bf32a842c15f12":
-  version: 0.0.105
-  resolution: "@Vectorized/solady@https://github.com/Vectorized/solady.git#commit=03f3fd05fb1da76edc4df83ae6bf32a842c15f12"
-  checksum: 10/7d0a1c2d1f9af6ee1d03ce544f0bb5898b3952ad6e47575246f167ac3d4d6fc2cf3ae7a1bafded26b41f295739ff01047fb97c796775c42fa6a7286c5d62a1e2
+"@Vectorized/solady@https://github.com/Vectorized/solady#e0530438df525d42279ffcb126e6836dd4f1741e":
+  version: 0.0.131
+  resolution: "@Vectorized/solady@https://github.com/Vectorized/solady.git#commit=e0530438df525d42279ffcb126e6836dd4f1741e"
+  checksum: 10/e66cb0677a28612b3871d928b02f9253166562e34876c37b33cc88153658c4db8c6607b2f9b565d1ccfebe0c4c50a26bb6510d660b8e263977fcade6a20aa5bd
   languageName: node
   linkType: hard
 
@@ -1488,7 +1488,7 @@ __metadata:
   resolution: "SKYBIT-Keyless-Deployment@workspace:."
   dependencies:
     "@SKYBITDev3/ZeframLou-create3-factory": "https://github.com/SKYBITDev3/ZeframLou-create3-factory#3a8db987b8a6e1b63845a0ee1d0206cb4b5748f9"
-    "@Vectorized/solady": "https://github.com/Vectorized/solady#03f3fd05fb1da76edc4df83ae6bf32a842c15f12"
+    "@Vectorized/solady": "https://github.com/Vectorized/solady#e0530438df525d42279ffcb126e6836dd4f1741e"
     "@axelar-network/axelar-gmp-sdk-solidity": "npm:5.6.4"
     "@nomicfoundation/ethereumjs-trie": "npm:^6.0.4"
     "@nomicfoundation/ethereumjs-util": "npm:^9.0.4"
