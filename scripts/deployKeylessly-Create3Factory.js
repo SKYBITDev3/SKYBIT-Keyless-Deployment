@@ -1,8 +1,8 @@
 // CHOOSE WHICH FACTORY YOU WANT TO USE:
 // const factoryToDeploy = `axelarnetwork`
 // const factoryToDeploy = `ZeframLou`
-const factoryToDeploy = `SKYBITSolady`
-// const factoryToDeploy = `SKYBITLite`
+// const factoryToDeploy = `SKYBITSolady`
+const factoryToDeploy = `SKYBITLite`
 
 const isDeployEnabled = true // toggle in case you do deployment and verification separately.
 

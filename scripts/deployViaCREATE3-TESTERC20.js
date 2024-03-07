@@ -1,10 +1,10 @@
 const { ethers, network } = require(`hardhat`)
 
 // CHOOSE WHICH FACTORY YOU WANT TO USE:
-// const factoryToUse = { name: `axelarnetwork`, address: `0xf0d5258610A5eF4ac7b894DDaAD1c314De8d56a5` } // gas cost: 2222365
-// const factoryToUse = { name: `ZeframLou`, address: `0x92B9db5453E03E516Fd461a1852E67EAF8Bc6dad` } // gas cost: 2145541
-// const factoryToUse = { name: `SKYBITSolady`, address: `0x7008e1DEECA3E45E61b379BBA882134b3A15d9dF` } // gas cost: 2116813
-const factoryToUse = { name: `SKYBITLite`, address: `0xb8462884791B873F68Bc5e2FD90E5BfEc8034D69` } // gas cost: 2117420
+// const factoryToUse = { name: `axelarnetwork`, address: `0x95A9323CF0443758df5F3becf3B221cB3D42f3A0` } // gas cost: 1846094
+// const factoryToUse = { name: `ZeframLou`, address: `0x2befaF9234EE4d5b10dDAECF55F73dA87F74Facb` } // gas cost: 1767973
+// const factoryToUse = { name: `SKYBITSolady`, address: `0xF545230eE44735CCDb71325c6D4bC981b444CBb6` } // gas cost: 1743119
+const factoryToUse = { name: `SKYBITLite`, address: `0x739201bA340A675624D9ADb1cc27e68F76a29765` } // gas cost: 1743602
 
 
 const isDeployEnabled = true // toggle in case you do deployment and verification separately.
