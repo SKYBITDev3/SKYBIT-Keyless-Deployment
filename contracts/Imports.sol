@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.21;
+pragma solidity ^0.8.24;
 
 // To force hardhat to compile the files into artifacts directory
 import "@axelar-network/axelar-gmp-sdk-solidity/contracts/deploy/Create3Deployer.sol";

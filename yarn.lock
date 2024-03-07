@@ -1228,18 +1228,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@skybit/hardhat-yul@npm:^4.0.3":
-  version: 4.0.3
-  resolution: "@skybit/hardhat-yul@npm:4.0.3"
+"@skybit/hardhat-yul@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "@skybit/hardhat-yul@npm:4.1.0"
   dependencies:
-    "@types/glob": "npm:^8.0.0"
-    glob: "npm:^10.3.4"
-    solc: "npm:^0.8.21"
-    typescript: "npm:~5.2.2"
+    "@types/glob": "npm:^8.1.0"
+    glob: "npm:^10.3.10"
+    solc: "npm:^0.8.24"
+    typescript: "npm:~5.3.3"
     yulp: "npm:^0.2.3"
-  peerDependencies:
-    hardhat: ^2.17.3
-  checksum: 10/5118898c85c528607d5d0bd66075adb922a2baa96439ba04d9286532872970f5d1e29b18f387e820828d1c2bd7e216a43c662ba9185626a148f24556c08f5cd8
+  checksum: 10/f6ec979f8847bb5634d311a2694776a78751956fac0e0593355b2aaa8e51631f7108747ffdeff2dcedb2e334a456a9320731ee5138290971973ee6ae7b204e74
   languageName: node
   linkType: hard
 
@@ -1379,7 +1377,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/glob@npm:^8.0.0":
+"@types/glob@npm:^8.1.0":
   version: 8.1.0
   resolution: "@types/glob@npm:8.1.0"
   dependencies:
@@ -1502,7 +1500,7 @@ __metadata:
     "@openzeppelin/contracts": "npm:^5.0.2"
     "@openzeppelin/contracts-upgradeable": "npm:^5.0.2"
     "@openzeppelin/hardhat-upgrades": "npm:^3.0.4"
-    "@skybit/hardhat-yul": "npm:^4.0.3"
+    "@skybit/hardhat-yul": "npm:^4.1.0"
     "@thundernetworkrad/readline-sync": "npm:^2023.3.13-1"
     "@typechain/ethers-v6": "npm:^0.5.1"
     "@typechain/hardhat": "npm:^9.1.0"
@@ -4020,7 +4018,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob@npm:^10.2.2":
+"glob@npm:^10.2.2, glob@npm:^10.3.10":
   version: 10.3.10
   resolution: "glob@npm:10.3.10"
   dependencies:
@@ -4032,21 +4030,6 @@ __metadata:
   bin:
     glob: dist/esm/bin.mjs
   checksum: 10/38bdb2c9ce75eb5ed168f309d4ed05b0798f640b637034800a6bf306f39d35409bf278b0eaaffaec07591085d3acb7184a201eae791468f0f617771c2486a6a8
-  languageName: node
-  linkType: hard
-
-"glob@npm:^10.3.4":
-  version: 10.3.4
-  resolution: "glob@npm:10.3.4"
-  dependencies:
-    foreground-child: "npm:^3.1.0"
-    jackspeak: "npm:^2.0.3"
-    minimatch: "npm:^9.0.1"
-    minipass: "npm:^5.0.0 || ^6.0.2 || ^7.0.0"
-    path-scurry: "npm:^1.10.1"
-  bin:
-    glob: dist/cjs/src/bin.js
-  checksum: 10/6375721bcd0c615fe4c1d61faaf9eb93e15d428f26bac6e85739221a84659b42601b2a085b20915142c0eb3d8a7155914884ff80f145d8c9f2397c8b771b8b60
   languageName: node
   linkType: hard
 
@@ -4860,19 +4843,6 @@ __metadata:
   version: 0.1.2
   resolution: "isstream@npm:0.1.2"
   checksum: 10/22d9c181015226d4534a227539256897bbbcb7edd1066ca4fc4d3a06dbd976325dfdd16b3983c7d236a89f256805c1a685a772e0364e98873d3819b064ad35a1
-  languageName: node
-  linkType: hard
-
-"jackspeak@npm:^2.0.3":
-  version: 2.3.3
-  resolution: "jackspeak@npm:2.3.3"
-  dependencies:
-    "@isaacs/cliui": "npm:^8.0.2"
-    "@pkgjs/parseargs": "npm:^0.11.0"
-  dependenciesMeta:
-    "@pkgjs/parseargs":
-      optional: true
-  checksum: 10/a4c7c1a3ffea90bbcaa2f7a0d2885861e94138982aef0ced8efd299b32ccb69645b49d27f5e3e81c57005002674dd7e2b5d08a4287e9110534e512ada53557b2
   languageName: node
   linkType: hard
 
@@ -7037,9 +7007,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"solc@npm:^0.8.21":
-  version: 0.8.21
-  resolution: "solc@npm:0.8.21"
+"solc@npm:^0.8.24":
+  version: 0.8.24
+  resolution: "solc@npm:0.8.24"
   dependencies:
     command-exists: "npm:^1.2.8"
     commander: "npm:^8.1.0"
@@ -7050,7 +7020,7 @@ __metadata:
     tmp: "npm:0.0.33"
   bin:
     solcjs: solc.js
-  checksum: 10/e050323d171e38969b159567b0635ee9f58285f89e477a1650008e91b7c4ea176c3ad6d984e568ec4046fed0ff63d93b148ea53fa8177fe294278fea41af55a9
+  checksum: 10/e85644370a26a92fbdfb783ce14184fb6291ddd77ff93cc5d70019add63c32ecea9988453d02b27b99cb37f46cc99b88f33321305b3f9a5cacb9b1a6f803b607
   languageName: node
   linkType: hard
 
@@ -7747,23 +7717,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:~5.2.2":
-  version: 5.2.2
-  resolution: "typescript@npm:5.2.2"
+"typescript@npm:~5.3.3":
+  version: 5.3.3
+  resolution: "typescript@npm:5.3.3"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10/d65e50eb849bd21ff8677e5b9447f9c6e74777e346afd67754934264dcbf4bd59e7d2473f6062d9a015d66bd573311166357e3eb07fea0b52859cf9bb2b58555
+  checksum: 10/6e4e6a14a50c222b3d14d4ea2f729e79f972fa536ac1522b91202a9a65af3605c2928c4a790a4a50aa13694d461c479ba92cedaeb1e7b190aadaa4e4b96b8e18
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A~5.2.2#optional!builtin<compat/typescript>":
-  version: 5.2.2
-  resolution: "typescript@patch:typescript@npm%3A5.2.2#optional!builtin<compat/typescript>::version=5.2.2&hash=f3b441"
+"typescript@patch:typescript@npm%3A~5.3.3#optional!builtin<compat/typescript>":
+  version: 5.3.3
+  resolution: "typescript@patch:typescript@npm%3A5.3.3#optional!builtin<compat/typescript>::version=5.3.3&hash=e012d7"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10/f79cc2ba802c94c2b78dbb00d767a10adb67368ae764709737dc277273ec148aa4558033a03ce901406b35fddf4eac46dabc94a1e1d12d2587e2b9cfe5707b4a
+  checksum: 10/c93786fcc9a70718ba1e3819bab56064ead5817004d1b8186f8ca66165f3a2d0100fee91fa64c840dcd45f994ca5d615d8e1f566d39a7470fc1e014dbb4cf15d
   languageName: node
   linkType: hard
 

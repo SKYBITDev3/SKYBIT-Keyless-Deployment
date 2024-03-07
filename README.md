@@ -77,15 +77,15 @@ Axelar's factory was included because they are a trustworthy organization doing 
 
 The original solidity files were obtained by firstly adding the npm package `@axelar-network/axelar-gmp-sdk-solidity` and importing `@axelar-network/axelar-gmp-sdk-solidity/contracts/deploy/Create3Deployer.sol` in `contracts/Imports.sol`. Hardhat then compiles it and places the artifacts in `artifacts` directory. `Create3Deployer.json` is then copied to `artifacts-saved/@axelar-network/axelar-gmp-sdk-solidity/contracts/deploy/Create3Deployer.sol/` directory for preservation of the bytecode.
 
-Gas used for the deployment is around 712,665, so gas limit in this deployment transaction has been set to 900,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.09 of native currency at the signer's address before factory deployment.
+Gas used for the deployment is around 724,337, so gas limit in this deployment transaction has been set to 900,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.09 of native currency at the signer's address before factory deployment.
 
 Axelar's factory contract will be deployed to this address (if the EVM version is `shanghai` and transaction bytecode is unchanged):
 ```
-0xf0d5258610A5eF4ac7b894DDaAD1c314De8d56a5
+0x95A9323CF0443758df5F3becf3B221cB3D42f3A0
 ```
 The derived address of the account that would sign the deployment transaction, and that you'd need to fund in order to pay the gas fee, is:
 ```
-0xf8EdB7E9C459455791d9bA08ED9b68d044E6b5Ba
+0x152510503b8f5EB95dc34aAF274DFc858d609DF5
 ```
 
 #### ZeframLou & transmissions11/solmate
@@ -99,15 +99,15 @@ The solmate CREATE3 library was obtained by adding the github repository commit 
 
 `@SKYBITDev3/ZeframLou-create3-factory/src/CREATE3Factory.sol` is imported in `contracts/Imports.sol`. Hardhat then compiles it and places the artifacts in `artifacts` directory. `CREATE3Factory.json` is then copied to `artifacts-saved/@SKYBITDev3/ZeframLou-create3-factory/src/CREATE3Factory.sol/` directory for preservation of the bytecode.
 
-Gas used for the deployment is around 388,999, so gas limit in this deployment transaction has been set to 500,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.05 of native currency at the signer's address before factory deployment.
+Gas used for the deployment is around 389,011, so gas limit in this deployment transaction has been set to 500,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.05 of native currency at the signer's address before factory deployment.
 
 ZeframLou's factory contract will be deployed to this address (if the EVM version is `shanghai` and transaction bytecode is unchanged):
 ```
-0x92B9db5453E03E516Fd461a1852E67EAF8Bc6dad
+0x2befaF9234EE4d5b10dDAECF55F73dA87F74Facb
 ```
 The derived address of the account that would sign the deployment transaction, and that you'd need to fund in order to pay the gas fee, is:
 ```
-0x0dDB4d6F105300A2eFa47DAf7EC47e6b17a70350
+0x1C5aEAeb492367E680e2aD965fE2Ac90E5c648cf
 ```
 #### SKYBIT & Vectorized/solady
 The Vectorized/solady CREATE3 library has been included because it is more gas-efficient than other options. A factory contract is needed to use the library so a new one was created based on ZeframLou's factory.
@@ -118,15 +118,15 @@ The original Vectorized/solady CREATE3 solidity file was obtained by firstly add
  
 `contracts/SKYBITCREATE3Factory.sol` imports `{CREATE3} from "@Vectorized/solady/src/utils/CREATE3.sol";`. Hardhat then compiles it and places the artifacts in `artifacts` directory. `SKYBITCREATE3Factory.json` is then copied to `artifacts-saved/contracts/SKYBITCREATE3Factory.sol/` directory for preservation of the bytecode.
 
-Gas used for the deployment is around 247,752, so gas limit in this deployment transaction has been set to 350,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.035 of native currency at the signer's address before factory deployment.
+Gas used for the deployment is around 251,856, so gas limit in this deployment transaction has been set to 350,000, giving some room in case some opcode costs increase in future, hence there should be at least 0.035 of native currency at the signer's address before factory deployment.
 
 The SKYBITSolady factory contract will be deployed to this address (if the EVM version is `shanghai` and transaction bytecode is unchanged):
 ```
-0x7008e1DEECA3E45E61b379BBA882134b3A15d9dF
+0x86fBf559A7e637e8355c7d4ba8d8734Af1F97687
 ```
 The derived address of the account that would sign the deployment transaction, and that you'd need to fund in order to pay the gas fee, is:
 ```
-0x6610a846957021103477DB54c18172cd80d953b7
+0xCE14Da04922322eac43b39f8255C0A589524f4f8
 ```
 
 #### SKYBITLite
@@ -138,11 +138,11 @@ Gas used for the deployment is 78,914, so gas limit in this deployment transacti
 
 The SKYBITLite factory contract will be deployed to this address (if the EVM version is `shanghai` and transaction bytecode is unchanged):
 ```
-0xb8462884791B873F68Bc5e2FD90E5BfEc8034D69
+0x739201bA340A675624D9ADb1cc27e68F76a29765
 ```
 and the derived address will be:
 ```
-0x2E91f2847Ad11DF5f9C1D9E2A4edb46C73958DcF
+0x93AA019F0128e3C2338201C9d09a96A6bF48113b
 ```
 
 ### Usage
@@ -468,7 +468,7 @@ It's generally best practice to use the latest released versions of technology. 
   solidity: { // changing these values affects deployment address
     compilers: [
       {
-        version: `0.8.21`,
+        version: `0.8.24`,
         settings: {
           optimizer: {
             enabled: true,

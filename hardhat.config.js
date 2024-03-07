@@ -136,7 +136,7 @@ module.exports = {
   solidity: { // changing these values changes bytecode, so can affect deployment address if not using CREATE3
     compilers: [
       {
-        version: `0.8.21`,
+        version: `0.8.24`,
         settings: {
           optimizer: {
             enabled: true,

@@ -16,7 +16,7 @@
     "@openzeppelin/contracts": "^5.0.2",
     "@openzeppelin/contracts-upgradeable": "^5.0.2",
     "@openzeppelin/hardhat-upgrades": "^3.0.4",
-    "@skybit/hardhat-yul": "^4.0.3",
+    "@skybit/hardhat-yul": "^4.1.0",
     "@thundernetworkrad/readline-sync": "^2023.3.13-1",
     "@typechain/ethers-v6": "^0.5.1",
     "@typechain/hardhat": "^9.1.0",
