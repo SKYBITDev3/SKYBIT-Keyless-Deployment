@@ -69,10 +69,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@axelar-network/axelar-gmp-sdk-solidity@npm:5.3.4":
-  version: 5.3.4
-  resolution: "@axelar-network/axelar-gmp-sdk-solidity@npm:5.3.4"
-  checksum: 10/ef321c9fce3979142971cb17f95e6787a7919d2366c37d237909fc4969e21ce19a0738c43911e6f2905bcd199aa0f7edceb13082b82fa0ea72c13caf8bcd6298
+"@axelar-network/axelar-gmp-sdk-solidity@npm:5.6.4":
+  version: 5.6.4
+  resolution: "@axelar-network/axelar-gmp-sdk-solidity@npm:5.6.4"
+  checksum: 10/94443f7250fbdd046239f03fbf83489a3ee9aceeb02f76c177ae0e522a16be4b202c386bd1aaa3bd7bdc1e6c57b92d7fee8e8bd8a063f244d454a1fab8d86ddf
   languageName: node
   linkType: hard
 
@@ -1489,7 +1489,7 @@ __metadata:
   dependencies:
     "@SKYBITDev3/ZeframLou-create3-factory": "https://github.com/SKYBITDev3/ZeframLou-create3-factory#3a8db987b8a6e1b63845a0ee1d0206cb4b5748f9"
     "@Vectorized/solady": "https://github.com/Vectorized/solady#03f3fd05fb1da76edc4df83ae6bf32a842c15f12"
-    "@axelar-network/axelar-gmp-sdk-solidity": "npm:5.3.4"
+    "@axelar-network/axelar-gmp-sdk-solidity": "npm:5.6.4"
     "@nomicfoundation/ethereumjs-trie": "npm:^6.0.4"
     "@nomicfoundation/ethereumjs-util": "npm:^9.0.4"
     "@nomicfoundation/hardhat-chai-matchers": "npm:^2.0.6"
