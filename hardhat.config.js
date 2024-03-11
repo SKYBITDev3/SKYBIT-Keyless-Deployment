@@ -162,6 +162,8 @@ module.exports = {
       bscTestnet: process.env.BSCSCAN_API_KEY,
       avalanche: process.env.SNOWTRACE_API_KEY,
       avalancheFujiTestnet: process.env.SNOWTRACE_API_KEY,
+      polygon: process.env.POLYGONSCAN_API_KEY,
+      polygonMumbai: process.env.POLYGONSCAN_API_KEY,
     },
     customChains,
     timeout: 60000 // 1min (default is 20s)
