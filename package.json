@@ -1,6 +1,6 @@
 {
   "name": "SKYBIT-Keyless-Deployment",
-  "version": "5.0.2",
+  "version": "6.0.0",
   "packageManager": "yarn@4.2.2",
   "devDependencies": {
     "@SKYBITDev3/ZeframLou-create3-factory": "https://github.com/SKYBITDev3/ZeframLou-create3-factory#3a8db987b8a6e1b63845a0ee1d0206cb4b5748f9",
@@ -30,7 +30,7 @@
     "ethers": "^6.12.1",
     "hardhat": "^2.22.4",
     "hardhat-gas-reporter": "^2.2.0",
-    "solc": "0.8.24",
+    "solc": "0.8.26",
     "solidity-coverage": "^0.8.12",
     "ts-node": "^10.9.2",
     "typechain": "^8.3.2",

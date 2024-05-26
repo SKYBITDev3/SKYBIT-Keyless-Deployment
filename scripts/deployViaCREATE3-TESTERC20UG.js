@@ -2,10 +2,10 @@
 const { ethers, network, upgrades } = require(`hardhat`)
 
 // CHOOSE WHICH FACTORY YOU WANT TO USE:
-// const factoryToUse = { name: `axelarnetwork`, address: `0x95A9323CF0443758df5F3becf3B221cB3D42f3A0` } // gas cost: 2413077 + 498930
-// const factoryToUse = { name: `ZeframLou`, address: `0x2befaF9234EE4d5b10dDAECF55F73dA87F74Facb` } // gas cost: 2413077 + 422294
-// const factoryToUse = { name: `SKYBITSolady`, address: `0xF545230eE44735CCDb71325c6D4bC981b444CBb6` } // gas cost: 2413077 + 418479
-const factoryToUse = { name: `SKYBITLite`, address: `0x739201bA340A675624D9ADb1cc27e68F76a29765` } // gas cost: 2413077 + 419071
+// const factoryToUse = { name: `axelarnetwork`, address: `0x8cf037a598957EFE440841E256f4CA0056A8219C` }
+// const factoryToUse = { name: `ZeframLou`, address: `0x03B583D983aAe5a965dfCC3565F58C9153Af1Be3` }
+// const factoryToUse = { name: `SKYBITSolady`, address: `0x5391d63aBd39A43360CE360531f5Ba5c19249030` }
+const factoryToUse = { name: `SKYBITLite`, address: `0x739201bA340A675624D9ADb1cc27e68F76a29765` }
 
 const isDeployEnabled = true // toggle in case you do deployment and verification separately.
 
@@ -67,7 +67,7 @@ async function main() {
       const { getArtifactOfFactory, getDeployedAddress, CREATE3Deploy } = rootRequire(`scripts/CREATE3-deploy-functions.js`)
 
       if (isDeployEnabled) {
-        proxy = await CREATE3Deploy(factoryToUse.name, factoryToUse.address, cfProxy, proxyContractName, proxyConstructorArgs, salt, wallet, isDeployEnabled) // Gas cost: 425068
+        proxy = await CREATE3Deploy(factoryToUse.name, factoryToUse.address, cfProxy, proxyContractName, proxyConstructorArgs, salt, wallet, isDeployEnabled)
         if (proxy === undefined) return
 
         proxyAddress = proxy.target

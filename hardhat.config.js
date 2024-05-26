@@ -122,8 +122,6 @@ networks = { ...networks, ...additionalNetworks }
 // RPC URL overrides in case you dont want to use the one in viem/chains:
 // networks.mainnet.url = `https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`
 
-networks.polygonMumbai.url = `https://polygon-mumbai.blockpi.network/v1/rpc/public`
-
 networks.bscTestnet.url = `https://data-seed-prebsc-2-s2.bnbchain.org:8545`
 
 networks.sepolia.url = `https://eth-sepolia.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`
@@ -139,14 +137,13 @@ module.exports = {
   solidity: { // changing these values changes bytecode, so can affect deployment address if not using CREATE3
     compilers: [
       {
-        version: `0.8.24`,
+        version: `0.8.26`,
         settings: {
           optimizer: {
             enabled: true,
             runs: 15000
           },
-          evmVersion: `shanghai`, // downgrade to `paris` if you encounter 'invalid opcode' error
-          // evmVersion: `paris`,
+          evmVersion: `cancun`,
         }
       },
     ],

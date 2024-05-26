@@ -1639,7 +1639,7 @@ __metadata:
     ethers: "npm:^6.12.1"
     hardhat: "npm:^2.22.4"
     hardhat-gas-reporter: "npm:^2.2.0"
-    solc: "npm:0.8.24"
+    solc: "npm:0.8.26"
     solidity-coverage: "npm:^0.8.12"
     ts-node: "npm:^10.9.2"
     typechain: "npm:^8.3.2"
@@ -6576,9 +6576,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"solc@npm:0.8.24":
-  version: 0.8.24
-  resolution: "solc@npm:0.8.24"
+"solc@npm:0.8.26":
+  version: 0.8.26
+  resolution: "solc@npm:0.8.26"
   dependencies:
     command-exists: "npm:^1.2.8"
     commander: "npm:^8.1.0"
@@ -6589,7 +6589,7 @@ __metadata:
     tmp: "npm:0.0.33"
   bin:
     solcjs: solc.js
-  checksum: 10/e85644370a26a92fbdfb783ce14184fb6291ddd77ff93cc5d70019add63c32ecea9988453d02b27b99cb37f46cc99b88f33321305b3f9a5cacb9b1a6f803b607
+  checksum: 10/30ef9c2687f727eb5bdd685c77b1a0b354e7d6ba7a080cfcdce5a89f25a1399ff7949fecef47768088d825588da230da0044b46f056fc36f3959c0e3d3c9a82b
   languageName: node
   linkType: hard
 

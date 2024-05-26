@@ -30,7 +30,7 @@ async function main() {
   const cfToken = await ethers.getContractFactory(artifactOfContractToDeploy.abi, artifactOfContractToDeploy.bytecode)
   const bytecodeWithArgs = (await cfToken.getDeployTransaction()).data // no constructor args
 
-  const implAddress = await deployKeylessly(contractName, bytecodeWithArgs, gasLimitForImpl, wallet, isDeployEnabled) // gas cost: 3012861
+  const implAddress = await deployKeylessly(contractName, bytecodeWithArgs, gasLimitForImpl, wallet, isDeployEnabled)
   if (implAddress === undefined) return
 
   const proxyContractName = `ERC1967Proxy`
@@ -41,7 +41,7 @@ async function main() {
 
   const proxyBytecodeWithArgs = (await cfProxy.getDeployTransaction(...proxyConstructorArgs)).data
 
-  const proxyAddress = await deployKeylessly(proxyContractName, proxyBytecodeWithArgs, gasLimitForProxy, wallet, isDeployEnabled) // gas cost: 378214
+  const proxyAddress = await deployKeylessly(proxyContractName, proxyBytecodeWithArgs, gasLimitForProxy, wallet, isDeployEnabled)
 
   if (isDeployEnabled) {
     await upgrades.forceImport(proxyAddress, cfToken)
