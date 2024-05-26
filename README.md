@@ -122,11 +122,11 @@ Gas used for the deployment is around 230,784, so gas limit in this deployment t
 
 The SKYBITSolady factory contract will be deployed to this address (if the EVM version is `shanghai` and transaction bytecode is unchanged):
 ```
-0x594719ec88e7049B7678fB931f903A3B7c99E30B
+0xF545230eE44735CCDb71325c6D4bC981b444CBb6
 ```
 The derived address of the account that would sign the deployment transaction, and that you'd need to fund in order to pay the gas fee, is:
 ```
-0xB8FBb9467CB727E32eF1619bb3f032cE8B7BeD76
+0x7a2c43Cb49D08a68D8F6Ac708A55716C3cd78557
 ```
 
 #### SKYBITLite

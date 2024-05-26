@@ -27,3 +27,4 @@ artifacts
 .pnp.loader.mjs
 *.dbg.json
 solmate
+yarn-error.log
