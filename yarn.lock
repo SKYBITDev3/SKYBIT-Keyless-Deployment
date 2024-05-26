@@ -1608,18 +1608,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@wagmi/chains@npm:^1.8.0":
-  version: 1.8.0
-  resolution: "@wagmi/chains@npm:1.8.0"
-  peerDependencies:
-    typescript: ">=5.0.4"
-  peerDependenciesMeta:
-    typescript:
-      optional: true
-  checksum: 10/8248419554a90c0d514acfc46f3a6f2090a282ff546b2488705e81fcdfaf197590e67a1fc62539383b4dd22ccafe9f16018cadad27acee098dc9d87b82f173e4
-  languageName: node
-  linkType: hard
-
 "SKYBIT-Keyless-Deployment@workspace:.":
   version: 0.0.0-use.local
   resolution: "SKYBIT-Keyless-Deployment@workspace:."
@@ -1645,7 +1633,6 @@ __metadata:
     "@typechain/ethers-v6": "npm:^0.5.1"
     "@typechain/hardhat": "npm:^9.1.0"
     "@types/mocha": "npm:^10.0.6"
-    "@wagmi/chains": "npm:^1.8.0"
     axios: "npm:^1.7.2"
     chai: "npm:4.4.1"
     dotenv: "npm:^16.4.5"
@@ -1656,6 +1643,7 @@ __metadata:
     solidity-coverage: "npm:^0.8.12"
     ts-node: "npm:^10.9.2"
     typechain: "npm:^8.3.2"
+    viem: "npm:^2.12.4"
   languageName: unknown
   linkType: soft
 
@@ -4678,6 +4666,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"isows@npm:1.0.4":
+  version: 1.0.4
+  resolution: "isows@npm:1.0.4"
+  peerDependencies:
+    ws: "*"
+  checksum: 10/a3ee62e3d6216abb3adeeb2a551fe2e7835eac87b05a6ecc3e7739259bf5f8e83290501f49e26137390c8093f207fc3378d4a7653aab76ad7bbab4b2dba9c5b9
+  languageName: node
+  linkType: hard
+
 "jackspeak@npm:^2.3.5":
   version: 2.3.6
   resolution: "jackspeak@npm:2.3.6"
@@ -7381,6 +7378,27 @@ __metadata:
     typescript:
       optional: true
   checksum: 10/fda804cdbf0bace0368d0ae6342749f19639675631d8c41f0810692de1af3c61a8ea2548aceebeef7bada9c547ff58b2e45a0225b77a4bfbf0e1ef371dbd3acf
+  languageName: node
+  linkType: hard
+
+"viem@npm:^2.12.4":
+  version: 2.12.4
+  resolution: "viem@npm:2.12.4"
+  dependencies:
+    "@adraffy/ens-normalize": "npm:1.10.0"
+    "@noble/curves": "npm:1.2.0"
+    "@noble/hashes": "npm:1.3.2"
+    "@scure/bip32": "npm:1.3.2"
+    "@scure/bip39": "npm:1.2.1"
+    abitype: "npm:1.0.0"
+    isows: "npm:1.0.4"
+    ws: "npm:8.13.0"
+  peerDependencies:
+    typescript: ">=5.0.4"
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+  checksum: 10/6e0fff9eb9bebb92f9935b0d08a8dba9dbe51dcc928b7ad3a78c3ca9dfc4eb8576218ea445491a18f5572d315c5c2bbd548502c3d9b795eefde8f87d9d287fee
   languageName: node
   linkType: hard
 

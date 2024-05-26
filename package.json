@@ -1,6 +1,6 @@
 {
   "name": "SKYBIT-Keyless-Deployment",
-  "version": "5.0.1",
+  "version": "5.0.2",
   "packageManager": "yarn@4.2.2",
   "devDependencies": {
     "@SKYBITDev3/ZeframLou-create3-factory": "https://github.com/SKYBITDev3/ZeframLou-create3-factory#3a8db987b8a6e1b63845a0ee1d0206cb4b5748f9",
@@ -24,7 +24,6 @@
     "@typechain/ethers-v6": "^0.5.1",
     "@typechain/hardhat": "^9.1.0",
     "@types/mocha": "^10.0.6",
-    "@wagmi/chains": "^1.8.0",
     "axios": "^1.7.2",
     "chai": "4.4.1",
     "dotenv": "^16.4.5",
@@ -34,6 +33,7 @@
     "solc": "0.8.24",
     "solidity-coverage": "^0.8.12",
     "ts-node": "^10.9.2",
-    "typechain": "^8.3.2"
+    "typechain": "^8.3.2",
+    "viem": "^2.12.4"
   }
 }
