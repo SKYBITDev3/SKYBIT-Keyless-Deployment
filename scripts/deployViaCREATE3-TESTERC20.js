@@ -35,17 +35,20 @@ async function main() {
   const cfToken = await ethers.getContractFactory(tokenContractName) // No need to use artifacts-saved for your contract because with CREATE3 deployment address isn't dependent on bytecode
 
   const { CREATE3Deploy } = rootRequire(`scripts/CREATE3-deploy-functions.js`)
-  const deployedContract = await CREATE3Deploy(factoryToUse.name, factoryToUse.address, cfToken, tokenContractName, constructorArgs, saltForCREATE3, wallet, isDeployEnabled)
-  if(deployedContract === undefined) return
+  const contractInstance = await CREATE3Deploy(factoryToUse.name, factoryToUse.address, cfToken, tokenContractName, constructorArgs, saltForCREATE3, wallet, isDeployEnabled)
+  if (contractInstance === undefined) {
+    console.error(`contractInstance is undefined`)
+    return
+  }
 
   // Testing the deployed ERC20 contract. If your contract isn't ERC20 then you can call a function other than balanceOf.
   console.log(`Testing:`)
-  const totalSupply = ethers.formatUnits(await deployedContract.totalSupply())
-  const tokenDecimals = 18
-  console.log(`${wallet.address} has ${ethers.formatUnits(await deployedContract.balanceOf(wallet.address), tokenDecimals)} of ${totalSupply}`)
-  console.log(`${wallet2Address} has ${ethers.formatUnits(await deployedContract.balanceOf(wallet2Address), tokenDecimals)} of ${totalSupply}`)
-  console.log(`point: ${await deployedContract.point()}`)
-  console.log(`b: ${await deployedContract.b()}`)
+  const totalSupply = ethers.formatUnits(await contractInstance.totalSupply())
+  const tokenDecimals = await contractInstance.decimals()
+  console.log(`${wallet.address} has ${ethers.formatUnits(await contractInstance.balanceOf(wallet.address), tokenDecimals)} of ${totalSupply}`)
+  console.log(`${wallet2Address} has ${ethers.formatUnits(await contractInstance.balanceOf(wallet2Address), tokenDecimals)} of ${totalSupply}`)
+  console.log(`point: ${await contractInstance.point()}`)
+  console.log(`b: ${await contractInstance.b()}`)
 
 
   // VERIFY ON BLOCKCHAIN EXPLORER
@@ -55,7 +58,7 @@ async function main() {
     const { setTimeout } = require(`timers/promises`)
     await setTimeout(20000)
 
-    await verifyContract(deployedContract.target, constructorArgs)
+      await verifyContract(contractInstance.target, constructorArgs)
   }
 }
 }

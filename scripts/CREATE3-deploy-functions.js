@@ -28,19 +28,17 @@ const CREATE3Deploy = async (factoryToUse, addressOfFactory, contractFactory, co
   // Call DEPLOY
   console.log(`now calling deploy() in the CREATE3 factory...`)
   const txResponse = await deploy(factoryToUse, instanceOfFactory, bytecodeWithArgs, wallet, salt, feeData)
+    console.log(`txResponse: ${JSON.stringify(txResponse, null, 2)}`)
     const txReceipt = await txResponse.wait()
-    // console.log(`txReceipt: ${JSON.stringify(txReceipt)}`)
     // console.log(`txReceipt.logs[0].address: ${txReceipt.logs[0].address}`)
     console.log(`txReceipt: ${JSON.stringify(txReceipt, null, 2)}`)
   }
 
-  const instanceOfDeployedContract = contractFactory.attach(addressExpected)
-  if (await ethers.provider.getCode(addressExpected) !== `0x`) {
-    console.log(`${contractToDeployName} was successfully deployed via ${factoryToUse} to ${instanceOfDeployedContract.target}`)
-  if (instanceOfDeployedContract.target === addressExpected) console.log(`The actual deployment address matches the expected address`)
-  }
+  const contractInstance = contractFactory.attach(addressExpected)
+  if (await ethers.provider.getCode(addressExpected) !== `0x`) console.log(`${contractToDeployName} was successfully deployed via ${factoryToUse} CREATE3 factory to ${contractInstance.target}`)
+  else console.error(`${contractToDeployName} was not found at ${contractInstance.target}`)
 
-  return instanceOfDeployedContract
+  return contractInstance
 }
 
 const getArtifactOfFactory = (factoryToUse) => {

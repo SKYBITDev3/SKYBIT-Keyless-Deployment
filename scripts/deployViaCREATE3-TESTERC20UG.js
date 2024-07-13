@@ -11,7 +11,7 @@ const isDeployEnabled = true // toggle in case you do deployment and verificatio
 
 const isVerifyEnabled = true
 
-const useDeployProxy = false // openzeppelin's deployment script for upgradeable contracts
+const useDeployProxy = false // openzeppelin's deployment script for upgradeable contracts (the usual way without CREATE3)
 const useCREATE3 = true
 
 const salt = ethers.encodeBytes32String(`SKYBIT.ASIA TESTERC20UGV1......`) // 31 characters that you choose
@@ -23,19 +23,19 @@ async function main() {
   const [wallet, wallet2] = await ethers.getSigners()
   console.log(`Using network: ${network.name} (${network.config.chainId}), account: ${wallet.address} having ${await printNativeCurrencyBalance(wallet.address)} of native currency, RPC url: ${network.config.url}`)
 
-  const tokenContractName = `TESTERC20UGV1`
-  const initializerArgs = [ // constructor not used in UUPS contracts. Instead, proxy will call initializer
+  const implContractName = `TESTERC20UGV1`
+  const initializerArgsForImpl = [ // constructor not used in UUPS contracts. Instead, proxy will call initializer in implementation contract instance
     wallet.address,
     { x: 10, y: 5 },
   ]
 
 
-  const cfToken = await ethers.getContractFactory(tokenContractName)
+  const cfImpl = await ethers.getContractFactory(implContractName)
 
   let proxy, proxyAddress, implAddress, initializerData
-  if (useDeployProxy) {
+  if (useDeployProxy) { // Using openzeppelin's script (e.g. to test that the usual way (without CREATE3) of deploying upgradeable contracts works)
     if (isDeployEnabled) {
-      proxy = await upgrades.deployProxy(cfToken, initializerArgs, { kind: `uups`, timeout: 0 })
+      proxy = await upgrades.deployProxy(cfImpl, initializerArgsForImpl, { kind: `uups`, timeout: 0 })
       await proxy.waitForDeployment()
 
       proxyAddress = proxy.target
@@ -46,21 +46,21 @@ async function main() {
     console.log(`Expected address of implementation using nonce ${nonce}: ${addressExpectedOfImpl}`)
     implAddress = addressExpectedOfImpl
 
-    const implementationGasCost = await ethers.provider.estimateGas(await cfToken.getDeployTransaction())
-    console.log(`Expected gas cost to deploy implementation: ${implementationGasCost}`)
+    const implGasCost = await ethers.provider.estimateGas(await cfImpl.getDeployTransaction())
+    console.log(`Expected gas cost to deploy implementation: ${implGasCost}`)
     
     if (isDeployEnabled) {
       const feeData = await ethers.provider.getFeeData()
       delete feeData.gasPrice
-      const impl = await cfToken.deploy({ ...feeData })
+      const impl = await cfImpl.deploy({ ...feeData })
       await impl.waitForDeployment()
       implAddress = await impl.getAddress()
       console.log(`implAddress ${implAddress === addressExpectedOfImpl ? `matches` : `doesn't match`} addressExpectedOfImpl`)
     }
     const proxyContractName = `ERC1967Proxy`
-    const cfProxy = await ethers.getContractFactory(proxyContractName) // got the artifacts locally from @openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol. The one in @openzeppelin/upgrades-core is old.
-    const fragment = cfToken.interface.getFunction(`initialize`)
-    initializerData = cfToken.interface.encodeFunctionData(fragment, initializerArgs)
+    const cfProxy = await ethers.getContractFactory(proxyContractName) // got the artifacts locally from @openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol. The one in @openzeppelin/upgrades-core may be old.
+    const fragment = cfImpl.interface.getFunction(`initialize`)
+    initializerData = cfImpl.interface.encodeFunctionData(fragment, initializerArgsForImpl)
     const proxyConstructorArgs = [implAddress, initializerData]
 
     if (useCREATE3) {
@@ -68,10 +68,16 @@ async function main() {
 
       if (isDeployEnabled) {
         proxy = await CREATE3Deploy(factoryToUse.name, factoryToUse.address, cfProxy, proxyContractName, proxyConstructorArgs, salt, wallet, isDeployEnabled)
-        if (proxy === undefined) return
+        if (proxy === undefined) {
+          console.error(`proxy is undefined`)
+          return
+        }
 
         proxyAddress = proxy.target
-      } else {
+
+        await upgrades.forceImport(proxy, cfImpl) // imports proxy to manifest so that it can be upgraded in future via OpenZeppelin's upgradeProxy. See https://github.com/OpenZeppelin/openzeppelin-upgrades/blob/master/packages/plugin-hardhat/src/force-import.ts
+        console.log(`implementation has been connected with proxy`)
+      } else { // Not actually deploying
         const artifactOfFactory = getArtifactOfFactory(factoryToUse.name)
         const instanceOfFactory = await ethers.getContractAt(artifactOfFactory.abi, factoryToUse.address)
         const proxyBytecodeWithArgs = (await cfProxy.getDeployTransaction(...proxyConstructorArgs)).data
@@ -84,21 +90,16 @@ async function main() {
       await proxy.waitForDeployment()
       proxyAddress = proxy.target
     }
-
-    if (isDeployEnabled) {
-      await upgrades.forceImport(proxyAddress, cfToken)
-      console.log(`implementation has been connected with proxy`)
-    }
   }
-  console.log(`proxy address: ${proxyAddress}`)
+  console.log(`proxy address (use this to operate with your contract): ${proxyAddress}`)
 
-  implAddress = await upgrades.erc1967.getImplementationAddress(proxyAddress)
-  console.log(`implementation address set in proxy: ${implAddress}`)
+  const implAddressFound = await upgrades.erc1967.getImplementationAddress(proxyAddress)
+  console.log(`implementation address found in proxy: ${implAddressFound} ${implAddressFound === implAddress ? `as expected` : `which is different to ${implAddress}. Please investigate.`}`)
 
 
-    // Testing the deployed contract.
-    console.log(`Testing:`)
-    const deployedContract = await ethers.getContractAt(tokenContractName, proxyAddress)
+    // Testing the deployed contracts.
+  console.log(`Testing the deployed contracts:`)
+  const deployedContract = await ethers.getContractAt(implContractName, proxyAddress)
     console.log(`point: ${await deployedContract.points(wallet.address)}`)
     console.log(`Version: ${await deployedContract.getV()}`)
     
