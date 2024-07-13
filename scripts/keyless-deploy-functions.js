@@ -145,10 +145,11 @@ const deployKeylessly = async (contractName, bytecodeWithArgs, gasLimit, wallet,
     console.log(`Deploying ${contractName} contract by broadcasting signed raw transaction to ${network.name}...`)
 
     // const txHash = await ethers.provider.send(`eth_sendRawTransaction`, [txSignedSerialized])
-    const txReceipt = await ethers.provider.broadcastTransaction(txSignedSerialized)
-    await txReceipt.wait()
+    const txResponse = await ethers.provider.broadcastTransaction(txSignedSerialized)
+    await txResponse.wait()
 
-    if (await ethers.provider.getCode(addressExpected) !== `0x`) console.log(`${contractName} contract was successfully deployed to ${addressExpected} in transaction ${txReceipt.hash}`)
+    if (await ethers.provider.getCode(addressExpected) !== `0x`) console.log(`${contractName} contract was successfully deployed to ${addressExpected} in transaction ${txResponse.hash}`)
+    else console.error(`${contractName} contract was not found at ${addressExpected}`)
   }
   return addressExpected
 }
