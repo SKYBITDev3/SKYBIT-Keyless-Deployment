@@ -15,8 +15,9 @@ const CREATE3Deploy = async (factoryToUse, addressOfFactory, contractFactory, co
   if (isDeployEnabled) {
   if (await ethers.provider.getCode(addressExpected) !== `0x`) {
     console.log(`The contract already exists at ${addressExpected}. Change the salt if you want to deploy your contract to a different address.`)
-    return
-  }
+    console.log(`Returning an instance of the already-deployed contract...`)
+    return contractFactory.attach(addressExpected)
+}
 
   const functionCallGasCost = await getGasEstimate(factoryToUse, instanceOfFactory, bytecodeWithArgs, wallet, salt)
   console.log(`functionCallGasCost: ${functionCallGasCost}`)
