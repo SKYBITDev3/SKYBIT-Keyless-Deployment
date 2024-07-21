@@ -40,7 +40,7 @@ async function main() {
   console.log(`txReceipt: ${JSON.stringify(txReceipt, null, 2)}`)
 
   if (await ethers.provider.getCode(addressExpected) !== `0x`) {
-    console.log(`${factoryToDeploy} was successfully deployed via Arachnid's CREATE2 factory to ${addressExpected}`)
+    console.log(`${factoryToDeploy} was successfully deployed via Arachnid's CREATE2 factory to ${addressExpected} on ${network.name}`)
   } else console.error(`${factoryToDeploy} was not found at ${addressExpected}`)
 
 
