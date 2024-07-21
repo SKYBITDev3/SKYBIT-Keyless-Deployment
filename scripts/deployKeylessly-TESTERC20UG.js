@@ -18,7 +18,7 @@ async function main() {
   console.log(`Using network: ${network.name} (${network.config.chainId}), account: ${wallet.address} having ${await printNativeCurrencyBalance(wallet.address)} of native currency, RPC url: ${network.config.url}`)
 
   // WRITE YOUR CONTRACT NAME AND CONSTRUCTOR ARGUMENTS HERE
-  const contractName = `TESTERC20UGV1`
+  const contractName = `TESTERC20UGv1`
   const initializerArgs = [ // constructor not used in UUPS contracts. Instead, proxy will call initializer
     wallet.address,
     { x: 10, y: 5 },
