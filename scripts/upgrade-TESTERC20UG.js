@@ -5,29 +5,32 @@ async function main() {
   const [wallet, wallet2] = await ethers.getSigners()
   console.log(`Using network: ${network.name} (${network.config.chainId}), account: ${wallet.address} having ${await printNativeCurrencyBalance(wallet.address)} of native currency, RPC url: ${network.config.url}`)
 
-  const tokenContractName = `TESTERC20UGv1`
+  const implContractName = `TESTERC20UGv1`
   const contractAddress = `0x18Fb2C4870cC1B9f9440CB0D87c41b25D486A062` // ERC1967Proxy address
 
-  const contract = await ethers.getContractAt(tokenContractName, contractAddress)
+  const contract = await ethers.getContractAt(implContractName, contractAddress)
 
   // await contract.initialize(...constructorArgsOfToken) // 'Initializable: contract is already initialized'
 
   console.log(`V: ${await contract.getV()}`)
 
   // Upgrading
-  const tokenContractNameV2 = `TESTERC20UGv2`
-  const cfTokenV2 = await ethers.getContractFactory(tokenContractNameV2)
-
-  await upgrades.validateUpgrade(contract, cfTokenV2)
+  const implContractNameV2 = `TESTERC20UGv2`
+  const cfTokenV2 = await ethers.getContractFactory(implContractNameV2)
 
   let implAddress = await upgrades.erc1967.getImplementationAddress(contractAddress)
   console.log(`Old implementation address: ${implAddress}`)
+
+  await upgrades.validateUpgrade(contract, cfTokenV2)
+  console.log(`validation of upgrade to ${implContractNameV2} was successful. Now upgrading...`)
 
   const upgraded = await upgrades.upgradeProxy(contractAddress, cfTokenV2)
   console.log(`Upgraded V: ${await upgraded.getV()}`)
 
   implAddress = await upgrades.erc1967.getImplementationAddress(contractAddress)
   console.log(`New implementation address: ${implAddress}`)
+
+  console.log(`Continue to use the proxy address ${contractAddress} to operate with your contract`)
 
 
   // VERIFY ON BLOCKCHAIN EXPLORER
