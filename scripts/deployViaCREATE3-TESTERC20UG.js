@@ -18,7 +18,7 @@ const saltForCREATE3 = ethers.encodeBytes32String(`SKYBIT.ASIA TESTERC20UG......
 
 
 async function main() {
-  const { rootRequire, printNativeCurrencyBalance, verifyContract } = require(`../utils`)
+  const { rootRequire, printNativeCurrencyBalance, verifyContract } = require(`./utils`)
 
   const [wallet, wallet2] = await ethers.getSigners()
   console.log(`Using network: ${network.name} (${network.config.chainId}), account: ${wallet.address} having ${await printNativeCurrencyBalance(wallet.address)} of native currency, RPC url: ${network.config.url}`)
@@ -52,6 +52,11 @@ async function main() {
 
     let proxyAddressExpected
     if (useCREATE3) {
+      if (await ethers.provider.getCode(factoryToUse.address) === `0x`) {
+        console.error(`CREATE3 factory was not found at ${factoryToUse.address} on ${network.name}. Deploy the factory there first (or update the factory address to the correct one) then rerun this script.`)
+        return
+      }
+
       const { getArtifactOfFactory, getDeployedAddress } = rootRequire(`scripts/CREATE3-deploy-functions.js`)
       const artifactOfFactory = getArtifactOfFactory(factoryToUse.name)
       const instanceOfFactory = await ethers.getContractAt(artifactOfFactory.abi, factoryToUse.address)
