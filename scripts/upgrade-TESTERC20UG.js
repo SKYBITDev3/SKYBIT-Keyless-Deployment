@@ -5,7 +5,7 @@ async function main() {
   const [wallet, wallet2] = await ethers.getSigners()
   console.log(`Using network: ${network.name} (${network.config.chainId}), account: ${wallet.address} having ${await printNativeCurrencyBalance(wallet.address)} of native currency, RPC url: ${network.config.url}`)
 
-  const implContractName = `TESTERC20UGv1`
+  const implContractName = `contracts/TESTERC20UGv1.sol:TESTERC20UGv1`
   const contractAddress = `0x18Fb2C4870cC1B9f9440CB0D87c41b25D486A062` // ERC1967Proxy address
 
   const contract = await ethers.getContractAt(implContractName, contractAddress)
@@ -15,16 +15,17 @@ async function main() {
   console.log(`V: ${await contract.getV()}`)
 
   // Upgrading
-  const implContractNameV2 = `TESTERC20UGv2`
-  const cfTokenV2 = await ethers.getContractFactory(implContractNameV2)
+  const implContractNameV2 = `contracts/TESTERC20UGv2.sol:TESTERC20UGv2`
+  const cfImplV2 = await ethers.getContractFactory(implContractNameV2)
 
   let implAddress = await upgrades.erc1967.getImplementationAddress(contractAddress)
   console.log(`Old implementation address: ${implAddress}`)
 
-  await upgrades.validateUpgrade(contract, cfTokenV2)
+  await upgrades.validateUpgrade(contract, cfImplV2)
   console.log(`validation of upgrade to ${implContractNameV2} was successful. Now upgrading...`)
 
-  const upgraded = await upgrades.upgradeProxy(contractAddress, cfTokenV2)
+  const upgraded = await upgrades.upgradeProxy(contractAddress, cfImplV2)
+  console.log(`Upgraded name: ${await upgraded.name()}`)
   console.log(`Upgraded V: ${await upgraded.getV()}`)
 
   implAddress = await upgrades.erc1967.getImplementationAddress(contractAddress)

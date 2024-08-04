@@ -23,12 +23,13 @@ const getContractAbi = async (contractAddress) => {
   return httpResponse.data.result
 }
 
-const verifyContract = async (address, constructorArguments) => {
+const verifyContract = async (address, constructorArguments, contract) => {
   console.log(`Verifying contract...`)
   try {
     await run(`verify:verify`, {
       address,
       constructorArguments,
+      contract,
     })
 
     console.log(`Contract verified!`)

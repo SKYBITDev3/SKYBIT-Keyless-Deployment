@@ -18,7 +18,7 @@ async function main() {
   console.log(`Using network: ${network.name} (${network.config.chainId}), account: ${wallet.address} having ${await printNativeCurrencyBalance(wallet.address)} of native currency, RPC url: ${network.config.url}`)
 
   // WRITE YOUR CONTRACT NAME AND CONSTRUCTOR ARGUMENTS HERE
-  const contractName = `TESTERC20UGv1`
+  const implContractName = `contracts/TESTERC20UGv1.sol:TESTERC20UGv1`
   const initializerArgs = [ // constructor not used in UUPS contracts. Instead, proxy will call initializer
     wallet.address,
     { x: 10, y: 5 },
@@ -26,25 +26,25 @@ async function main() {
 
   const { getArtifactOfContract, deployKeylessly } = require(`./keyless-deploy-functions`)
 
-  const artifactOfContractToDeploy = getArtifactOfContract(contractName)
-  const cfToken = await ethers.getContractFactory(artifactOfContractToDeploy.abi, artifactOfContractToDeploy.bytecode)
-  const bytecodeWithArgs = (await cfToken.getDeployTransaction()).data // no constructor args
+  const artifactOfContractToDeploy = getArtifactOfContract(implContractName)
+  const cfImpl = await ethers.getContractFactory(artifactOfContractToDeploy.abi, artifactOfContractToDeploy.bytecode)
+  const bytecodeWithArgs = (await cfImpl.getDeployTransaction()).data // no constructor args
 
-  const implAddress = await deployKeylessly(contractName, bytecodeWithArgs, gasLimitForImpl, wallet, isDeployEnabled)
+  const implAddress = await deployKeylessly(implContractName, bytecodeWithArgs, gasLimitForImpl, wallet, isDeployEnabled) // gas cost: 3012861
   if (implAddress === undefined) return
 
-  const proxyContractName = `ERC1967Proxy`
+  const proxyContractName = `@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol:ERC1967Proxy`
   const cfProxy = await ethers.getContractFactory(proxyContractName)
-  const fragment = cfToken.interface.getFunction(`initialize`)
-  const initializerData = cfToken.interface.encodeFunctionData(fragment, initializerArgs)
+  const fragment = cfImpl.interface.getFunction(`initialize`)
+  const initializerData = cfImpl.interface.encodeFunctionData(fragment, initializerArgs)
   const proxyConstructorArgs = [implAddress, initializerData]
 
   const proxyBytecodeWithArgs = (await cfProxy.getDeployTransaction(...proxyConstructorArgs)).data
 
-  const proxyAddress = await deployKeylessly(proxyContractName, proxyBytecodeWithArgs, gasLimitForProxy, wallet, isDeployEnabled)
+  const proxyAddress = await deployKeylessly(proxyContractName, proxyBytecodeWithArgs, gasLimitForProxy, wallet, isDeployEnabled) // gas cost: 378214
 
   if (isDeployEnabled) {
-    await upgrades.forceImport(proxyAddress, cfToken)
+    await upgrades.forceImport(proxyAddress, cfImpl)
     console.log(`implementation has been connected with proxy`)
   }
 
@@ -58,7 +58,7 @@ async function main() {
         await setTimeout(20000)
       }
       const { verifyContract } = require(`./utils`)
-      await verifyContract(proxyAddress) // also verifies implementation
+      await verifyContract(proxyAddress, [], implContractName) // also verifies implementation. Added contract name to prevent the error "More than one contract was found to match the deployed bytecode"
     } else console.log(`Verification on local network skipped`)
   }
 }

@@ -13,7 +13,7 @@ async function main() {
   console.log(`Using network: ${network.name} (${network.config.chainId}), account: ${wallet.address} having ${ethers.formatUnits(balanceOfWallet, `ether`)} of native currency, RPC url: ${network.config.url}`)
 
   // WRITE YOUR CONTRACT NAME AND CONSTRUCTOR ARGUMENTS HERE
-  const contractName = `TESTERC20`
+  const contractName = `contracts/TESTERC20.sol:TESTERC20`
   const wallet2Address = `0xEB2e452fC167b5bb948c6FC2c9215ce7F4064692` // just for testing deployed token
   const constructorArgs = [
     `Token 4628`,

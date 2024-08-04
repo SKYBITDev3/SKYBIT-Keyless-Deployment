@@ -16,6 +16,7 @@ const useOZDeployProxy = false // openzeppelin's deployment script for upgradeab
 const useCREATE3 = true
 const saltForCREATE3 = ethers.encodeBytes32String(`SKYBIT.ASIA TESTERC20UG........`) // 31 characters that you choose
 
+let implAddress // set implementation address here if it has already been deployed but proxy hasn't, to skip deploying another implementation instance
 
 async function main() {
   const { rootRequire, printNativeCurrencyBalance, verifyContract } = require(`./utils`)
@@ -23,7 +24,7 @@ async function main() {
   const [wallet, wallet2] = await ethers.getSigners()
   console.log(`Using network: ${network.name} (${network.config.chainId}), account: ${wallet.address} having ${await printNativeCurrencyBalance(wallet.address)} of native currency, RPC url: ${network.config.url}`)
 
-  const implContractName = `TESTERC20UGv1`
+  const implContractName = `contracts/TESTERC20UGv1.sol:TESTERC20UGv1`
   const initializerArgsForImpl = [ // constructor not used in UUPS contracts. Instead, proxy will call initializer in implementation contract instance
     wallet.address,
     { x: 10, y: 5 },
@@ -40,14 +41,13 @@ async function main() {
       proxyAddress = proxy.target
     }
   } else { // not using openzeppelin's script
-    let implAddress, initializerData
     let isDeployed = false
 
     // Derive address of proxy and check whether contract had already been deployed to there
-    const proxyContractName = `ERC1967Proxy`
+    const proxyContractName = `@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol:ERC1967Proxy`
     const cfProxy = await ethers.getContractFactory(proxyContractName) // got the artifacts locally from @openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol. The one in @openzeppelin/upgrades-core may be old.
     const fragment = cfImpl.interface.getFunction(`initialize`)
-    initializerData = cfImpl.interface.encodeFunctionData(fragment, initializerArgsForImpl)
+    const initializerData = cfImpl.interface.encodeFunctionData(fragment, initializerArgsForImpl)
     let proxyConstructorArgs = [ethers.ZeroAddress, initializerData] // actual implAddress not needed to get proxy address
 
     let proxyAddressExpected
@@ -62,7 +62,7 @@ async function main() {
       const instanceOfFactory = await ethers.getContractAt(artifactOfFactory.abi, factoryToUse.address)
       const proxyBytecodeWithArgs = (await cfProxy.getDeployTransaction(...proxyConstructorArgs)).data
       proxyAddressExpected = await getDeployedAddress(factoryToUse.name, instanceOfFactory, proxyBytecodeWithArgs, wallet, saltForCREATE3)
-      console.log(`Expected address of proxyAddress: ${proxyAddressExpected}`)
+      console.log(`Expected address of proxy: ${proxyAddressExpected}`)
     } else {
       const nonce = await wallet.getNonce() + 1 // skip 1 as that'll be for implementation
       proxyAddressExpected = ethers.getCreateAddress({ from: wallet.address, nonce })
@@ -82,7 +82,7 @@ async function main() {
       }
     }
 
-    if (!isDeployed) { // Deploy implementation
+    if (!isDeployed && implAddress === undefined) { // Deploy implementation
       const nonce = await wallet.getNonce()
       const implAddressExpected = ethers.getCreateAddress({ from: wallet.address, nonce })
       console.log(`Expected address of implementation using nonce ${nonce}: ${implAddressExpected}`)
@@ -93,13 +93,15 @@ async function main() {
       if (isDeployEnabled) {
         const feeData = await ethers.provider.getFeeData()
         delete feeData.gasPrice
-        const impl = await cfImpl.deploy({ ...feeData })
+
+        console.log(`Deploying implementation contract normally...`)
+        const impl = await cfImpl.deploy({ ...feeData }) // If it gets stuck here try removing { ...feeData }
         await impl.waitForDeployment()
+        console.log(`Implementation contract has been deployed normally.`)
         implAddress = await impl.getAddress()
       } else implAddress = implAddressExpected
-
-      console.log(`implAddress: ${implAddress}`)
     }
+    console.log(`implAddress: ${implAddress}`)
 
     if (isDeployEnabled) {
       proxyConstructorArgs = [implAddress, initializerData] // update to set actual value of implAddress
@@ -118,7 +120,7 @@ async function main() {
         if (!isDeployed) { // Deploy proxy
           const feeData = await ethers.provider.getFeeData()
           delete feeData.gasPrice
-          proxy = await cfProxy.deploy(...proxyConstructorArgs, { ...feeData })
+          proxy = await cfProxy.deploy(...proxyConstructorArgs, { ...feeData }) // If it gets stuck here try removing { ...feeData }
           await proxy.waitForDeployment()
         }
       } // if (useCREATE3)
@@ -137,7 +139,6 @@ async function main() {
   } // if (useOZDeployProxy)
 
 
-  // Testing the deployed contracts.
   console.log(`Testing the deployed contracts:`)
   const contractInstance = await ethers.getContractAt(implContractName, proxyAddress)
   console.log(`point: ${await contractInstance.points(wallet.address)}`)
@@ -153,7 +154,7 @@ async function main() {
         await setTimeout(20000)
       }
 
-      await verifyContract(proxyAddress) // also verifies implementation
+      await verifyContract(proxyAddress, [], implContractName) // also verifies implementation. Added contract name to prevent the error "More than one contract was found to match the deployed bytecode"
     }
   }
 }
@@ -163,4 +164,3 @@ main().catch(error => {
   console.error(error)
   process.exitCode = 1
 })
-

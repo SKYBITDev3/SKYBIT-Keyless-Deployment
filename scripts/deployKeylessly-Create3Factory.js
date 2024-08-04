@@ -37,7 +37,7 @@ async function main() {
 
 const getCreate3FactoryArtifact = factory => {
   let compiledArtifactFilePath
-  switch (factory) { // Get hardhat's compiled artifact file first for comparison with saved copy
+  switch (factory) { // Get hardhat's compiled artifact file first for comparison with saved copy. Artifacts were created via contracts\Imports.sol
     case `ZeframLou`:
       compiledArtifactFilePath = `artifacts/@SKYBITDev3/ZeframLou-create3-factory/src/CREATE3Factory.sol/CREATE3Factory.json`
       break
@@ -57,7 +57,7 @@ const getCreate3FactoryArtifact = factory => {
 }
 
 
-const getGasLimit = (factory) => {
+const getGasLimit = factory => {
   switch (factory) {
     case `ZeframLou`:
       return 500000n
