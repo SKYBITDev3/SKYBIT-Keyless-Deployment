@@ -31,6 +31,12 @@ async function main() {
 
   console.log(`Deploying ${factoryToDeploy} via Arachnid's CREATE2 factory ("Deterministic Deployment Proxy").`)
   console.log(`expected address using ethers.getCreate2Address: ${addressExpected}`)
+  
+  if (await ethers.provider.getCode(addressExpected) !== `0x`) {
+    console.error(`A contract already exists at ${addressExpected} on ${network.config.chainId}`)
+    return
+  }
+  
   console.log(`expected address using await wallet.call(txData): ${await wallet.call(txData)}`)
 
   const txResponse = await wallet.sendTransaction(txData)
