@@ -163,12 +163,14 @@ module.exports = {
       avalanche: process.env.SNOWTRACE_API_KEY,
       avalancheFujiTestnet: process.env.SNOWTRACE_API_KEY,
       polygon: process.env.POLYGONSCAN_API_KEY,
-      polygonMumbai: process.env.POLYGONSCAN_API_KEY,
+      polygonAmoy: process.env.POLYGONSCAN_API_KEY,
     },
     customChains,
     timeout: 60000 // 1min (default is 20s)
-  }
-}
+  },
+  sourcify: {
+    enabled: true
+  },
 
 
 /* Not needed anymore after forking https://github.com/ZeframLou/create3-factory
